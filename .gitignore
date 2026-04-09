@@ -20,4 +20,10 @@
 .history
 .ionide
 
+### Node.js ###
+node_modules/
+
+
+/certs
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
