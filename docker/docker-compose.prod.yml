@@ -12,7 +12,7 @@ services:
       - mongo
     volumes:
       - ../frontend/dist:/app/dist
-      - ../certs/lyra:/var/www/certs/lyra:ro
+      - /var/www/certs:/var/www/certs:ro
 
   mongo:
     image: mongo:8.0
