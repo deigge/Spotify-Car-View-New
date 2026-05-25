@@ -1,0 +1,23 @@
+services:
+  backend:
+    container_name: spotify-app-backend
+    build: ../backend
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - NODE_ENV=production
+      - MONGO_URL=mongodb://mongo:27017/meinprojekt
+    depends_on:
+      - mongo
+    volumes:
+      - ../frontend/dist:/app/dist
+      - ../certs/lyra:/var/www/certs/lyra:ro
+
+  mongo:
+    image: mongo:8.0
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
