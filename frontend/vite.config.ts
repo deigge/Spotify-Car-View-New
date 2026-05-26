@@ -11,6 +11,9 @@ export default defineConfig({
     vueDevTools(),
   ],
   server: {
+    watch: {
+      usePolling: true
+    },
     host: true,
     proxy: {
       '/api': 'http://backend:3000'  // "backend" = Servicename im Compose
