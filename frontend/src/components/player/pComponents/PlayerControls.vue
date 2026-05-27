@@ -39,9 +39,12 @@ import RepeatIcon from '@/components/icons/repeatIcon.vue';
   width: 80%;
   display: flex;
   justify-content: space-around;
+  max-width: 400px;
+  align-self: center;
 }
 
 #mainControls {
-  margin-top: 2.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 </style>

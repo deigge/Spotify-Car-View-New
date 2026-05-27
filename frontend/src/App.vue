@@ -20,16 +20,17 @@ import BottomNavBar from '@/components/BottomNavBar.vue'
   </header>
 -->
   <div class="app">
-    <router-view />   <!-- bekommt den ganzen Platz -->
-    <BottomNavBar />     <!-- nimmt nur so viel wie sie braucht -->
+    <router-view style="overflow: hidden; width: 100%; height: 100%;"/>
+    <BottomNavBar />
   </div>
 </template>
 
 <style scoped>
-/* App.vue */
 .app {
   display: grid;
   grid-template-rows: 1fr auto;
-  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  width: 100%;
 }
 </style>

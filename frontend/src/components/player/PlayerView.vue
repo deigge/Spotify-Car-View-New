@@ -15,7 +15,7 @@
     <TrackInfo />
 
     <img id="albumCover" :src="albumCover" />
-
+    <input type="range" min="0" max="100" value="30" id="progress-bar" />
     <PlayerControls />
   </div>
 </template>
@@ -23,24 +23,32 @@
 <style lang="css" scoped>
 .player-view {
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  max-width: 400px;
-  margin: 0 auto;
   align-items: center;
+  max-width: 400px;
 }
 
 .playlist-name {
   margin-top: 1rem;
-  font-size: 1.5rem;
+  font-size: 1rem;
   display: block;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #albumCover {
   margin-top: 1rem;
-  margin-bottom: 1rem;
   width: 80%;
   border-radius: 2rem;
+}
+
+#progress-bar {
+  flex: 1;
+  accent-color: rgb(144, 255, 80);
+  width: 70%;
 }
 </style>

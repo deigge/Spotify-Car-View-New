@@ -15,7 +15,7 @@ defineProps<{
 .icon-btn {
   background: none;
   border: none;
-  color: #555;
+  color: #d3d3d3;
   font-size: 1.8rem;
   cursor: pointer;
 }
