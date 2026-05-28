@@ -12,7 +12,7 @@
 <template>
   <div class="player-view">
     <span class="playlist-name safe-top">{{ playlistName }}</span>
-    <TrackInfo />
+    <TrackInfo title="Lorem ipsum yadda yadda yadda" artist="Artist"/>
 
     <img id="albumCover" :src="albumCover" />
     <input type="range" min="0" max="100" value="30" id="progress-bar" />
@@ -22,12 +22,12 @@
 
 <style lang="css" scoped>
 .player-view {
-  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   max-width: 400px;
+  padding-bottom: 4rem;
 }
 
 .playlist-name {
@@ -47,7 +47,8 @@
 }
 
 #progress-bar {
-  flex: 1;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   accent-color: rgb(144, 255, 80);
   width: 70%;
 }

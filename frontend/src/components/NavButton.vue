@@ -28,6 +28,8 @@ function handleClick() {
   color: #d3d3d3;
   font-size: 1.8rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 .icon-btn.active {
   color: rgb(144, 255, 80);

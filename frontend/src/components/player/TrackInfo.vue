@@ -1,11 +1,13 @@
 <script setup lang="ts">
   import { ref, onMounted } from 'vue'
 
-  const trackTitle = 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam';
-  const trackArtist = 'Artist';
+  const props = defineProps<{
+  title: string
+  artist: string
+  }>()
 
-const titleRef = ref<HTMLElement | null>(null)
-const titleOverflowing = ref(false)
+  const titleRef = ref<HTMLElement | null>(null)
+  const titleOverflowing = ref(false)
 
 
   onMounted(() => {
@@ -17,10 +19,10 @@ const titleOverflowing = ref(false)
 <template>
   <div class="track-info">
     <span id="trackTitle" ref="titleRef" :class="{ scrolling: titleOverflowing }">
-      {{ trackTitle }}
+      {{ props.title }}
     </span>
     <span id="trackArtist">
-      {{ trackArtist }}
+      {{ props.artist }}
     </span>
   </div>
 </template>

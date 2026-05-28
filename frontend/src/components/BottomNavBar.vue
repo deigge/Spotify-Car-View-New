@@ -10,7 +10,7 @@ const route = useRoute()
 </script>
 
 <template>
-  <nav class="bottom-nav safe-bottom">
+  <nav class="bottom-nav">
     <NavButton href="/playlists" :active="route.path === '/playlists'">
       <PlaylistIcon/>
     </NavButton>
@@ -29,11 +29,21 @@ const route = useRoute()
 .bottom-nav {
   margin: 0 1rem 1rem 1rem;
   height: 4rem;
-  background: #1111113f;
+  background: #11111198;
   border-radius: 2rem;
 
   display: flex;
   justify-content: space-around;
   align-items: center;
+
+  position: fixed;
+  bottom: calc(1rem + var(--safe-bottom));
+  left: 5%;
+  right: 5%;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow: 0 0 1rem 0.4rem #0f0f0f98;
 }
 </style>

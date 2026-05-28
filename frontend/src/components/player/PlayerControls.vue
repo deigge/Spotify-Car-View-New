@@ -45,6 +45,5 @@ import RepeatIcon from '@/components/icons/repeatIcon.vue';
 
 #mainControls {
   margin-top: 0.5rem;
-  margin-bottom: 1.5rem;
 }
 </style>
