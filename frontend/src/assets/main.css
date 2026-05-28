@@ -18,3 +18,11 @@ svg {
     background-color: hsla(160, 100%, 37%, 0.2);
   }
 }
+
+.safe-top {
+  padding-top: var(--safe-top);
+}
+
+.safe-bottom {
+  padding-bottom: var(--safe-bottom);
+}

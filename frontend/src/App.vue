@@ -20,7 +20,7 @@ import BottomNavBar from '@/components/BottomNavBar.vue'
   </header>
 -->
   <div class="app">
-    <router-view style="overflow: hidden; width: 100%; height: 100%;"/>
+    <router-view style="overflow-y: auto; overflow-x: hidden; width: 100%; height: 100%;"/>
     <BottomNavBar />
   </div>
 </template>
@@ -29,8 +29,8 @@ import BottomNavBar from '@/components/BottomNavBar.vue'
 .app {
   display: grid;
   grid-template-rows: 1fr auto;
-  height: 100dvh;
   overflow: hidden;
+  height: 100dvh;
   width: 100%;
 }
 </style>

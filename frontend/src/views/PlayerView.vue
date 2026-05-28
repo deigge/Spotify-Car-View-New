@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { ref } from 'vue'
 
-  import TrackInfo from './pComponents/TrackInfo.vue';
+  import TrackInfo from '@/components/player/TrackInfo.vue';
   import coverPlaceholder from '@/assets/img/album_cover_placeholder.png'
-  import PlayerControls from './pComponents/PlayerControls.vue';
+  import PlayerControls from '@/components/player/PlayerControls.vue';
 
   const playlistName = 'My Playlist';
   const albumCover = ref(coverPlaceholder)
@@ -11,7 +11,7 @@
 
 <template>
   <div class="player-view">
-    <span class="playlist-name">{{ playlistName }}</span>
+    <span class="playlist-name safe-top">{{ playlistName }}</span>
     <TrackInfo />
 
     <img id="albumCover" :src="albumCover" />
