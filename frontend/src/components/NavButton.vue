@@ -32,6 +32,6 @@ function handleClick() {
   align-items: center;
 }
 .icon-btn.active {
-  color: rgb(144, 255, 80);
+  color: var(--accent-color);
 }
 </style>

@@ -1,6 +1,7 @@
-import User from '../models/User.js'
+import User from '../models/User.js';
 import crypto from 'crypto';
 import { Router } from 'express';
+import { encrypt, decrypt } from '../utils/crypto.js';
 
 const router = Router();
 
@@ -20,9 +21,9 @@ router.get('/login', function(req, res) {
   res.redirect('https://accounts.spotify.com/authorize?' +
     new URLSearchParams({
       response_type: 'code',
-      client_id: s_client_id,
+      client_id: s_client_id!,
       scope: scope,
-      redirect_uri: s_redirect_uri,
+      redirect_uri: s_redirect_uri!,
       state: state
     }).toString());
 });
@@ -35,14 +36,14 @@ router.get('/callback', async (req, res) => {
     const storedState = req.cookies.spotify_state
 
     if (!state || state !== storedState) {
-        return res.redirect(app_url + '?error=state_mismatch')
+        return res.redirect(app_url + "/login" + '?error=state_mismatch')
     }
 
     res.clearCookie('spotify_state')
 
     // Nutzer hat abgelehnt
     if (error) {
-        return res.redirect(app_url + '?error=' + error)
+        return res.redirect(app_url + "/login"  + '?error=' + error)
     }
 
     // Token von Spotify holen
@@ -82,7 +83,7 @@ router.get('/callback', async (req, res) => {
     await User.findOneAndUpdate(
         { spotifyId },
         {
-            refreshToken,
+            refreshToken: encrypt(refreshToken),
             $push: { sessions: { sessionId } }
         },
         { upsert: true } // erstellt neuen User wenn er nicht existiert
@@ -94,7 +95,54 @@ router.get('/callback', async (req, res) => {
         sameSite: 'strict'
     });
 
-    res.redirect(app_url);
+    res.redirect(app_url!);
+})
+
+router.get('/token', async (req, res) => {
+    const sessionId = req.cookies.sessionId
+    if (!sessionId) return res.status(401).json({ error: 'nicht eingeloggt' })
+
+    // User anhand Session finden
+    const user = await User.findOne({ 'sessions.sessionId': sessionId })
+    if (!user) return res.status(401).json({ error: 'Session ungültig' })
+
+    // Neuen Access Token von Spotify holen
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + Buffer.from(
+            s_client_id + ':' + s_client_secret
+        ).toString('base64')
+        },
+        body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: decrypt(user.refreshToken)
+        })
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+    // Refresh Token ungültig → Session löschen
+    await User.updateOne(
+        { 'sessions.sessionId': sessionId },
+        { $pull: { sessions: { sessionId } } }
+    )
+    return res.status(401).json({ error: 'Token ungültig' })
+    }
+
+    if (data.refresh_token) {
+        await User.updateOne(
+            { 'sessions.sessionId': sessionId },
+            { refreshToken: encrypt(data.refresh_token) }
+        )
+    }
+
+    res.json({ 
+        accessToken: data.access_token,
+        expiresIn: data.expires_in 
+    });
 })
 
 export default router;

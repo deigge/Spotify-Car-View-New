@@ -16,6 +16,7 @@ export default defineConfig({
     },
     host: true,
     proxy: {
+      '/auth': 'http://backend:3000',
       '/api': 'http://backend:3000'  // "backend" = Servicename im Compose
     }
   },
