@@ -1,12 +1,17 @@
-const express = require('express');
-const https = require('https');
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-const mongoose = require('mongoose');
+import express from 'express'
+import https from 'https'
+import http from 'http'
+import fs from 'fs'
+import path from 'path'
+import mongoose from 'mongoose'
+import cookieParser from 'cookie-parser'
+import authRouter from './routes/auth.js'
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
+
+app.use('/auth', authRouter)
 
 mongoose.connect(process.env.MONGO_URL);
 

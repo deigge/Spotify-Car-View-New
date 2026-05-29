@@ -6,7 +6,8 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - MONGO_URL=mongodb://mongo:27017/meinprojekt
+    env_file:
+      - ../backend/.env
     depends_on:
       - mongo
     volumes:
@@ -27,6 +28,8 @@ services:
     image: mongo:8.0
     volumes:
       - mongo-data:/data/db
+    ports:
+      - "27017:27017"
 
 volumes:
   mongo-data:
