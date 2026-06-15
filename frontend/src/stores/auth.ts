@@ -21,18 +21,19 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async spotifyFetch(url: string) {
-      let res = await fetch(url, {
+      const base_url = 'https://api.spotify.com'
+      let res = await fetch(base_url + url, {
         headers: { 'Authorization': 'Bearer ' + this.accessToken }
       })
 
       if (res.status === 401) {
         await this.fetchToken()
-        res = await fetch(url, {
+        res = await fetch(base_url + url, {
           headers: { 'Authorization': 'Bearer ' + this.accessToken }
         })
       }
 
-      return res.json()
+      return res.json();
     }
   }
 })

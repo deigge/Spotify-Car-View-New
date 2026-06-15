@@ -19,15 +19,15 @@ import RepeatIcon from '@/components/icons/repeatIcon.vue';
   </div>
 
   <div class="controls" id="mainControls">
-    <IconButton size="2.5rem">
+    <IconButton size="3.5rem">
       <PlayerSkipBackIcon/>
     </IconButton>
 
-    <IconButton icon="player-play" size="4rem">
+    <IconButton icon="player-play" size="5rem">
       <PlayerPlayIcon/>
     </IconButton>
 
-    <IconButton size="2.5rem">
+    <IconButton size="3.5rem">
       <PlayerSkipForwardIcon/>
     </IconButton>
   </div>

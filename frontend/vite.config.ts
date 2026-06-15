@@ -14,7 +14,11 @@ export default defineConfig({
     watch: {
       usePolling: true
     },
-    host: true,
+    host: '0.0.0.0',
+    port: 5173,
+    allowedHosts: [
+      'spotify.deigge.net'
+    ],
     proxy: {
       '/auth': 'http://backend:3000',
       '/api': 'http://backend:3000'  // "backend" = Servicename im Compose

@@ -16,7 +16,7 @@ router.get('/login', function(req, res) {
   var state = crypto.randomUUID()
   var scope = 'user-read-playback-state user-read-private user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative user-read-playback-position';
 
-  res.cookie('spotify_state', state, { httpOnly: true });
+  res.cookie('spotify_state', state, { httpOnly: true })
 
   res.redirect('https://accounts.spotify.com/authorize?' +
     new URLSearchParams({
@@ -25,8 +25,8 @@ router.get('/login', function(req, res) {
       scope: scope,
       redirect_uri: s_redirect_uri!,
       state: state
-    }).toString());
-});
+    }))
+})
 
 
 router.get('/callback', async (req, res) => {
@@ -63,7 +63,6 @@ router.get('/callback', async (req, res) => {
     });
 
     const data = await response.json();
-    console.log(data)
 
     const accessToken = data.access_token;
     const refreshToken = data.refresh_token;
@@ -74,26 +73,30 @@ router.get('/callback', async (req, res) => {
 
     const profile = await profileRes.json()
     const spotifyId = profile.id;
-    console.log(profile)
-    console.log(spotifyId)
 
     const sessionId = crypto.randomUUID();
 
-    // User in MongoDB speichern oder updaten
+    // 1. Erst alte Sessions löschen
+    await User.updateOne(
+        { spotifyId },
+        { $pull: { sessions: { lastUsedAt: { $lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } } } }
+    );
+
+    // 2. Dann neue Session + Refresh Token speichern
     await User.findOneAndUpdate(
         { spotifyId },
         {
             refreshToken: encrypt(refreshToken),
-            $push: { sessions: { sessionId } }
+            $push: { sessions: { sessionId, createdAt: new Date(), lastUsedAt: new Date() } }
         },
-        { upsert: true } // erstellt neuen User wenn er nicht existiert
-    );
+        { upsert: true }
+    )
 
     res.cookie('sessionId', sessionId, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict'
-    });
+    })
 
     res.redirect(app_url!);
 })
@@ -103,7 +106,10 @@ router.get('/token', async (req, res) => {
     if (!sessionId) return res.status(401).json({ error: 'nicht eingeloggt' })
 
     // User anhand Session finden
-    const user = await User.findOne({ 'sessions.sessionId': sessionId })
+    const user = await User.findOneAndUpdate(
+        { 'sessions.sessionId': sessionId },
+        { $set: { 'sessions.$.lastUsedAt': new Date() } }
+    )
     if (!user) return res.status(401).json({ error: 'Session ungültig' })
 
     // Neuen Access Token von Spotify holen

@@ -14,7 +14,9 @@ services:
       - ../backend:/app
       - /app/node_modules
       - ../certs/lyra:/var/www/certs/lyra:ro
- 
+    networks:
+      - app-net
+
   frontend:
     container_name: spotify-app-frontend-dev
     build: ../frontend
@@ -23,6 +25,8 @@ services:
     volumes:
       - ../frontend:/app
       - /app/node_modules
+    networks:
+      - app-net
 
   mongo:
     image: mongo:8.0
@@ -30,6 +34,22 @@ services:
       - mongo-data:/data/db
     ports:
       - "27017:27017"
+    networks:
+      - app-net
+
+  cloudflared:
+    container_name: spotify-app-tunnel
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-net
+
+networks:
+  app-net:
 
 volumes:
   mongo-data:
