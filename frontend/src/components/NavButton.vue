@@ -16,13 +16,13 @@ function handleClick() {
 </script>
 
 <template>
-  <button class="icon-btn" :class="{ active }" :style="{ 'font-size': size }" @click="handleClick">
+  <button class="nav-btn" :class="{ active }" :style="{ 'font-size': size }" @click="handleClick">
     <slot />
   </button>
 </template>
 
 <style lang="css" scoped>
-.icon-btn {
+.nav-btn {
   background: none;
   border: none;
   color: #d3d3d3;
@@ -31,7 +31,15 @@ function handleClick() {
   display: flex;
   align-items: center;
 }
-.icon-btn.active {
+.nav-btn.active {
   color: var(--accent-color);
+}
+
+.nav-btn:hover, .nav-btn:focus-visible {
+  color: white;
+}
+
+.nav-btn:active {
+  color: rgb(204, 255, 174);
 }
 </style>

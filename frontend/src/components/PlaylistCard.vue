@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import coverPlaceholder from '@/assets/img/album_cover_placeholder.png'
-
-const playlistCover = ref(coverPlaceholder)
 
 defineProps<{
   coverUrl?: string
@@ -12,7 +9,7 @@ defineProps<{
 
 <template>
   <div id="playlistCard">
-    <img id="playlistCover" :src="coverUrl || playlistCover">
+    <img id="playlistCover" :src="coverUrl || coverPlaceholder">
     <span>{{ name }}</span>
   </div>
 </template>

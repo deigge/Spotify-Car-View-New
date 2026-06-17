@@ -1,32 +1,53 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import TrackCard from '@/components/TrackCard.vue';
+import type { PlayedSong } from '../../../shared/types/playedSong';
+import { computed } from 'vue';
 
-const tracks = [
-  { id: 1, name: 'Track 1', artist: "undefined", cover: undefined },
-  { id: 2, name: 'Track 2', artist: "undefined", cover: undefined },
-  { id: 3, name: 'Track 3', artist: "undefined", cover: undefined },
-  { id: 4, name: 'Track 1', artist: "undefined", cover: undefined },
-  { id: 5, name: 'Track 2', artist: "undefined", cover: undefined },
-  { id: 6, name: 'Track 3', artist: "undefined", cover: undefined },
-  { id: 7, name: 'Track 1', artist: "undefined", cover: undefined },
-  { id: 8, name: 'Track 2', artist: "undefined", cover: undefined },
-  { id: 9, name: 'Track 3', artist: "undefined", cover: undefined },
-  { id: 10, name: 'Track 1', artist: "undefined", cover: undefined },
-  { id: 11, name: 'Track 2', artist: "undefined", cover: undefined },
-  { id: 12, name: 'Track 3', artist: "undefined", cover: undefined },
-]
+const tracks = ref<PlayedSong[]>([]);
+
+onMounted(async () => {
+    const res = await fetch('/api/history');
+    tracks.value = await res.json();
+});
+
+const groupedTracks = computed(() => {
+  const groups: Record<string, PlayedSong[]> = {};
+
+  for (const track of tracks.value) {
+    const date = new Date(track.playedAt).toLocaleDateString('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+  });
+
+  if (!groups[date]) groups[date] = [];
+    groups[date].push(track);
+  }
+
+  return groups;
+});
 </script>
 
 <template>
   <div id="history-view">
     <h1 class="safe-top">History</h1>
-    <TrackCard
-      v-for="track in tracks"
-      :key="track.id"
-      :title="track.name"
-      :artist="track.artist"
-      :cover-url="track.cover"
-    />
+    <div v-for="(songs, date) in groupedTracks" :key="date">
+      <div id="date-header">
+        <hr>
+        <h2>{{ date }}</h2>
+        <hr>
+      </div>
+
+      <TrackCard
+        v-for="track in songs"
+        :key="track._id"
+        :title="track.name"
+        :artist="track.artists.join(', ')"
+        :cover-url="track.albumCovers.at(-1)?.url"
+        :spotify-url="track.spotifyUrl"
+      />
+    </div>
   </div>
 </template>
 
@@ -41,5 +62,12 @@ h1 {
   font-size: 1.2rem;
   display: block;
   text-align: center;
+}
+
+#date-header {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 2rem;
+  font-size: 1.1rem;
 }
 </style>

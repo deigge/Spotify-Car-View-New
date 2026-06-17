@@ -6,24 +6,16 @@ import path from 'path'
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser'
 import authRouter from './routes/auth.js'
+import apiRouter from './routes/api.js'
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
 app.use('/auth', authRouter)
+app.use('/api', apiRouter)
 
 mongoose.connect(process.env.MONGO_URL);
-
-// --- API ROUTES ---
-app.get('/api/ping', async (req, res) => {
-  await mongoose.connection.db.admin().ping();
-  res.json({ mongo: 'ok' });
-});
-
-app.get('/api/test', (req, res) => {
-  res.json({ ok: true });
-});
 
 // --- STATIC FILES (nur Prod) ---
 if (process.env.NODE_ENV === 'production') {

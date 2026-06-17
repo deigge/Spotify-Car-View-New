@@ -152,3 +152,14 @@ router.get('/token', async (req, res) => {
 })
 
 export default router;
+
+export async function getUser(req, res, next) {
+    const sessionId = req.cookies.sessionId;
+    if (!sessionId) return res.status(401).json({ error: 'nicht eingeloggt' });
+    
+    const user = await User.findOne({ 'sessions.sessionId': sessionId });
+    if (!user) return res.status(401).json({ error: 'Session ungültig' });
+    
+    req.user = user;
+    next();
+}

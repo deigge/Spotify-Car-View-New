@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 
+const base_url = 'https://api.spotify.com/v1/'
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     accessToken: null as string | null,
@@ -21,7 +23,6 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async spotifyFetch(url: string) {
-      const base_url = 'https://api.spotify.com'
       let res = await fetch(base_url + url, {
         headers: { 'Authorization': 'Bearer ' + this.accessToken }
       })
@@ -34,6 +35,34 @@ export const useAuthStore = defineStore('auth', {
       }
 
       return res.json();
+    },
+
+    async spotifyRequest(method: 'PUT' | 'POST', url: string, body?: object) {
+    const doRequest = () => fetch(base_url + url, {
+        method,
+        headers: {
+            'Authorization': 'Bearer ' + this.accessToken,
+            'Content-Type': 'application/json'
+        },
+        body: body ? JSON.stringify(body) : undefined
+    });
+
+    let res = await doRequest();
+
+    if (res.status === 401) {
+        await this.fetchToken()
+        res = await doRequest();
+    }
+
+    return res.status !== 204 ? res.json() : null;
+    },
+
+    async spotifyPut(url: string, body?: object) {
+      return this.spotifyRequest('PUT', url, body);
+    },
+
+    async spotifyPost(url: string, body?: object) {
+      return this.spotifyRequest('POST', url, body);
     }
   }
 })

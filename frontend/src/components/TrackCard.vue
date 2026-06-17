@@ -1,28 +1,41 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
   import coverPlaceholder from '@/assets/img/album_cover_placeholder.png'
-import IconButton from './IconButton.vue';
-import ShareIcon from './icons/shareIcon.vue';
-import HeartIcon from './icons/heartIcon.vue';
+  import IconButton from './IconButton.vue';
+  import ShareIcon from './icons/shareIcon.vue';
+  import HeartIcon from './icons/heartIcon.vue';
 
   const props = defineProps<{
     title: string
     artist: string
+    spotifyUrl: string
     coverUrl?: string
     }>()
 
-const trackCover = ref(coverPlaceholder)
+async function share() {
+  if (!props.spotifyUrl) return;
+
+  if (navigator.share) {
+    await navigator.share({
+      title: props.title,
+      text: `${props.title} - ${props.artist}`,
+      url: props.spotifyUrl
+    });
+  } else {
+    // Fallback
+    await navigator.clipboard.writeText(props.spotifyUrl);
+  }
+}
 </script>
 
 <template>
   <div id="trackCard">
-    <img id="trackCover" :src="coverUrl || trackCover">
+    <img id="trackCover" :src="coverUrl || coverPlaceholder">
     <div id="trackInfo">
       <span id="title">{{ props.title }}</span>
       <span id="artist">{{ props.artist }}</span>
     </div>
     <div id="buttons">
-      <IconButton>
+      <IconButton @click="share">
         <ShareIcon/>
       </IconButton>
       <IconButton>

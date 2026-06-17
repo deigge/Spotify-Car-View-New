@@ -4,9 +4,10 @@
     import TrackInfo from '@/components/player/TrackInfo.vue';
     import coverPlaceholder from '@/assets/img/album_cover_placeholder.png';
     import PlayerControls from '@/components/player/PlayerControls.vue';
-    import type { SpotifyPlayer } from '@/types/spotify';
+    import type { SpotifyPlayer } from '../../../shared/types/spotifyPlayer';
 
     import { useAuthStore } from '@/stores/auth';
+import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
 
     const spotifyApi = useAuthStore();
 
@@ -15,6 +16,7 @@
     const playlistName = ref('');
     const albumCover = ref(coverPlaceholder);
     const progress = ref(0);
+    const isPlaying = ref(false);
 
     let interval: number;
     let syncInterval: number;
@@ -24,12 +26,14 @@
 
     onMounted(async () => {
       let currentTrack = await spotifyApi.spotifyFetch(
-        '/v1/me/player'
+        'me/player'
       );
 
       currentTrackId = currentTrack.item.id;
 
       updateTrackDetails(currentTrack);
+
+      isPlaying.value = currentTrack.is_playing;
 
       startProgress = currentTrack.progress_ms;
       const duration = currentTrack.item.duration_ms;
@@ -39,6 +43,7 @@
       progress.value = (startProgress / duration) * 100;
 
       interval = window.setInterval(() => {
+        isPlaying.value = currentTrack.is_playing;
         if (!currentTrack?.is_playing) return;
 
         const elapsed = Date.now() - startTime;
@@ -47,35 +52,41 @@
         const duration = currentTrack.item.duration_ms;
 
         progress.value = (newProgress / duration) * 100;
-      }, 500);
+      }, 1000);
 
 
       syncInterval = window.setInterval(async () => {
-        const updated = await spotifyApi.spotifyFetch('/v1/me/player');
+        const fetchedTrack = await spotifyApi.spotifyFetch('me/player');
 
-        if (!updated?.item) return;
+        if (!fetchedTrack?.item) return;
 
         // 🔥 TRACK CHANGE DETECTED
-        if (updated.item.id !== currentTrackId) {
-          currentTrackId = updated.item.id;
+        if (fetchedTrack.item.id !== currentTrackId) {
+          currentTrackId = fetchedTrack.item.id;
 
-          currentTrack = updated;
+          currentTrack = fetchedTrack;
 
-          await updateTrackDetails(updated);
+          await updateTrackDetails(fetchedTrack);
 
-          startProgress = updated.progress_ms;
+          startProgress = fetchedTrack.progress_ms;
           startTime = Date.now();
 
-          const duration = updated.item.duration_ms;
+          const duration = fetchedTrack.item.duration_ms;
           progress.value = (startProgress / duration) * 100;
+
+          await fetch('/api/addsong', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(currentTrack)
+          });
 
           return;
         }
 
         // 🔄 SAME TRACK → SYNC CORRECTION
-        currentTrack = updated;
+        currentTrack = fetchedTrack;
 
-        startProgress = updated.progress_ms;
+        startProgress = fetchedTrack.progress_ms;
         startTime = Date.now();
 
       }, 4000);
@@ -95,7 +106,7 @@
       switch (currentTrack.context?.type) {
         case 'playlist':
           const id = currentTrack.context.uri.split(':')[2];
-          const playlist = await spotifyApi.spotifyFetch(`/v1/playlists/${id}`);
+          const playlist = await spotifyApi.spotifyFetch(`playlists/${id}`) as SpotifyPlaylist;
           playlistName.value = playlist.name;
           break;
 
@@ -120,7 +131,7 @@
 
     <img id="albumCover" :src="albumCover" />
     <input type="range" min="0" max="100" :value="progress" id="progress-bar" />
-    <PlayerControls />
+    <PlayerControls :isPlaying="isPlaying"/>
   </div>
 </template>
 

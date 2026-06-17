@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import PlaylistCard from '@/components/PlaylistCard.vue'
+  import PlaylistCard from '@/components/PlaylistCard.vue';
+  import { ref, onMounted } from 'vue';
 
-const playlists = [
-  { id: 1, name: 'Playlist 1', cover: undefined },
-  { id: 2, name: 'Playlist 2', cover: undefined },
-  { id: 3, name: 'Playlist 3', cover: undefined },
-  { id: 4, name: 'Playlist 1', cover: undefined },
-  { id: 5, name: 'Playlist 2', cover: undefined },
-  { id: 6, name: 'Playlist 3', cover: undefined },
-  { id: 7, name: 'Playlist 1', cover: undefined },
-  { id: 8, name: 'Playlist 2', cover: undefined },
-  { id: 9, name: 'Playlist 3', cover: undefined },
-]
+  import { useAuthStore } from '@/stores/auth';
+  import type { SpotifyPlaylist ,SpotifyPlaylistsResponse } from '../../../shared/types/spotifyPlaylist';
+
+  const spotifyApi = useAuthStore();
+  const playlists = ref<SpotifyPlaylist[]>([]);
+
+  onMounted(async () => {
+      const data = await spotifyApi.spotifyFetch('me/playlists') as SpotifyPlaylistsResponse;
+      playlists.value = data.items;
+  });
+
 </script>
 
 <template>
@@ -22,7 +23,7 @@ const playlists = [
       <PlaylistCard
         v-for="playlist in playlists"
         :key="playlist.id"
-        :coverUrl="playlist.cover"
+        :coverUrl="playlist.images[1]?.url ?? playlist.images[0]?.url"
         :name="playlist.name"
       />
     </div>
