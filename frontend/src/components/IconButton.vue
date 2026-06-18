@@ -1,11 +1,9 @@
 <script setup lang="ts">
-
-  defineProps<{
-    active?: boolean
-    size?: string
-    disabled?: boolean
-  }>()
-
+defineProps<{
+  active?: boolean;
+  size?: string;
+  disabled?: boolean;
+}>();
 </script>
 
 <template>
@@ -27,7 +25,8 @@
   color: rgb(144, 255, 80);
 }
 
-.icon-btn:hover, .icon-btn:focus-visible {
+.icon-btn:hover,
+.icon-btn:focus-visible {
   color: white;
 }
 

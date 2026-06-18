@@ -2,7 +2,7 @@
 import ExternalLinkIcon from '@/components/icons/externalLinkIcon.vue';
 
 function login() {
-  window.location.href = '/auth/login'
+  window.location.href = '/auth/login';
 }
 </script>
 
@@ -10,7 +10,7 @@ function login() {
   <div id="login">
     <button id="loginButton" @click="login">
       Mit Spotify anmelden
-      <ExternalLinkIcon/>
+      <ExternalLinkIcon />
     </button>
   </div>
 </template>
@@ -44,6 +44,6 @@ function login() {
 }
 
 #loginButton:hover {
-    background-color: var(--accent-color-light);
+  background-color: var(--accent-color-light);
 }
 </style>

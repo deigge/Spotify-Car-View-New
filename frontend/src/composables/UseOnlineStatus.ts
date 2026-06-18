@@ -5,10 +5,10 @@ const isOnline = ref(navigator.onLine);
 
 function updateStatus() {
   isOnline.value = navigator.onLine;
-  if(isOnline.value){
-    showToast("Du bist online", ToastType.Success);
+  if (isOnline.value) {
+    showToast('Du bist online', ToastType.Success);
   } else {
-    showToast("Du bist offline", ToastType.Error);
+    showToast('Du bist offline', ToastType.Error);
   }
 }
 

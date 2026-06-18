@@ -1,19 +1,18 @@
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue';
 
-  const props = defineProps<{
-  title: string
-  artist: string
-  }>()
+const props = defineProps<{
+  title: string;
+  artist: string;
+}>();
 
-  const titleRef = ref<HTMLElement | null>(null)
-  const titleOverflowing = ref(false)
+const titleRef = ref<HTMLElement | null>(null);
+const titleOverflowing = ref(false);
 
-
-  onMounted(() => {
+onMounted(() => {
   if (titleRef.value)
-    titleOverflowing.value = titleRef.value.scrollWidth > titleRef.value.clientWidth
-  })
+    titleOverflowing.value = titleRef.value.scrollWidth > titleRef.value.clientWidth;
+});
 </script>
 
 <template>
@@ -33,8 +32,12 @@
 }
 
 @keyframes scroll {
-  0%   { transform: translateX(100%); }
-  100% { transform: translateX(-150%); }
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-150%);
+  }
 }
 
 .scrolling {

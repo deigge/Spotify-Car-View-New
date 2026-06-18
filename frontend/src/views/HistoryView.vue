@@ -7,8 +7,8 @@ import { computed } from 'vue';
 const tracks = ref<PlayedSong[]>([]);
 
 onMounted(async () => {
-    const res = await fetch('/api/history');
-    tracks.value = await res.json();
+  const res = await fetch('/api/history');
+  tracks.value = await res.json();
 });
 
 const groupedTracks = computed(() => {
@@ -18,10 +18,10 @@ const groupedTracks = computed(() => {
     const date = new Date(track.playedAt).toLocaleDateString('de-DE', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric'
-  });
+      year: 'numeric',
+    });
 
-  if (!groups[date]) groups[date] = [];
+    if (!groups[date]) groups[date] = [];
     groups[date].push(track);
   }
 
@@ -34,9 +34,9 @@ const groupedTracks = computed(() => {
     <h1 class="safe-top">History</h1>
     <div v-for="(songs, date) in groupedTracks" :key="date">
       <div id="date-header">
-        <hr>
+        <hr />
         <h2>{{ date }}</h2>
-        <hr>
+        <hr />
       </div>
 
       <TrackCard

@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
+import { useRoute } from 'vue-router';
 
 import NavButton from './NavButton.vue';
 import HistoryIcon from './icons/historyIcon.vue';
 import HomeIcon from './icons/homeIcon.vue';
 import PlaylistIcon from './icons/playlistIcon.vue';
 
-const route = useRoute()
+const route = useRoute();
 </script>
 
 <template>
   <nav class="bottom-nav">
     <NavButton href="/playlists" :active="route.path === '/playlists'">
-      <PlaylistIcon/>
+      <PlaylistIcon />
     </NavButton>
 
     <NavButton href="/" :active="route.path === '/'">
-      <HomeIcon/>
+      <HomeIcon />
     </NavButton>
 
     <NavButton href="/history" :active="route.path === '/history'">
-      <HistoryIcon/>
+      <HistoryIcon />
     </NavButton>
   </nav>
-  </template>
+</template>
 
 <style lang="css" scoped>
 .bottom-nav {

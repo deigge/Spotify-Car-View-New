@@ -3,7 +3,7 @@ services:
     container_name: spotify-app-backend-dev
     build: ../backend
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - NODE_ENV=development
     env_file:
@@ -21,7 +21,7 @@ services:
     container_name: spotify-app-frontend-dev
     build: ../frontend
     ports:
-      - "5173:5173"
+      - '5173:5173'
     volumes:
       - ../frontend:/app
       - /app/node_modules
@@ -33,7 +33,7 @@ services:
     volumes:
       - mongo-data:/data/db
     ports:
-      - "27017:27017"
+      - '27017:27017'
     networks:
       - app-net
 

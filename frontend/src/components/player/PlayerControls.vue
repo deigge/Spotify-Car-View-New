@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import IconButton from '@/components/IconButton.vue';
+import IconButton from '@/components/IconButton.vue';
 import ArrowsShuffleIcon from '@/components/icons/arrowsShuffleIcon.vue';
 import PlayerPlayIcon from '@/components/icons/playerPlayIcon.vue';
 import PlayerPauseIcon from '../icons/playerPauseIcon.vue';
@@ -13,17 +13,17 @@ import RepeatOffIcon from '../icons/repeatOffIcon.vue';
 const spotifyApi = useAuthStore();
 
 const props = defineProps<{
-  isPlaying: boolean
-  shuffleState: boolean
-  repeatState: string
-  disabled?: boolean
-}>()
+  isPlaying: boolean;
+  shuffleState: boolean;
+  repeatState: string;
+  disabled?: boolean;
+}>();
 
 function togglePlayback() {
-  if(props.isPlaying) {
-    spotifyApi.spotifyPut("me/player/pause");
+  if (props.isPlaying) {
+    spotifyApi.spotifyPut('me/player/pause');
   } else {
-    spotifyApi.spotifyPut("me/player/play");
+    spotifyApi.spotifyPut('me/player/play');
   }
 }
 
@@ -32,11 +32,11 @@ function toggleShuffle() {
 }
 
 function switchRepeatState() {
-  switch(props.repeatState){
-    case "off":
+  switch (props.repeatState) {
+    case 'off':
       spotifyApi.spotifyPut('me/player/repeat?state=context');
       break;
-    case "context":
+    case 'context':
       spotifyApi.spotifyPut('me/player/repeat?state=track');
       break;
     default:
@@ -46,45 +46,54 @@ function switchRepeatState() {
 }
 
 function nextSong() {
-  spotifyApi.spotifyPost("me/player/next");
+  spotifyApi.spotifyPost('me/player/next');
 }
 
 function previousSong() {
-  spotifyApi.spotifyPost("me/player/previous");
+  spotifyApi.spotifyPost('me/player/previous');
 }
 </script>
 
 <template>
   <div class="controls">
-    <IconButton size="2.5rem" :active="shuffleState" :disabled="props.disabled" @click="toggleShuffle">
-      <ArrowsShuffleIcon/>
+    <IconButton
+      size="2.5rem"
+      :active="shuffleState"
+      :disabled="props.disabled"
+      @click="toggleShuffle"
+    >
+      <ArrowsShuffleIcon />
     </IconButton>
 
-    <IconButton size="2.5rem" :active="props.repeatState === 'context' || props.repeatState === 'track'" :disabled="disabled" @click="switchRepeatState">
-      <RepeatIcon v-if="props.repeatState == 'context'"/>
-      <RepeatOnceIcon v-else-if="props.repeatState == 'track'"/>
-      <RepeatOffIcon v-else/>
+    <IconButton
+      size="2.5rem"
+      :active="props.repeatState === 'context' || props.repeatState === 'track'"
+      :disabled="disabled"
+      @click="switchRepeatState"
+    >
+      <RepeatIcon v-if="props.repeatState == 'context'" />
+      <RepeatOnceIcon v-else-if="props.repeatState == 'track'" />
+      <RepeatOffIcon v-else />
     </IconButton>
   </div>
 
   <div class="controls" id="mainControls">
     <IconButton size="3.5rem" :disabled="props.disabled" @click="previousSong">
-      <PlayerSkipBackIcon/>
+      <PlayerSkipBackIcon />
     </IconButton>
 
     <IconButton icon="player-play" size="5rem" :disabled="props.disabled" @click="togglePlayback">
-      <PlayerPauseIcon v-if="props.isPlaying"/>
-      <PlayerPlayIcon v-else/>
+      <PlayerPauseIcon v-if="props.isPlaying" />
+      <PlayerPlayIcon v-else />
     </IconButton>
 
     <IconButton size="3.5rem" :disabled="disabled" @click="nextSong">
-      <PlayerSkipForwardIcon/>
+      <PlayerSkipForwardIcon />
     </IconButton>
   </div>
 </template>
 
 <style lang="css" scoped>
-
 .controls {
   width: 80%;
   display: flex;

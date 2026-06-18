@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
-  active?: boolean
-  size?: string
-  href?: string
-}>()
+  active?: boolean;
+  size?: string;
+  href?: string;
+}>();
 
-
-const router = useRouter()
+const router = useRouter();
 
 function handleClick() {
-  if (props.href) router.push(props.href)
+  if (props.href) router.push(props.href);
 }
 </script>
 
@@ -35,7 +34,8 @@ function handleClick() {
   color: var(--accent-color);
 }
 
-.nav-btn:hover, .nav-btn:focus-visible {
+.nav-btn:hover,
+.nav-btn:focus-visible {
   color: white;
 }
 

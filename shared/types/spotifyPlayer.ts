@@ -3,7 +3,7 @@ export type SpotifyPlayer = {
     id: string;
     name: string;
     artists: {
-      name: string
+      name: string;
     }[];
     album: {
       name: string;
@@ -11,7 +11,7 @@ export type SpotifyPlayer = {
     };
     duration_ms: number;
     external_urls: {
-      spotify: string
+      spotify: string;
     };
   };
   shuffle_state: boolean;

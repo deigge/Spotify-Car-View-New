@@ -1,149 +1,150 @@
 <script setup lang="ts">
-    import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
-    import TrackInfo from '@/components/player/TrackInfo.vue';
-    import coverPlaceholder from '@/assets/img/album_cover_placeholder.png';
-    import PlayerControls from '@/components/player/PlayerControls.vue';
-    import type { SpotifyPlayer } from '../../../shared/types/spotifyPlayer';
+import TrackInfo from '@/components/player/TrackInfo.vue';
+import coverPlaceholder from '@/assets/img/album_cover_placeholder.png';
+import PlayerControls from '@/components/player/PlayerControls.vue';
+import type { SpotifyPlayer } from '../../../shared/types/spotifyPlayer';
 
-    import { useAuthStore } from '@/stores/auth';
-    import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
-    import { useOnlineStatus } from '@/composables/UseOnlineStatus';
+import { useAuthStore } from '@/stores/auth';
+import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
+import { useOnlineStatus } from '@/composables/UseOnlineStatus';
 
-    const { isOnline } = useOnlineStatus();
+const { isOnline } = useOnlineStatus();
 
-    const spotifyApi = useAuthStore();
+const spotifyApi = useAuthStore();
 
-    const trackTitle = ref('');
-    const trackArtist = ref('');
-    const playlistName = ref('');
-    const albumCover = ref(coverPlaceholder);
-    const progress = ref(0);
+const trackTitle = ref('');
+const trackArtist = ref('');
+const playlistName = ref('');
+const albumCover = ref(coverPlaceholder);
+const progress = ref(0);
 
-    const isPlaying = ref(false);
-    const shuffleState = ref(false);
-    const repeatState = ref('');
+const isPlaying = ref(false);
+const shuffleState = ref(false);
+const repeatState = ref('');
 
-    let interval: number;
-    let syncInterval: number;
-    let startTime = 0;
-    let startProgress = 0;
-    let currentTrackId = '';
+let interval: number;
+let syncInterval: number;
+let startTime = 0;
+let startProgress = 0;
+let currentTrackId = '';
 
-    onMounted(async () => {
-      let currentTrack = await spotifyApi.spotifyFetch(
-        'me/player'
-      );
+onMounted(async () => {
+  let currentTrack = await spotifyApi.spotifyFetch('me/player');
 
-      currentTrackId = currentTrack.item.id;
+  currentTrackId = currentTrack.item.id;
 
-      updateTrackDetails(currentTrack);
+  updateTrackDetails(currentTrack);
 
-      updatePlayerControls(currentTrack);
+  updatePlayerControls(currentTrack);
 
-      startProgress = currentTrack.progress_ms;
-      const duration = currentTrack.item.duration_ms;
+  startProgress = currentTrack.progress_ms;
+  const duration = currentTrack.item.duration_ms;
 
+  startTime = Date.now();
+
+  progress.value = (startProgress / duration) * 100;
+
+  interval = window.setInterval(() => {
+    updatePlayerControls(currentTrack);
+    if (!currentTrack?.is_playing) return;
+
+    const elapsed = Date.now() - startTime;
+    const newProgress = startProgress + elapsed;
+
+    const duration = currentTrack.item.duration_ms;
+
+    progress.value = (newProgress / duration) * 100;
+  }, 1000);
+
+  syncInterval = window.setInterval(async () => {
+    const fetchedTrack = await spotifyApi.spotifyFetch('me/player');
+
+    if (!fetchedTrack?.item) return;
+
+    // 🔥 TRACK CHANGE DETECTED
+    if (fetchedTrack.item.id !== currentTrackId) {
+      currentTrackId = fetchedTrack.item.id;
+
+      currentTrack = fetchedTrack;
+
+      await updateTrackDetails(fetchedTrack);
+
+      startProgress = fetchedTrack.progress_ms;
       startTime = Date.now();
 
+      const duration = fetchedTrack.item.duration_ms;
       progress.value = (startProgress / duration) * 100;
 
-      interval = window.setInterval(() => {
-        updatePlayerControls(currentTrack);
-        if (!currentTrack?.is_playing) return;
+      await fetch('/api/addsong', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentTrack),
+      });
 
-        const elapsed = Date.now() - startTime;
-        const newProgress = startProgress + elapsed;
-
-        const duration = currentTrack.item.duration_ms;
-
-        progress.value = (newProgress / duration) * 100;
-      }, 1000);
-
-
-      syncInterval = window.setInterval(async () => {
-        const fetchedTrack = await spotifyApi.spotifyFetch('me/player');
-
-        if (!fetchedTrack?.item) return;
-
-        // 🔥 TRACK CHANGE DETECTED
-        if (fetchedTrack.item.id !== currentTrackId) {
-          currentTrackId = fetchedTrack.item.id;
-
-          currentTrack = fetchedTrack;
-
-          await updateTrackDetails(fetchedTrack);
-
-          startProgress = fetchedTrack.progress_ms;
-          startTime = Date.now();
-
-          const duration = fetchedTrack.item.duration_ms;
-          progress.value = (startProgress / duration) * 100;
-
-          await fetch('/api/addsong', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(currentTrack)
-          });
-
-          return;
-        }
-
-        // 🔄 SAME TRACK → SYNC CORRECTION
-        currentTrack = fetchedTrack;
-
-        startProgress = fetchedTrack.progress_ms;
-        startTime = Date.now();
-
-      }, 2000);
-    });
-
-    onBeforeUnmount(() => {
-      clearInterval(interval);
-      clearInterval(syncInterval);
-    });
-
-    async function updatePlayerControls(currentTrack: SpotifyPlayer){
-      isPlaying.value = currentTrack.is_playing;
-      shuffleState.value = currentTrack.shuffle_state;
-      repeatState.value = currentTrack.repeat_state;
+      return;
     }
 
-    async function updateTrackDetails(currentTrack: SpotifyPlayer){
+    // 🔄 SAME TRACK → SYNC CORRECTION
+    currentTrack = fetchedTrack;
 
-      trackTitle.value = currentTrack.item.name;
-      trackArtist.value = currentTrack.item.artists?.[0]?.name ?? 'Unknown Artist';
-      albumCover.value = currentTrack.item.album?.images?.[0]?.url ?? coverPlaceholder;
+    startProgress = fetchedTrack.progress_ms;
+    startTime = Date.now();
+  }, 2000);
+});
 
-      switch (currentTrack.context?.type) {
-        case 'playlist':
-          const id = currentTrack.context.uri.split(':')[2];
-          const playlist = await spotifyApi.spotifyFetch(`playlists/${id}`) as SpotifyPlaylist;
-          playlistName.value = playlist.name;
-          break;
+onBeforeUnmount(() => {
+  clearInterval(interval);
+  clearInterval(syncInterval);
+});
 
-        case 'album':
-          playlistName.value = currentTrack.item.album.name;
-          break;
+async function updatePlayerControls(currentTrack: SpotifyPlayer) {
+  isPlaying.value = currentTrack.is_playing;
+  shuffleState.value = currentTrack.shuffle_state;
+  repeatState.value = currentTrack.repeat_state;
+}
 
-        case 'artist':
-          playlistName.value = trackArtist.value;
-          break;
+async function updateTrackDetails(currentTrack: SpotifyPlayer) {
+  trackTitle.value = currentTrack.item.name;
+  trackArtist.value = currentTrack.item.artists?.[0]?.name ?? 'Unknown Artist';
+  albumCover.value = currentTrack.item.album?.images?.[0]?.url ?? coverPlaceholder;
 
-        default:
-          playlistName.value = '';
-      }
+  switch (currentTrack.context?.type) {
+    case 'playlist': {
+      const id = currentTrack.context.uri.split(':')[2];
+      const playlist = (await spotifyApi.spotifyFetch(`playlists/${id}`)) as SpotifyPlaylist;
+      playlistName.value = playlist.name;
+      break;
     }
+
+    case 'album':
+      playlistName.value = currentTrack.item.album.name;
+      break;
+
+    case 'artist':
+      playlistName.value = trackArtist.value;
+      break;
+
+    default:
+      playlistName.value = '';
+  }
+}
 </script>
 
 <template>
   <div class="player-view">
     <span class="playlist-name safe-top">{{ playlistName }}</span>
-    <TrackInfo :title="trackTitle" :artist="trackArtist"/>
+    <TrackInfo :title="trackTitle" :artist="trackArtist" />
 
     <img id="albumCover" :src="albumCover" />
     <input type="range" min="0" max="100" :value="progress" id="progress-bar" />
-    <PlayerControls :isPlaying="isPlaying" :shuffleState="shuffleState" :repeatState="repeatState" :disabled="!isOnline"/>
+    <PlayerControls
+      :isPlaying="isPlaying"
+      :shuffleState="shuffleState"
+      :repeatState="repeatState"
+      :disabled="!isOnline"
+    />
   </div>
 </template>
 

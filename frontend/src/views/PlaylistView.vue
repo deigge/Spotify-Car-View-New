@@ -1,21 +1,23 @@
 <script setup lang="ts">
-  import PlaylistCard from '@/components/PlaylistCard.vue';
-  import { ref, onMounted } from 'vue';
+import PlaylistCard from '@/components/PlaylistCard.vue';
+import { ref, onMounted } from 'vue';
 
-  import { useAuthStore } from '@/stores/auth';
-  import type { SpotifyPlaylist ,SpotifyPlaylistsResponse } from '../../../shared/types/spotifyPlaylist';
-  import { useOnlineStatus } from '@/composables/UseOnlineStatus';
+import { useAuthStore } from '@/stores/auth';
+import type {
+  SpotifyPlaylist,
+  SpotifyPlaylistsResponse,
+} from '../../../shared/types/spotifyPlaylist';
+import { useOnlineStatus } from '@/composables/UseOnlineStatus';
 
-  const { isOnline } = useOnlineStatus();
+const { isOnline } = useOnlineStatus();
 
-  const spotifyApi = useAuthStore();
-  const playlists = ref<SpotifyPlaylist[]>([]);
+const spotifyApi = useAuthStore();
+const playlists = ref<SpotifyPlaylist[]>([]);
 
-  onMounted(async () => {
-      const data = await spotifyApi.spotifyFetch('me/playlists') as SpotifyPlaylistsResponse;
-      playlists.value = data.items;
-  });
-
+onMounted(async () => {
+  const data = (await spotifyApi.spotifyFetch('me/playlists')) as SpotifyPlaylistsResponse;
+  playlists.value = data.items;
+});
 </script>
 
 <template>
@@ -36,7 +38,6 @@
 </template>
 
 <style lang="css" scoped>
-
 .playlist-view {
   width: 100%;
   display: flex;
@@ -58,5 +59,4 @@ h1 {
   display: block;
   text-align: center;
 }
-
 </style>

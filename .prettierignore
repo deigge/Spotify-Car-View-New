@@ -1,0 +1,8 @@
+# .prettierignore
+node_modules
+dist
+dev-dist
+build
+*.min.js
+frontend/node_modules
+backend/node_modules

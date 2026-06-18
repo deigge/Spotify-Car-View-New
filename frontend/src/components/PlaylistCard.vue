@@ -7,21 +7,21 @@ const spotifyApi = useAuthStore();
 const router = useRouter();
 
 const props = defineProps<{
-  coverUrl?: string
-  name: string
-  playlistURI: string
-  disabled?: boolean
-}>()
+  coverUrl?: string;
+  name: string;
+  playlistURI: string;
+  disabled?: boolean;
+}>();
 
-function selectPlaylist(){
-  spotifyApi.spotifyPut("me/player/play", { context_uri: props.playlistURI});
-  router.push("/");
+function selectPlaylist() {
+  spotifyApi.spotifyPut('me/player/play', { context_uri: props.playlistURI });
+  router.push('/');
 }
 </script>
 
 <template>
   <button id="playlistCard" @click="selectPlaylist" :disabled="props.disabled">
-    <img id="playlistCover" :src="coverUrl || coverPlaceholder">
+    <img id="playlistCover" :src="coverUrl || coverPlaceholder" />
     <span>{{ name }}</span>
   </button>
 </template>
@@ -38,7 +38,8 @@ function selectPlaylist(){
   cursor: pointer;
 }
 
-#playlistCard:hover, #playlistCard:focus-visible {
+#playlistCard:hover,
+#playlistCard:focus-visible {
   color: white;
 }
 

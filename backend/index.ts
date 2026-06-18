@@ -1,19 +1,19 @@
-import express from 'express'
-import https from 'https'
-import http from 'http'
-import fs from 'fs'
-import path from 'path'
-import mongoose from 'mongoose'
-import cookieParser from 'cookie-parser'
-import authRouter from './routes/auth.js'
-import apiRouter from './routes/api.js'
+import express from 'express';
+import https from 'https';
+import http from 'http';
+import fs from 'fs';
+import path from 'path';
+import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
+import authRouter from './routes/auth.js';
+import apiRouter from './routes/api.js';
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/auth', authRouter)
-app.use('/api', apiRouter)
+app.use('/auth', authRouter);
+app.use('/api', apiRouter);
 
 mongoose.connect(process.env.MONGO_URL);
 
@@ -36,14 +36,15 @@ if (process.env.NODE_ENV === 'production') {
     console.log('HTTPS läuft auf 443');
   });
 
-  http.createServer((req, res) => {
-    const host = req.headers.host?.split(':')[0] ?? 'localhost';
-    res.writeHead(301, { Location: `https://${host}${req.url}` });
-    res.end();
-  }).listen(80, '0.0.0.0', () => {
-    console.log('HTTP → HTTPS Redirect');
-  });
-
+  http
+    .createServer((req, res) => {
+      const host = req.headers.host?.split(':')[0] ?? 'localhost';
+      res.writeHead(301, { Location: `https://${host}${req.url}` });
+      res.end();
+    })
+    .listen(80, '0.0.0.0', () => {
+      console.log('HTTP → HTTPS Redirect');
+    });
 } else {
   app.listen(3000, () => {
     console.log('Backend läuft auf http://localhost:3000');

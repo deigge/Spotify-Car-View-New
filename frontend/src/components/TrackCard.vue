@@ -1,16 +1,16 @@
 <script setup lang="ts">
-  import coverPlaceholder from '@/assets/img/album_cover_placeholder.png'
-  import IconButton from './IconButton.vue';
-  import ShareIcon from './icons/shareIcon.vue';
-  import HeartIcon from './icons/heartIcon.vue';
-  import { showToast, ToastType } from '@/components/ToastComponent.vue';
+import coverPlaceholder from '@/assets/img/album_cover_placeholder.png';
+import IconButton from './IconButton.vue';
+import ShareIcon from './icons/shareIcon.vue';
+import HeartIcon from './icons/heartIcon.vue';
+import { showToast, ToastType } from '@/components/ToastComponent.vue';
 
-  const props = defineProps<{
-    title: string
-    artist: string
-    spotifyUrl: string
-    coverUrl?: string
-    }>()
+const props = defineProps<{
+  title: string;
+  artist: string;
+  spotifyUrl: string;
+  coverUrl?: string;
+}>();
 
 async function share() {
   if (!props.spotifyUrl) return;
@@ -19,7 +19,7 @@ async function share() {
     await navigator.share({
       title: props.title,
       text: `${props.title} - ${props.artist}`,
-      url: props.spotifyUrl
+      url: props.spotifyUrl,
     });
   } else {
     // Fallback
@@ -31,21 +31,21 @@ async function share() {
 
 <template>
   <div id="trackCard">
-    <img id="trackCover" :src="coverUrl || coverPlaceholder">
+    <img id="trackCover" :src="coverUrl || coverPlaceholder" />
     <div id="trackInfo">
       <span id="title">{{ props.title }}</span>
       <span id="artist">{{ props.artist }}</span>
     </div>
     <div id="buttons">
       <IconButton @click="share">
-        <ShareIcon/>
+        <ShareIcon />
       </IconButton>
       <IconButton>
-        <HeartIcon/>
+        <HeartIcon />
       </IconButton>
     </div>
   </div>
-  <hr>
+  <hr />
 </template>
 
 <style lang="css" scoped>
