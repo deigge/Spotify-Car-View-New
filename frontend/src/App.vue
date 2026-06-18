@@ -8,7 +8,7 @@ const route = useRoute()
 
 <template>
   <div class="app">
-    <router-view/>
+    <router-view style="overflow-y: auto; overflow-x: hidden; width: 100%; height: 100%;"/>
     <BottomNavBar v-if="route.path !== '/login'"/>
     <Toast />
   </div>
@@ -19,12 +19,5 @@ const route = useRoute()
   overflow: hidden;
   height: 100dvh;
   width: 100%;
-}
-
-router-view {
-  overflow-y: auto;
-  overflow-x: hidden;
-  width: 100%;
-  height: 100%;
 }
 </style>

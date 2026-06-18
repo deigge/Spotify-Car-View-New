@@ -8,6 +8,9 @@
 
     import { useAuthStore } from '@/stores/auth';
     import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
+    import { useOnlineStatus } from '@/composables/UseOnlineStatus';
+
+    const { isOnline } = useOnlineStatus();
 
     const spotifyApi = useAuthStore();
 
@@ -140,7 +143,7 @@
 
     <img id="albumCover" :src="albumCover" />
     <input type="range" min="0" max="100" :value="progress" id="progress-bar" />
-    <PlayerControls :isPlaying="isPlaying" :shuffleState="shuffleState" :repeatState="repeatState"/>
+    <PlayerControls :isPlaying="isPlaying" :shuffleState="shuffleState" :repeatState="repeatState" :disabled="!isOnline"/>
   </div>
 </template>
 

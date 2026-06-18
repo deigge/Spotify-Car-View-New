@@ -4,6 +4,9 @@
 
   import { useAuthStore } from '@/stores/auth';
   import type { SpotifyPlaylist ,SpotifyPlaylistsResponse } from '../../../shared/types/spotifyPlaylist';
+  import { useOnlineStatus } from '@/composables/UseOnlineStatus';
+
+  const { isOnline } = useOnlineStatus();
 
   const spotifyApi = useAuthStore();
   const playlists = ref<SpotifyPlaylist[]>([]);
@@ -26,6 +29,7 @@
         :coverUrl="playlist.images[1]?.url ?? playlist.images[0]?.url"
         :name="playlist.name"
         :playlistURI="playlist.uri"
+        :disabled="!isOnline"
       />
     </div>
   </div>

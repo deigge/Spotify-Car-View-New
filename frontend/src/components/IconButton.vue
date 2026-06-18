@@ -3,12 +3,13 @@
   defineProps<{
     active?: boolean
     size?: string
+    disabled?: boolean
   }>()
 
 </script>
 
 <template>
-  <button class="icon-btn" :class="{ active }" :style="{ 'font-size': size }">
+  <button class="icon-btn" :class="{ active }" :style="{ 'font-size': size }" :disabled="disabled">
     <slot />
   </button>
 </template>
@@ -32,5 +33,9 @@
 
 .icon-btn:active {
   color: rgb(204, 255, 174);
+}
+
+.icon-btn:disabled {
+  color: #555555;
 }
 </style>

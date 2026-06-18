@@ -16,6 +16,7 @@ const props = defineProps<{
   isPlaying: boolean
   shuffleState: boolean
   repeatState: string
+  disabled?: boolean
 }>()
 
 function togglePlayback() {
@@ -55,11 +56,11 @@ function previousSong() {
 
 <template>
   <div class="controls">
-    <IconButton size="2.5rem" :active="shuffleState" @click="toggleShuffle">
+    <IconButton size="2.5rem" :active="shuffleState" :disabled="props.disabled" @click="toggleShuffle">
       <ArrowsShuffleIcon/>
     </IconButton>
 
-    <IconButton size="2.5rem" :active="props.repeatState === 'context' || props.repeatState === 'track'" @click="switchRepeatState">
+    <IconButton size="2.5rem" :active="props.repeatState === 'context' || props.repeatState === 'track'" :disabled="disabled" @click="switchRepeatState">
       <RepeatIcon v-if="props.repeatState == 'context'"/>
       <RepeatOnceIcon v-else-if="props.repeatState == 'track'"/>
       <RepeatOffIcon v-else/>
@@ -67,16 +68,16 @@ function previousSong() {
   </div>
 
   <div class="controls" id="mainControls">
-    <IconButton size="3.5rem" @click="previousSong">
+    <IconButton size="3.5rem" :disabled="props.disabled" @click="previousSong">
       <PlayerSkipBackIcon/>
     </IconButton>
 
-    <IconButton icon="player-play" size="5rem" @click="togglePlayback">
+    <IconButton icon="player-play" size="5rem" :disabled="props.disabled" @click="togglePlayback">
       <PlayerPauseIcon v-if="props.isPlaying"/>
       <PlayerPlayIcon v-else/>
     </IconButton>
 
-    <IconButton size="3.5rem" @click="nextSong">
+    <IconButton size="3.5rem" :disabled="disabled" @click="nextSong">
       <PlayerSkipForwardIcon/>
     </IconButton>
   </div>

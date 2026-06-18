@@ -10,6 +10,7 @@ const props = defineProps<{
   coverUrl?: string
   name: string
   playlistURI: string
+  disabled?: boolean
 }>()
 
 function selectPlaylist(){
@@ -19,7 +20,7 @@ function selectPlaylist(){
 </script>
 
 <template>
-  <button id="playlistCard" @click="selectPlaylist">
+  <button id="playlistCard" @click="selectPlaylist" :disabled="props.disabled">
     <img id="playlistCover" :src="coverUrl || coverPlaceholder">
     <span>{{ name }}</span>
   </button>
@@ -53,6 +54,12 @@ function selectPlaylist(){
 #playlistCard:active #playlistCover {
   filter: brightness(0.8);
   transform: scale(0.96);
+}
+
+#playlistCard:disabled {
+  filter: grayscale(1);
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 #playlistCover {
