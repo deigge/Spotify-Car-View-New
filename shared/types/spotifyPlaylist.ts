@@ -5,6 +5,7 @@ export type SpotifyPlaylist = {
   external_urls: {
     spotify: string;
   };
+  uri: string;
 };
 
 export type SpotifyPlaylistsResponse = {

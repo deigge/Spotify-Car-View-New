@@ -38,23 +38,26 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async spotifyRequest(method: 'PUT' | 'POST', url: string, body?: object) {
-    const doRequest = () => fetch(base_url + url, {
-        method,
-        headers: {
-            'Authorization': 'Bearer ' + this.accessToken,
-            'Content-Type': 'application/json'
-        },
-        body: body ? JSON.stringify(body) : undefined
-    });
+      const doRequest = () => fetch(base_url + url, {
+          method,
+          headers: {
+              'Authorization': 'Bearer ' + this.accessToken,
+              'Content-Type': 'application/json'
+          },
+          body: body ? JSON.stringify(body) : undefined
+      });
+      let res = await doRequest();
+      if (res.status === 401) {
+          await this.fetchToken()
+          res = await doRequest();
+      }
 
-    let res = await doRequest();
-
-    if (res.status === 401) {
-        await this.fetchToken()
-        res = await doRequest();
-    }
-
-    return res.status !== 204 ? res.json() : null;
+      const text = await res.text();
+      try {
+          return text ? JSON.parse(text) : null;
+      } catch {
+          return null; // Antwort war kein valides JSON, z.B. /shuffle
+      }
     },
 
     async spotifyPut(url: string, body?: object) {

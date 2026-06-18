@@ -1,22 +1,14 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 
-const props = defineProps<{
-  active?: boolean
-  size?: string
-  href?: string
-}>()
+  defineProps<{
+    active?: boolean
+    size?: string
+  }>()
 
-
-const router = useRouter()
-
-function handleClick() {
-  if (props.href) router.push(props.href)
-}
 </script>
 
 <template>
-  <button class="icon-btn" :class="{ active }" :style="{ 'font-size': size }" @click="handleClick">
+  <button class="icon-btn" :class="{ active }" :style="{ 'font-size': size }">
     <slot />
   </button>
 </template>

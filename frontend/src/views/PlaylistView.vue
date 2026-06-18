@@ -25,6 +25,7 @@
         :key="playlist.id"
         :coverUrl="playlist.images[1]?.url ?? playlist.images[0]?.url"
         :name="playlist.name"
+        :playlistURI="playlist.uri"
       />
     </div>
   </div>

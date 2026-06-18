@@ -14,6 +14,8 @@ export type SpotifyPlayer = {
       spotify: string
     };
   };
+  shuffle_state: boolean;
+  repeat_state: string;
   progress_ms: number;
   is_playing: boolean;
   context?: {

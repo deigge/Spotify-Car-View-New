@@ -3,6 +3,7 @@
   import IconButton from './IconButton.vue';
   import ShareIcon from './icons/shareIcon.vue';
   import HeartIcon from './icons/heartIcon.vue';
+  import { showToast, ToastType } from '@/components/ToastComponent.vue';
 
   const props = defineProps<{
     title: string
@@ -23,6 +24,7 @@ async function share() {
   } else {
     // Fallback
     await navigator.clipboard.writeText(props.spotifyUrl);
+    showToast('Link wurde kopiert!', ToastType.Success);
   }
 }
 </script>

@@ -7,11 +7,15 @@ import PlayerSkipBackIcon from '@/components/icons/playerSkipBackIcon.vue';
 import PlayerSkipForwardIcon from '@/components/icons/playerSkipForwardIcon.vue';
 import RepeatIcon from '@/components/icons/repeatIcon.vue';
 import { useAuthStore } from '@/stores/auth';
+import RepeatOnceIcon from '../icons/repeatOnceIcon.vue';
+import RepeatOffIcon from '../icons/repeatOffIcon.vue';
 
 const spotifyApi = useAuthStore();
 
 const props = defineProps<{
-  isPlaying?: boolean
+  isPlaying: boolean
+  shuffleState: boolean
+  repeatState: string
 }>()
 
 function togglePlayback() {
@@ -19,6 +23,24 @@ function togglePlayback() {
     spotifyApi.spotifyPut("me/player/pause");
   } else {
     spotifyApi.spotifyPut("me/player/play");
+  }
+}
+
+function toggleShuffle() {
+  spotifyApi.spotifyPut(`me/player/shuffle?state=${!props.shuffleState}`);
+}
+
+function switchRepeatState() {
+  switch(props.repeatState){
+    case "off":
+      spotifyApi.spotifyPut('me/player/repeat?state=context');
+      break;
+    case "context":
+      spotifyApi.spotifyPut('me/player/repeat?state=track');
+      break;
+    default:
+      spotifyApi.spotifyPut('me/player/repeat?state=off');
+      break;
   }
 }
 
@@ -33,12 +55,14 @@ function previousSong() {
 
 <template>
   <div class="controls">
-    <IconButton size="2.5rem">
+    <IconButton size="2.5rem" :active="shuffleState" @click="toggleShuffle">
       <ArrowsShuffleIcon/>
     </IconButton>
 
-    <IconButton size="2.5rem">
-      <RepeatIcon/>
+    <IconButton size="2.5rem" :active="props.repeatState === 'context' || props.repeatState === 'track'" @click="switchRepeatState">
+      <RepeatIcon v-if="props.repeatState == 'context'"/>
+      <RepeatOnceIcon v-else-if="props.repeatState == 'track'"/>
+      <RepeatOffIcon v-else/>
     </IconButton>
   </div>
 

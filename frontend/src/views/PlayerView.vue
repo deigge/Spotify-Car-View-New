@@ -7,7 +7,7 @@
     import type { SpotifyPlayer } from '../../../shared/types/spotifyPlayer';
 
     import { useAuthStore } from '@/stores/auth';
-import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
+    import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
 
     const spotifyApi = useAuthStore();
 
@@ -16,7 +16,10 @@ import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
     const playlistName = ref('');
     const albumCover = ref(coverPlaceholder);
     const progress = ref(0);
+
     const isPlaying = ref(false);
+    const shuffleState = ref(false);
+    const repeatState = ref('');
 
     let interval: number;
     let syncInterval: number;
@@ -33,7 +36,7 @@ import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
 
       updateTrackDetails(currentTrack);
 
-      isPlaying.value = currentTrack.is_playing;
+      updatePlayerControls(currentTrack);
 
       startProgress = currentTrack.progress_ms;
       const duration = currentTrack.item.duration_ms;
@@ -43,7 +46,7 @@ import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
       progress.value = (startProgress / duration) * 100;
 
       interval = window.setInterval(() => {
-        isPlaying.value = currentTrack.is_playing;
+        updatePlayerControls(currentTrack);
         if (!currentTrack?.is_playing) return;
 
         const elapsed = Date.now() - startTime;
@@ -89,13 +92,19 @@ import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
         startProgress = fetchedTrack.progress_ms;
         startTime = Date.now();
 
-      }, 4000);
+      }, 2000);
     });
 
     onBeforeUnmount(() => {
       clearInterval(interval);
       clearInterval(syncInterval);
     });
+
+    async function updatePlayerControls(currentTrack: SpotifyPlayer){
+      isPlaying.value = currentTrack.is_playing;
+      shuffleState.value = currentTrack.shuffle_state;
+      repeatState.value = currentTrack.repeat_state;
+    }
 
     async function updateTrackDetails(currentTrack: SpotifyPlayer){
 
@@ -131,7 +140,7 @@ import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
 
     <img id="albumCover" :src="albumCover" />
     <input type="range" min="0" max="100" :value="progress" id="progress-bar" />
-    <PlayerControls :isPlaying="isPlaying"/>
+    <PlayerControls :isPlaying="isPlaying" :shuffleState="shuffleState" :repeatState="repeatState"/>
   </div>
 </template>
 
