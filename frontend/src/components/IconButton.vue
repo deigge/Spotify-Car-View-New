@@ -25,8 +25,9 @@ defineProps<{
   color: rgb(144, 255, 80);
 }
 
-.icon-btn:hover,
-.icon-btn:focus-visible {
+.icon-btn:not(.active):hover,
+.icon-btn:not(.active):focus-visible,
+.icon-btn:not(.active):focus {
   color: white;
 }
 

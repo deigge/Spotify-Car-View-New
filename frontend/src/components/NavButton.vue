@@ -34,8 +34,9 @@ function handleClick() {
   color: var(--accent-color);
 }
 
-.nav-btn:hover,
-.nav-btn:focus-visible {
+.nav-btn:not(.active):hover,
+.nav-btn:not(.active):focus-visible,
+.nav-btn:not(.active):focus {
   color: white;
 }
 

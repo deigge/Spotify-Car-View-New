@@ -17,15 +17,23 @@ export default defineConfig({
       },
       manifest: {
         name: 'Spotify Car View',
-        short_name: 'SpotifyCar',
+        short_name: 'Car View',
         description: 'Spotify Steuerung fürs Auto',
-        theme_color: '#000000',
-        background_color: '#000000',
+        theme_color: '#222222',
+        background_color: '#222222',
         display: 'standalone',
         start_url: '/',
+        orientation: 'portrait',
         icons: [
+          { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          {
+            src: 'maskable-icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
         ],
       },
     }),
@@ -39,7 +47,7 @@ export default defineConfig({
     allowedHosts: ['spotify.deigge.net'],
     proxy: {
       '/auth': 'http://backend:3000',
-      '/api': 'http://backend:3000', // "backend" = Servicename im Compose
+      '/api': 'http://backend:3000',
     },
   },
   resolve: {
