@@ -104,7 +104,7 @@ router.get('/callback', async (req, res) => {
     res.cookie('sessionId', sessionId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
     });
 
     res.redirect(app_url!);
