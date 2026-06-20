@@ -12,6 +12,10 @@ export default defineConfig({
     vueDevTools(),
     VitePWA({
       registerType: 'autoUpdate',
+      workbox: {
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/auth/, /^\/api/],
+      },
       devOptions: {
         enabled: true,
       },
