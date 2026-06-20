@@ -40,10 +40,16 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
   if (to.path === '/login') return true;
+
   const auth = useAuthStore();
   const loggedIn = await auth.fetchToken();
-  if (!loggedIn) return '/login';
-  return true;
+
+  if (loggedIn) return true;
+
+  const wasLoggedIn = localStorage.getItem('wasLoggedIn') === 'true';
+  if (wasLoggedIn) return true;
+
+  return '/login';
 });
 
 export default router;

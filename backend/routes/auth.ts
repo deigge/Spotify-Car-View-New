@@ -30,95 +30,100 @@ router.get('/login', function (req, res) {
 });
 
 router.get('/callback', async (req, res) => {
-  const code = req.query.code as string;
-  const error = req.query.error as string;
-  const state = req.query.state as string;
-  const storedState = req.cookies.spotify_state;
+  try {
+    const code = req.query.code as string;
+    const error = req.query.error as string;
+    const state = req.query.state as string;
+    const storedState = req.cookies.spotify_state;
 
-  if (!state || state !== storedState) {
-    return res.redirect(app_url + '/login' + '?error=state_mismatch');
-  }
-
-  res.clearCookie('spotify_state');
-
-  // Nutzer hat abgelehnt
-  if (error) {
-    return res.redirect(app_url + '/login' + '?error=' + error);
-  }
-
-  // Token von Spotify holen
-  const response = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: 'Basic ' + Buffer.from(s_client_id + ':' + s_client_secret).toString('base64'),
-    },
-    body: new URLSearchParams({
-      code,
-      redirect_uri: s_redirect_uri!,
-      grant_type: 'authorization_code',
-    }),
-  });
-
-  const data = await response.json();
-
-  const accessToken = data.access_token;
-  const refreshToken = data.refresh_token;
-
-  const profileRes = await fetch('https://api.spotify.com/v1/me', {
-    headers: { Authorization: 'Bearer ' + accessToken },
-  });
-
-  const profile = await profileRes.json();
-  const spotifyId = profile.id;
-
-  const sessionId = crypto.randomUUID();
-
-  // 1. Erst alte Sessions löschen
-  await User.updateOne(
-    { spotifyId },
-    {
-      $pull: {
-        sessions: {
-          lastUsedAt: { $lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
-        },
-      },
+    if (!state || state !== storedState) {
+      return res.redirect(app_url + '/login?error=state_mismatch');
     }
-  );
 
-  // 2. Dann neue Session + Refresh Token speichern
-  await User.findOneAndUpdate(
-    { spotifyId },
-    {
-      refreshToken: encrypt(refreshToken),
-      $push: {
-        sessions: { sessionId, createdAt: new Date(), lastUsedAt: new Date() },
+    res.clearCookie('spotify_state');
+
+    if (error) {
+      return res.redirect(app_url + '/login?error=' + error);
+    }
+
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization:
+          'Basic ' + Buffer.from(s_client_id + ':' + s_client_secret).toString('base64'),
       },
-    },
-    { upsert: true }
-  );
+      body: new URLSearchParams({
+        code,
+        redirect_uri: s_redirect_uri!,
+        grant_type: 'authorization_code',
+      }),
+    });
 
-  res.cookie('sessionId', sessionId, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-  });
+    const data = await response.json();
 
-  res.redirect(app_url!);
+    if (!response.ok || data.error || !data.access_token) {
+      console.error('Spotify Token Error:', data);
+      return res.redirect(app_url + '/login?error=token_exchange_failed');
+    }
+
+    const accessToken = data.access_token;
+    const refreshToken = data.refresh_token;
+
+    const profileRes = await fetch('https://api.spotify.com/v1/me', {
+      headers: { Authorization: 'Bearer ' + accessToken },
+    });
+    const profile = await profileRes.json();
+
+    if (!profileRes.ok || !profile.id) {
+      console.error('Spotify Profile Error:', profile);
+      return res.redirect(app_url + '/login?error=profile_fetch_failed');
+    }
+
+    const spotifyId = profile.id;
+    const sessionId = crypto.randomUUID();
+
+    await User.updateOne(
+      { spotifyId },
+      {
+        $pull: {
+          sessions: { lastUsedAt: { $lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } },
+        },
+      }
+    );
+
+    await User.findOneAndUpdate(
+      { spotifyId },
+      {
+        refreshToken: encrypt(refreshToken),
+        $push: { sessions: { sessionId, createdAt: new Date(), lastUsedAt: new Date() } },
+      },
+      { upsert: true }
+    );
+
+    res.cookie('sessionId', sessionId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+
+    res.redirect(app_url!);
+  } catch (err) {
+    console.error('Callback Error:', err);
+    res.redirect(app_url + '/login?error=server_error');
+  }
 });
 
 router.get('/token', async (req, res) => {
   const sessionId = req.cookies.sessionId;
   if (!sessionId) return res.status(401).json({ error: 'nicht eingeloggt' });
 
-  // User anhand Session finden
   const user = await User.findOneAndUpdate(
     { 'sessions.sessionId': sessionId },
     { $set: { 'sessions.$.lastUsedAt': new Date() } }
   );
   if (!user) return res.status(401).json({ error: 'Session ungültig' });
 
-  // Neuen Access Token von Spotify holen
   const response = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
@@ -134,7 +139,6 @@ router.get('/token', async (req, res) => {
   const data = await response.json();
 
   if (data.error) {
-    // Refresh Token ungültig → Session löschen
     await User.updateOne(
       { 'sessions.sessionId': sessionId },
       { $pull: { sessions: { sessionId } } }

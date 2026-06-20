@@ -10,16 +10,17 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async fetchToken() {
-      const res = await fetch('/auth/token', {
-        credentials: 'include',
-      });
-
-      if (!res.ok) return false;
-
-      const data = await res.json();
-      this.accessToken = data.accessToken;
-      this.tokenExpiresAt = Date.now() + (data.expiresIn - 60) * 1000;
-      return true;
+      try {
+        const res = await fetch('/auth/token', { credentials: 'include' });
+        if (!res.ok) return false;
+        const data = await res.json();
+        this.accessToken = data.accessToken;
+        this.tokenExpiresAt = Date.now() + (data.expiresIn - 60) * 1000;
+        localStorage.setItem('wasLoggedIn', 'true');
+        return true;
+      } catch {
+        return false;
+      }
     },
 
     async spotifyFetch(url: string) {
