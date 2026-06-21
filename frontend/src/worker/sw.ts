@@ -1,7 +1,7 @@
 import { precacheAndRoute } from 'workbox-precaching';
 
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate, CacheFirst } from 'workbox-strategies';
+import { CacheFirst } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 
 declare let self: ServiceWorkerGlobalScope;
@@ -13,7 +13,7 @@ registerRoute(
   ({ url }) =>
     url.origin === 'https://api.spotify.com' && url.pathname.startsWith('/v1/me/playlists'),
 
-  new StaleWhileRevalidate({
+  new CacheFirst({
     cacheName: 'spotify-playlists',
 
     plugins: [
