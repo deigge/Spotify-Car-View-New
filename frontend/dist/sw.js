@@ -2800,7 +2800,7 @@ var CacheableResponsePlugin = class {
 //#region src/worker/sw.ts
 self.skipWaiting();
 clientsClaim();
-precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"6a0389c0d6af9eebb04a0e733cf82fae","url":"index.html"},{"revision":null,"url":"assets/index-CtPj4pdM.css"},{"revision":null,"url":"assets/index-B-9IXEDB.js"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
+precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"c6cd4a33fd0b921e1af13f2792206f63","url":"index.html"},{"revision":null,"url":"assets/index-DHedUOGA.js"},{"revision":null,"url":"assets/index-De12-HR9.css"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
 registerRoute(new NavigationRoute(createHandlerBoundToURL("/index.html"), { denylist: [/^\/auth/, /^\/api/] }));
 setCatchHandler(async ({ request }) => {
 	if (request.destination === "image") {

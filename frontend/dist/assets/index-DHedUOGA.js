@@ -7789,6 +7789,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 		onMounted(async () => {
 			let currentTrack = await spotifyApi.spotifyFetch("me/player");
 			currentTrackId = currentTrack.item.id;
+			preloadTabData();
 			updateTrackDetails(currentTrack);
 			updatePlayerControls(currentTrack);
 			startProgress = currentTrack.progress_ms;
@@ -7828,6 +7829,10 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			clearInterval(interval);
 			clearInterval(syncInterval);
 		});
+		async function preloadTabData() {
+			spotifyApi.spotifyFetch("me/playlists").catch(() => {});
+			fetch("/api/history").catch(() => {});
+		}
 		async function updatePlayerControls(currentTrack) {
 			isPlaying.value = currentTrack.is_playing;
 			shuffleState.value = currentTrack.shuffle_state;
@@ -7884,7 +7889,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-533a8c58"]]);
+}), [["__scopeId", "data-v-ff22a4a3"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];

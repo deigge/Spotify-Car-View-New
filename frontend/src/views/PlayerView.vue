@@ -35,6 +35,8 @@ onMounted(async () => {
 
   currentTrackId = currentTrack.item.id;
 
+  preloadTabData();
+
   updateTrackDetails(currentTrack);
 
   updatePlayerControls(currentTrack);
@@ -98,6 +100,11 @@ onBeforeUnmount(() => {
   clearInterval(interval);
   clearInterval(syncInterval);
 });
+
+async function preloadTabData() {
+  spotifyApi.spotifyFetch('me/playlists').catch(() => {});
+  fetch('/api/history').catch(() => {});
+}
 
 async function updatePlayerControls(currentTrack: SpotifyPlayer) {
   isPlaying.value = currentTrack.is_playing;
