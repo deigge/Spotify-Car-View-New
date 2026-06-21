@@ -6,6 +6,9 @@ import PlaylistView from '@/views/PlaylistView.vue';
 import HistoryView from '@/views/HistoryView.vue';
 import { useAuthStore } from '@/stores/auth';
 import LoginView from '@/views/LoginView.vue';
+import { useOnlineStatus } from '@/composables/UseOnlineStatus';
+
+const { isOnline } = useOnlineStatus();
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +42,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
+  if (!isOnline) return true;
   if (to.path === '/login') return true;
 
   const auth = useAuthStore();

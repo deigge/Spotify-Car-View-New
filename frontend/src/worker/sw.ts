@@ -1,7 +1,7 @@
-import { precacheAndRoute } from 'workbox-precaching';
+import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 
-import { registerRoute } from 'workbox-routing';
-import { CacheFirst } from 'workbox-strategies';
+import { registerRoute, NavigationRoute } from 'workbox-routing';
+import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 
 declare let self: ServiceWorkerGlobalScope;
@@ -11,11 +11,17 @@ const SPOTIFY_IMAGE_HOSTS = ['i.scdn.co', 'mosaic.scdn.co', 'image-cdn-ak.spotif
 // Pflicht: App Dateien cachen
 precacheAndRoute(self.__WB_MANIFEST);
 
+const handler = createHandlerBoundToURL('/index.html');
+const navigationRoute = new NavigationRoute(handler, {
+  denylist: [/^\/auth/, /^\/api/],
+});
+registerRoute(navigationRoute);
+
 registerRoute(
   ({ url }) =>
     url.origin === 'https://api.spotify.com' && url.pathname.startsWith('/v1/me/playlists'),
 
-  new CacheFirst({
+  new StaleWhileRevalidate({
     cacheName: 'spotify-playlists',
 
     plugins: [
