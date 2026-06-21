@@ -19,6 +19,9 @@ export default defineConfig({
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/auth/, /^\/api/],
       },
+      strategies: 'injectManifest',
+      srcDir: 'src/worker',
+      filename: 'sw.ts',
       devOptions: {
         enabled: true,
       },
