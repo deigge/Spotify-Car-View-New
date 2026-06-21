@@ -28,7 +28,7 @@ registerRoute(
 
   new StaleWhileRevalidate({
     cacheName: 'spotify-playlists',
-
+    matchOptions: { ignoreVary: true },
     plugins: [
       new ExpirationPlugin({
         maxAgeSeconds: 7 * 24 * 60 * 60, // 1 Woche
