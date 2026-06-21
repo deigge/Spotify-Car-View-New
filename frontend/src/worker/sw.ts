@@ -4,6 +4,7 @@ import { registerRoute, NavigationRoute, setCatchHandler } from 'workbox-routing
 import { StaleWhileRevalidate } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { clientsClaim } from 'workbox-core';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 
 declare let self: ServiceWorkerGlobalScope;
 
@@ -49,17 +50,15 @@ registerRoute(
     url.hostname === 'mosaic.scdn.co' ||
     /^image-cdn-\w+\.spotifycdn\.com$/.test(url.hostname),
 
-  async ({ request }) => {
-    const cache = await caches.open('spotify-images');
-    const cached = await cache.match(request);
-
-    const networkUpdate = fetch(request)
-      .then((response) => {
-        cache.put(request, response.clone());
-        return response;
-      })
-      .catch(() => undefined);
-
-    return cached || (await networkUpdate) || Response.error();
-  }
+  new StaleWhileRevalidate({
+    cacheName: 'spotify-images',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200], // 0 = opaque responses!
+      }),
+      new ExpirationPlugin({
+        maxAgeSeconds: 7 * 24 * 60 * 60, // 1 Woche
+      }),
+    ],
+  })
 );

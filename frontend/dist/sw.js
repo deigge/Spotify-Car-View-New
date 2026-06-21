@@ -2587,6 +2587,96 @@ function clientsClaim() {
 	self.addEventListener("activate", () => self.clients.claim());
 }
 //#endregion
+//#region node_modules/workbox-cacheable-response/_version.js
+try {
+	self["workbox:cacheable-response:7.4.0"] && _();
+} catch (e) {}
+//#endregion
+//#region node_modules/workbox-cacheable-response/CacheableResponse.js
+/**
+* This class allows you to set up rules determining what
+* status codes and/or headers need to be present in order for a
+* [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response)
+* to be considered cacheable.
+*
+* @memberof workbox-cacheable-response
+*/
+var CacheableResponse = class {
+	/**
+	* To construct a new CacheableResponse instance you must provide at least
+	* one of the `config` properties.
+	*
+	* If both `statuses` and `headers` are specified, then both conditions must
+	* be met for the `Response` to be considered cacheable.
+	*
+	* @param {Object} config
+	* @param {Array<number>} [config.statuses] One or more status codes that a
+	* `Response` can have and be considered cacheable.
+	* @param {Object<string,string>} [config.headers] A mapping of header names
+	* and expected values that a `Response` can have and be considered cacheable.
+	* If multiple headers are provided, only one needs to be present.
+	*/
+	constructor(config = {}) {
+		this._statuses = config.statuses;
+		this._headers = config.headers;
+	}
+	/**
+	* Checks a response to see whether it's cacheable or not, based on this
+	* object's configuration.
+	*
+	* @param {Response} response The response whose cacheability is being
+	* checked.
+	* @return {boolean} `true` if the `Response` is cacheable, and `false`
+	* otherwise.
+	*/
+	isResponseCacheable(response) {
+		let cacheable = true;
+		if (this._statuses) cacheable = this._statuses.includes(response.status);
+		if (this._headers && cacheable) cacheable = Object.keys(this._headers).some((headerName) => {
+			return response.headers.get(headerName) === this._headers[headerName];
+		});
+		return cacheable;
+	}
+};
+//#endregion
+//#region node_modules/workbox-cacheable-response/CacheableResponsePlugin.js
+/**
+* A class implementing the `cacheWillUpdate` lifecycle callback. This makes it
+* easier to add in cacheability checks to requests made via Workbox's built-in
+* strategies.
+*
+* @memberof workbox-cacheable-response
+*/
+var CacheableResponsePlugin = class {
+	/**
+	* To construct a new CacheableResponsePlugin instance you must provide at
+	* least one of the `config` properties.
+	*
+	* If both `statuses` and `headers` are specified, then both conditions must
+	* be met for the `Response` to be considered cacheable.
+	*
+	* @param {Object} config
+	* @param {Array<number>} [config.statuses] One or more status codes that a
+	* `Response` can have and be considered cacheable.
+	* @param {Object<string,string>} [config.headers] A mapping of header names
+	* and expected values that a `Response` can have and be considered cacheable.
+	* If multiple headers are provided, only one needs to be present.
+	*/
+	constructor(config) {
+		/**
+		* @param {Object} options
+		* @param {Response} options.response
+		* @return {Response|null}
+		* @private
+		*/
+		this.cacheWillUpdate = async ({ response }) => {
+			if (this._cacheableResponse.isResponseCacheable(response)) return response;
+			return null;
+		};
+		this._cacheableResponse = new CacheableResponse(config);
+	}
+};
+//#endregion
 //#region src/worker/sw.ts
 self.skipWaiting();
 clientsClaim();
@@ -2604,13 +2694,8 @@ registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathn
 	matchOptions: { ignoreVary: true },
 	plugins: [new ExpirationPlugin({ maxAgeSeconds: 10080 * 60 })]
 }));
-registerRoute(({ url }) => url.hostname === "i.scdn.co" || url.hostname === "mosaic.scdn.co" || /^image-cdn-\w+\.spotifycdn\.com$/.test(url.hostname), async ({ request }) => {
-	const cache = await caches.open("spotify-images");
-	const cached = await cache.match(request);
-	const networkUpdate = fetch(request).then((response) => {
-		cache.put(request, response.clone());
-		return response;
-	}).catch(() => void 0);
-	return cached || await networkUpdate || Response.error();
-});
+registerRoute(({ url }) => url.hostname === "i.scdn.co" || url.hostname === "mosaic.scdn.co" || /^image-cdn-\w+\.spotifycdn\.com$/.test(url.hostname), new StaleWhileRevalidate({
+	cacheName: "spotify-images",
+	plugins: [new CacheableResponsePlugin({ statuses: [0, 200] }), new ExpirationPlugin({ maxAgeSeconds: 10080 * 60 })]
+}));
 //#endregion
