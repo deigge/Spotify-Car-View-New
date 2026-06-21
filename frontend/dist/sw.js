@@ -1718,6 +1718,26 @@ function createHandlerBoundToURL(url) {
 	return getOrCreatePrecacheController().createHandlerBoundToURL(url);
 }
 //#endregion
+//#region node_modules/workbox-precaching/matchPrecache.js
+/**
+* Helper function that calls
+* {@link PrecacheController#matchPrecache} on the default
+* {@link PrecacheController} instance.
+*
+* If you are creating your own {@link PrecacheController}, then call
+* {@link PrecacheController#matchPrecache} on that instance,
+* instead of using this function.
+*
+* @param {string|Request} request The key (without revisioning parameters)
+* to look up in the precache.
+* @return {Promise<Response|undefined>}
+*
+* @memberof workbox-precaching
+*/
+function matchPrecache(request) {
+	return getOrCreatePrecacheController().matchPrecache(request);
+}
+//#endregion
 //#region node_modules/workbox-precaching/precache.js
 /**
 * Adds items to the precache list, removing any duplicates and
@@ -1883,45 +1903,6 @@ var NavigationRoute = class extends Route {
 function setCatchHandler(handler) {
 	getOrCreateDefaultRouter().setCatchHandler(handler);
 }
-//#endregion
-//#region node_modules/workbox-strategies/CacheFirst.js
-/**
-* An implementation of a [cache-first](https://developer.chrome.com/docs/workbox/caching-strategies-overview/#cache-first-falling-back-to-network)
-* request strategy.
-*
-* A cache first strategy is useful for assets that have been revisioned,
-* such as URLs like `/styles/example.a8f5f1.css`, since they
-* can be cached for long periods of time.
-*
-* If the network request fails, and there is no cache match, this will throw
-* a `WorkboxError` exception.
-*
-* @extends workbox-strategies.Strategy
-* @memberof workbox-strategies
-*/
-var CacheFirst = class extends Strategy {
-	/**
-	* @private
-	* @param {Request|string} request A request to run this strategy for.
-	* @param {workbox-strategies.StrategyHandler} handler The event that
-	*     triggered the request.
-	* @return {Promise<Response>}
-	*/
-	async _handle(request, handler) {
-		let response = await handler.cacheMatch(request);
-		let error = void 0;
-		if (!response) try {
-			response = await handler.fetchAndCachePut(request);
-		} catch (err) {
-			if (err instanceof Error) error = err;
-		}
-		if (!response) throw new WorkboxError("no-response", {
-			url: request.url,
-			error
-		});
-		return response;
-	}
-};
 //#endregion
 //#region node_modules/workbox-strategies/plugins/cacheOkAndOpaquePlugin.js
 var cacheOkAndOpaquePlugin = { 
@@ -2613,7 +2594,7 @@ precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"register
 registerRoute(new NavigationRoute(createHandlerBoundToURL("/index.html"), { denylist: [/^\/auth/, /^\/api/] }));
 setCatchHandler(async ({ request }) => {
 	if (request.destination === "image") {
-		const fallback = await (await caches.open("spotify-images")).match("/album_cover_placeholder.png");
+		const fallback = await matchPrecache("/img/album_cover_placeholder.png");
 		if (fallback) return fallback;
 	}
 	return Response.error();
@@ -2623,11 +2604,13 @@ registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathn
 	matchOptions: { ignoreVary: true },
 	plugins: [new ExpirationPlugin({ maxAgeSeconds: 10080 * 60 })]
 }));
-registerRoute(({ url }) => url.hostname === "i.scdn.co" || url.hostname === "mosaic.scdn.co" || /^image-cdn-\w+\.spotifycdn\.com$/.test(url.hostname), new CacheFirst({
-	cacheName: "spotify-images",
-	plugins: [new ExpirationPlugin({
-		maxEntries: 200,
-		maxAgeSeconds: 720 * 60 * 60
-	})]
-}));
+registerRoute(({ url }) => url.hostname === "i.scdn.co" || url.hostname === "mosaic.scdn.co" || /^image-cdn-\w+\.spotifycdn\.com$/.test(url.hostname), async ({ request }) => {
+	const cache = await caches.open("spotify-images");
+	const cached = await cache.match(request);
+	const networkUpdate = fetch(request).then((response) => {
+		cache.put(request, response.clone());
+		return response;
+	}).catch(() => void 0);
+	return cached || await networkUpdate || Response.error();
+});
 //#endregion

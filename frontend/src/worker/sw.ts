@@ -1,7 +1,7 @@
-import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
+import { precacheAndRoute, createHandlerBoundToURL, matchPrecache } from 'workbox-precaching';
 
 import { registerRoute, NavigationRoute, setCatchHandler } from 'workbox-routing';
-import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
+import { StaleWhileRevalidate } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { clientsClaim } from 'workbox-core';
 
@@ -22,8 +22,7 @@ registerRoute(navigationRoute);
 
 setCatchHandler(async ({ request }) => {
   if (request.destination === 'image') {
-    const cache = await caches.open('spotify-images');
-    const fallback = await cache.match('/album_cover_placeholder.png');
+    const fallback = await matchPrecache('/img/album_cover_placeholder.png');
     if (fallback) return fallback;
   }
   return Response.error();
@@ -50,13 +49,17 @@ registerRoute(
     url.hostname === 'mosaic.scdn.co' ||
     /^image-cdn-\w+\.spotifycdn\.com$/.test(url.hostname),
 
-  new CacheFirst({
-    cacheName: 'spotify-images',
-    plugins: [
-      new ExpirationPlugin({
-        maxEntries: 200,
-        maxAgeSeconds: 30 * 24 * 60 * 60,
-      }),
-    ],
-  })
+  async ({ request }) => {
+    const cache = await caches.open('spotify-images');
+    const cached = await cache.match(request);
+
+    const networkUpdate = fetch(request)
+      .then((response) => {
+        cache.put(request, response.clone());
+        return response;
+      })
+      .catch(() => undefined);
+
+    return cached || (await networkUpdate) || Response.error();
+  }
 );
