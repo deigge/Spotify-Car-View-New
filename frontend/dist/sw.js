@@ -2581,7 +2581,20 @@ var ExpirationPlugin = class {
 	}
 };
 //#endregion
+//#region node_modules/workbox-core/clientsClaim.js
+/**
+* Claim any currently available clients once the service worker
+* becomes active. This is normally used in conjunction with `skipWaiting()`.
+*
+* @memberof workbox-core
+*/
+function clientsClaim() {
+	self.addEventListener("activate", () => self.clients.claim());
+}
+//#endregion
 //#region src/worker/sw.ts
+self.skipWaiting();
+clientsClaim();
 var SPOTIFY_IMAGE_HOSTS = [
 	"i.scdn.co",
 	"mosaic.scdn.co",
