@@ -6,6 +6,8 @@ import { ExpirationPlugin } from 'workbox-expiration';
 
 declare let self: ServiceWorkerGlobalScope;
 
+const SPOTIFY_IMAGE_HOSTS = ['i.scdn.co', 'mosaic.scdn.co', 'image-cdn-ak.spotifycdn.com'];
+
 // Pflicht: App Dateien cachen
 precacheAndRoute(self.__WB_MANIFEST);
 
@@ -25,7 +27,7 @@ registerRoute(
 );
 
 registerRoute(
-  ({ url }) => url.hostname === 'i.scdn.co',
+  ({ url }) => SPOTIFY_IMAGE_HOSTS.includes(url.hostname),
 
   new CacheFirst({
     cacheName: 'spotify-images',

@@ -1822,88 +1822,6 @@ var CacheFirst = class extends Strategy {
 	}
 };
 //#endregion
-//#region node_modules/workbox-strategies/plugins/cacheOkAndOpaquePlugin.js
-var cacheOkAndOpaquePlugin = { 
-/**
-* Returns a valid response (to allow caching) if the status is 200 (OK) or
-* 0 (opaque).
-*
-* @param {Object} options
-* @param {Response} options.response
-* @return {Response|null}
-*
-* @private
-*/
-cacheWillUpdate: async ({ response }) => {
-	if (response.status === 200 || response.status === 0) return response;
-	return null;
-} };
-//#endregion
-//#region node_modules/workbox-strategies/StaleWhileRevalidate.js
-/**
-* An implementation of a
-* [stale-while-revalidate](https://developer.chrome.com/docs/workbox/caching-strategies-overview/#stale-while-revalidate)
-* request strategy.
-*
-* Resources are requested from both the cache and the network in parallel.
-* The strategy will respond with the cached version if available, otherwise
-* wait for the network response. The cache is updated with the network response
-* with each successful request.
-*
-* By default, this strategy will cache responses with a 200 status code as
-* well as [opaque responses](https://developer.chrome.com/docs/workbox/caching-resources-during-runtime/#opaque-responses).
-* Opaque responses are cross-origin requests where the response doesn't
-* support [CORS](https://enable-cors.org/).
-*
-* If the network request fails, and there is no cache match, this will throw
-* a `WorkboxError` exception.
-*
-* @extends workbox-strategies.Strategy
-* @memberof workbox-strategies
-*/
-var StaleWhileRevalidate = class extends Strategy {
-	/**
-	* @param {Object} [options]
-	* @param {string} [options.cacheName] Cache name to store and retrieve
-	* requests. Defaults to cache names provided by
-	* {@link workbox-core.cacheNames}.
-	* @param {Array<Object>} [options.plugins] [Plugins]{@link https://developers.google.com/web/tools/workbox/guides/using-plugins}
-	* to use in conjunction with this caching strategy.
-	* @param {Object} [options.fetchOptions] Values passed along to the
-	* [`init`](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters)
-	* of [non-navigation](https://github.com/GoogleChrome/workbox/issues/1796)
-	* `fetch()` requests made by this strategy.
-	* @param {Object} [options.matchOptions] [`CacheQueryOptions`](https://w3c.github.io/ServiceWorker/#dictdef-cachequeryoptions)
-	*/
-	constructor(options = {}) {
-		super(options);
-		if (!this.plugins.some((p) => "cacheWillUpdate" in p)) this.plugins.unshift(cacheOkAndOpaquePlugin);
-	}
-	/**
-	* @private
-	* @param {Request|string} request A request to run this strategy for.
-	* @param {workbox-strategies.StrategyHandler} handler The event that
-	*     triggered the request.
-	* @return {Promise<Response>}
-	*/
-	async _handle(request, handler) {
-		const fetchAndCachePromise = handler.fetchAndCachePut(request).catch(() => {});
-		handler.waitUntil(fetchAndCachePromise);
-		let response = await handler.cacheMatch(request);
-		let error;
-		if (response) {} else try {
-			response = await fetchAndCachePromise;
-		} catch (err) {
-			if (err instanceof Error) error = err;
-		}
-		if (!response) throw new WorkboxError("no-response", {
-			url: request.url,
-			error
-		});
-		return response;
-	}
-};
-//#endregion
 //#region node_modules/workbox-core/_private/dontWaitFor.js
 /**
 * A helper function that prevents a promise from being flagged as unused.
@@ -2495,12 +2413,17 @@ var ExpirationPlugin = class {
 };
 //#endregion
 //#region src/worker/sw.ts
+var SPOTIFY_IMAGE_HOSTS = [
+	"i.scdn.co",
+	"mosaic.scdn.co",
+	"image-cdn-ak.spotifycdn.com"
+];
 precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"eaa56a933425135269494fce9b2a9b99","url":"index.html"},{"revision":null,"url":"assets/index-CRIJUM-6.js"},{"revision":null,"url":"assets/index-B_A3j3af.css"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
-registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname.startsWith("/v1/me/playlists"), new StaleWhileRevalidate({
+registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname.startsWith("/v1/me/playlists"), new CacheFirst({
 	cacheName: "spotify-playlists",
 	plugins: [new ExpirationPlugin({ maxAgeSeconds: 10080 * 60 })]
 }));
-registerRoute(({ url }) => url.hostname === "i.scdn.co", new CacheFirst({
+registerRoute(({ url }) => SPOTIFY_IMAGE_HOSTS.includes(url.hostname), new CacheFirst({
 	cacheName: "spotify-images",
 	plugins: [new ExpirationPlugin({
 		maxEntries: 200,
