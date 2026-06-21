@@ -1696,6 +1696,28 @@ function addRoute(options) {
 	registerRoute(new PrecacheRoute(getOrCreatePrecacheController(), options));
 }
 //#endregion
+//#region node_modules/workbox-precaching/createHandlerBoundToURL.js
+/**
+* Helper function that calls
+* {@link PrecacheController#createHandlerBoundToURL} on the default
+* {@link PrecacheController} instance.
+*
+* If you are creating your own {@link PrecacheController}, then call the
+* {@link PrecacheController#createHandlerBoundToURL} on that instance,
+* instead of using this function.
+*
+* @param {string} url The precached URL which will be used to lookup the
+* `Response`.
+* @param {boolean} [fallbackToNetwork=true] Whether to attempt to get the
+* response from the network if there's a precache miss.
+* @return {workbox-routing~handlerCallback}
+*
+* @memberof workbox-precaching
+*/
+function createHandlerBoundToURL(url) {
+	return getOrCreatePrecacheController().createHandlerBoundToURL(url);
+}
+//#endregion
 //#region node_modules/workbox-precaching/precache.js
 /**
 * Adds items to the precache list, removing any duplicates and
@@ -1783,6 +1805,71 @@ function precacheAndRoute(entries, options) {
 * @memberof workbox-precaching
 */
 //#endregion
+//#region node_modules/workbox-routing/NavigationRoute.js
+/**
+* NavigationRoute makes it easy to create a
+* {@link workbox-routing.Route} that matches for browser
+* [navigation requests]{@link https://developers.google.com/web/fundamentals/primers/service-workers/high-performance-loading#first_what_are_navigation_requests}.
+*
+* It will only match incoming Requests whose
+* {@link https://fetch.spec.whatwg.org/#concept-request-mode|mode}
+* is set to `navigate`.
+*
+* You can optionally only apply this route to a subset of navigation requests
+* by using one or both of the `denylist` and `allowlist` parameters.
+*
+* @memberof workbox-routing
+* @extends workbox-routing.Route
+*/
+var NavigationRoute = class extends Route {
+	/**
+	* If both `denylist` and `allowlist` are provided, the `denylist` will
+	* take precedence and the request will not match this route.
+	*
+	* The regular expressions in `allowlist` and `denylist`
+	* are matched against the concatenated
+	* [`pathname`]{@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname}
+	* and [`search`]{@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/search}
+	* portions of the requested URL.
+	*
+	* *Note*: These RegExps may be evaluated against every destination URL during
+	* a navigation. Avoid using
+	* [complex RegExps](https://github.com/GoogleChrome/workbox/issues/3077),
+	* or else your users may see delays when navigating your site.
+	*
+	* @param {workbox-routing~handlerCallback} handler A callback
+	* function that returns a Promise resulting in a Response.
+	* @param {Object} options
+	* @param {Array<RegExp>} [options.denylist] If any of these patterns match,
+	* the route will not handle the request (even if a allowlist RegExp matches).
+	* @param {Array<RegExp>} [options.allowlist=[/./]] If any of these patterns
+	* match the URL's pathname and search parameter, the route will handle the
+	* request (assuming the denylist doesn't match).
+	*/
+	constructor(handler, { allowlist = [/./], denylist = [] } = {}) {
+		super((options) => this._match(options), handler);
+		this._allowlist = allowlist;
+		this._denylist = denylist;
+	}
+	/**
+	* Routes match handler.
+	*
+	* @param {Object} options
+	* @param {URL} options.url
+	* @param {Request} options.request
+	* @return {boolean}
+	*
+	* @private
+	*/
+	_match({ url, request }) {
+		if (request && request.mode !== "navigate") return false;
+		const pathnameAndSearch = url.pathname + url.search;
+		for (const regExp of this._denylist) if (regExp.test(pathnameAndSearch)) return false;
+		if (this._allowlist.some((regExp) => regExp.test(pathnameAndSearch))) return true;
+		return false;
+	}
+};
+//#endregion
 //#region node_modules/workbox-strategies/CacheFirst.js
 /**
 * An implementation of a [cache-first](https://developer.chrome.com/docs/workbox/caching-strategies-overview/#cache-first-falling-back-to-network)
@@ -1811,6 +1898,88 @@ var CacheFirst = class extends Strategy {
 		let error = void 0;
 		if (!response) try {
 			response = await handler.fetchAndCachePut(request);
+		} catch (err) {
+			if (err instanceof Error) error = err;
+		}
+		if (!response) throw new WorkboxError("no-response", {
+			url: request.url,
+			error
+		});
+		return response;
+	}
+};
+//#endregion
+//#region node_modules/workbox-strategies/plugins/cacheOkAndOpaquePlugin.js
+var cacheOkAndOpaquePlugin = { 
+/**
+* Returns a valid response (to allow caching) if the status is 200 (OK) or
+* 0 (opaque).
+*
+* @param {Object} options
+* @param {Response} options.response
+* @return {Response|null}
+*
+* @private
+*/
+cacheWillUpdate: async ({ response }) => {
+	if (response.status === 200 || response.status === 0) return response;
+	return null;
+} };
+//#endregion
+//#region node_modules/workbox-strategies/StaleWhileRevalidate.js
+/**
+* An implementation of a
+* [stale-while-revalidate](https://developer.chrome.com/docs/workbox/caching-strategies-overview/#stale-while-revalidate)
+* request strategy.
+*
+* Resources are requested from both the cache and the network in parallel.
+* The strategy will respond with the cached version if available, otherwise
+* wait for the network response. The cache is updated with the network response
+* with each successful request.
+*
+* By default, this strategy will cache responses with a 200 status code as
+* well as [opaque responses](https://developer.chrome.com/docs/workbox/caching-resources-during-runtime/#opaque-responses).
+* Opaque responses are cross-origin requests where the response doesn't
+* support [CORS](https://enable-cors.org/).
+*
+* If the network request fails, and there is no cache match, this will throw
+* a `WorkboxError` exception.
+*
+* @extends workbox-strategies.Strategy
+* @memberof workbox-strategies
+*/
+var StaleWhileRevalidate = class extends Strategy {
+	/**
+	* @param {Object} [options]
+	* @param {string} [options.cacheName] Cache name to store and retrieve
+	* requests. Defaults to cache names provided by
+	* {@link workbox-core.cacheNames}.
+	* @param {Array<Object>} [options.plugins] [Plugins]{@link https://developers.google.com/web/tools/workbox/guides/using-plugins}
+	* to use in conjunction with this caching strategy.
+	* @param {Object} [options.fetchOptions] Values passed along to the
+	* [`init`](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters)
+	* of [non-navigation](https://github.com/GoogleChrome/workbox/issues/1796)
+	* `fetch()` requests made by this strategy.
+	* @param {Object} [options.matchOptions] [`CacheQueryOptions`](https://w3c.github.io/ServiceWorker/#dictdef-cachequeryoptions)
+	*/
+	constructor(options = {}) {
+		super(options);
+		if (!this.plugins.some((p) => "cacheWillUpdate" in p)) this.plugins.unshift(cacheOkAndOpaquePlugin);
+	}
+	/**
+	* @private
+	* @param {Request|string} request A request to run this strategy for.
+	* @param {workbox-strategies.StrategyHandler} handler The event that
+	*     triggered the request.
+	* @return {Promise<Response>}
+	*/
+	async _handle(request, handler) {
+		const fetchAndCachePromise = handler.fetchAndCachePut(request).catch(() => {});
+		handler.waitUntil(fetchAndCachePromise);
+		let response = await handler.cacheMatch(request);
+		let error;
+		if (response) {} else try {
+			response = await fetchAndCachePromise;
 		} catch (err) {
 			if (err instanceof Error) error = err;
 		}
@@ -2418,8 +2587,9 @@ var SPOTIFY_IMAGE_HOSTS = [
 	"mosaic.scdn.co",
 	"image-cdn-ak.spotifycdn.com"
 ];
-precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"eaa56a933425135269494fce9b2a9b99","url":"index.html"},{"revision":null,"url":"assets/index-CRIJUM-6.js"},{"revision":null,"url":"assets/index-B_A3j3af.css"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
-registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname.startsWith("/v1/me/playlists"), new CacheFirst({
+precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"e7e8027b5a84d52c12edcc0e0ce44f45","url":"index.html"},{"revision":null,"url":"assets/index-DnV9nCPw.js"},{"revision":null,"url":"assets/index-B_A3j3af.css"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
+registerRoute(new NavigationRoute(createHandlerBoundToURL("/index.html"), { denylist: [/^\/auth/, /^\/api/] }));
+registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname.startsWith("/v1/me/playlists"), new StaleWhileRevalidate({
 	cacheName: "spotify-playlists",
 	plugins: [new ExpirationPlugin({ maxAgeSeconds: 10080 * 60 })]
 }));

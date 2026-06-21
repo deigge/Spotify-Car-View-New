@@ -7746,16 +7746,16 @@ var PlayerControls_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/
 }), [["__scopeId", "data-v-0621b1be"]]);
 //#endregion
 //#region src/composables/UseOnlineStatus.ts
-var isOnline = /* @__PURE__ */ ref(navigator.onLine);
+var isOnline$1 = /* @__PURE__ */ ref(navigator.onLine);
 function updateStatus() {
-	isOnline.value = navigator.onLine;
-	if (isOnline.value) showToast("Du bist online", ToastType.Success);
+	isOnline$1.value = navigator.onLine;
+	if (isOnline$1.value) showToast("Du bist online", ToastType.Success);
 	else showToast("Du bist offline", ToastType.Error);
 }
 window.addEventListener("online", updateStatus);
 window.addEventListener("offline", updateStatus);
 function useOnlineStatus() {
-	return { isOnline };
+	return { isOnline: isOnline$1 };
 }
 //#endregion
 //#region src/views/PlayerView.vue?vue&type=script&setup=true&lang.ts
@@ -8145,6 +8145,7 @@ var LoginView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 }), [["__scopeId", "data-v-d3e58963"]]);
 //#endregion
 //#region src/router/index.ts
+var { isOnline } = useOnlineStatus();
 var router = createRouter({
 	history: createWebHistory("/"),
 	routes: [
@@ -8176,6 +8177,7 @@ var router = createRouter({
 	]
 });
 router.beforeEach(async (to) => {
+	if (!isOnline) return true;
 	if (to.path === "/login") return true;
 	if (await useAuthStore().fetchToken()) return true;
 	if (localStorage.getItem("wasLoggedIn") === "true") return true;
