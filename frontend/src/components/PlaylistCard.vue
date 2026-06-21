@@ -2,9 +2,11 @@
 import coverPlaceholder from '/album_cover_placeholder.png';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+import { useImageFallback } from '@/composables/UseImageFallback';
 
 const spotifyApi = useAuthStore();
 const router = useRouter();
+const onImageError = useImageFallback(coverPlaceholder);
 
 const props = defineProps<{
   coverUrl?: string;
@@ -21,7 +23,7 @@ function selectPlaylist() {
 
 <template>
   <button id="playlistCard" @click="selectPlaylist" :disabled="props.disabled">
-    <img id="playlistCover" :src="coverUrl || coverPlaceholder" />
+    <img id="playlistCover" :src="coverUrl" @error="onImageError" />
     <span>{{ name }}</span>
   </button>
 </template>

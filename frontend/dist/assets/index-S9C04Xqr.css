@@ -288,7 +288,7 @@ span[data-v-0dafee8e] {
   pointer-events: none;
 }
 
-#playlistCard[data-v-645646b0] {
+#playlistCard[data-v-5b262c1a] {
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -298,31 +298,31 @@ span[data-v-0dafee8e] {
   color: #d1d1d1;
   cursor: pointer;
 }
-#playlistCard[data-v-645646b0]:hover,
-#playlistCard[data-v-645646b0]:focus-visible {
+#playlistCard[data-v-5b262c1a]:hover,
+#playlistCard[data-v-5b262c1a]:focus-visible {
   color: white;
 }
-#playlistCard[data-v-645646b0]:active {
+#playlistCard[data-v-5b262c1a]:active {
   color: rgb(204, 255, 174);
 }
-#playlistCard:hover #playlistCover[data-v-645646b0],
-#playlistCard:focus-visible #playlistCover[data-v-645646b0] {
+#playlistCard:hover #playlistCover[data-v-5b262c1a],
+#playlistCard:focus-visible #playlistCover[data-v-5b262c1a] {
   filter: brightness(1.3);
 }
-#playlistCard:active #playlistCover[data-v-645646b0] {
+#playlistCard:active #playlistCover[data-v-5b262c1a] {
   filter: brightness(0.8);
   transform: scale(0.96);
 }
-#playlistCard[data-v-645646b0]:disabled {
+#playlistCard[data-v-5b262c1a]:disabled {
   filter: grayscale(1);
   opacity: 0.5;
   cursor: not-allowed;
 }
-#playlistCover[data-v-645646b0] {
+#playlistCover[data-v-5b262c1a] {
   border-radius: 2rem;
   width: 95%;
 }
-span[data-v-645646b0] {
+span[data-v-5b262c1a] {
   width: 80%;
   margin-top: 0.5rem;
   white-space: nowrap;

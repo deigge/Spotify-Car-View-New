@@ -7896,6 +7896,16 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 	}
 }), [["__scopeId", "data-v-132d2b92"]]);
 //#endregion
+//#region src/composables/UseImageFallback.ts
+function useImageFallback(fallback) {
+	return (e) => {
+		const img = e.target;
+		if (!img) return;
+		if (img.src === fallback) return;
+		img.src = fallback;
+	};
+}
+//#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];
 var _hoisted_2$3 = ["src"];
@@ -7912,6 +7922,7 @@ var PlaylistCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 	setup(__props) {
 		const spotifyApi = useAuthStore();
 		const router = useRouter();
+		const onImageError = useImageFallback(album_cover_placeholder_default);
 		const props = __props;
 		function selectPlaylist() {
 			spotifyApi.spotifyPut("me/player/play", { context_uri: props.playlistURI });
@@ -7924,11 +7935,12 @@ var PlaylistCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 				disabled: props.disabled
 			}, [createBaseVNode("img", {
 				id: "playlistCover",
-				src: __props.coverUrl || unref("/album_cover_placeholder.png")
-			}, null, 8, _hoisted_2$3), createBaseVNode("span", null, toDisplayString(__props.name), 1)], 8, _hoisted_1$7);
+				src: __props.coverUrl,
+				onError: _cache[0] || (_cache[0] = (...args) => unref(onImageError) && unref(onImageError)(...args))
+			}, null, 40, _hoisted_2$3), createBaseVNode("span", null, toDisplayString(__props.name), 1)], 8, _hoisted_1$7);
 		};
 	}
-}), [["__scopeId", "data-v-645646b0"]]);
+}), [["__scopeId", "data-v-5b262c1a"]]);
 //#endregion
 //#region src/views/PlaylistView.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$6 = { class: "playlist-view" };
