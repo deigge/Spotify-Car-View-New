@@ -23,7 +23,7 @@ registerRoute(navigationRoute);
 setCatchHandler(async ({ request }) => {
   if (request.destination === 'image') {
     const cache = await caches.open('spotify-images');
-    const fallback = await cache.match('/placeholder-cover.png');
+    const fallback = await cache.match('/album_cover_placeholder.png');
     if (fallback) return fallback;
   }
   return Response.error();

@@ -2,7 +2,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 import TrackInfo from '@/components/player/TrackInfo.vue';
-import coverPlaceholder from '@/assets/img/album_cover_placeholder.png';
+import coverPlaceholder from '/album_cover_placeholder.png';
 import PlayerControls from '@/components/player/PlayerControls.vue';
 import type { SpotifyPlayer } from '../../../shared/types/spotifyPlayer';
 

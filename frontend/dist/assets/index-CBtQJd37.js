@@ -6921,8 +6921,8 @@ var TrackInfo_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 	}
 }), [["__scopeId", "data-v-0dafee8e"]]);
 //#endregion
-//#region src/assets/img/album_cover_placeholder.png
-var album_cover_placeholder_default = "/assets/album_cover_placeholder-GArFUbp0.png";
+//#region /album_cover_placeholder.png
+var album_cover_placeholder_default = "/album_cover_placeholder.png";
 //#endregion
 //#region src/components/IconButton.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$18 = ["disabled"];
@@ -7836,7 +7836,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 		async function updateTrackDetails(currentTrack) {
 			trackTitle.value = currentTrack.item.name;
 			trackArtist.value = currentTrack.item.artists?.[0]?.name ?? "Unknown Artist";
-			albumCover.value = currentTrack.item.album?.images?.[0]?.url ?? "/assets/album_cover_placeholder-GArFUbp0.png";
+			albumCover.value = currentTrack.item.album?.images?.[0]?.url ?? "/album_cover_placeholder.png";
 			switch (currentTrack.context?.type) {
 				case "playlist": {
 					const id = currentTrack.context.uri.split(":")[2];
@@ -7884,7 +7884,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-0630b2b1"]]);
+}), [["__scopeId", "data-v-533a8c58"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];
@@ -7914,11 +7914,11 @@ var PlaylistCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 				disabled: props.disabled
 			}, [createBaseVNode("img", {
 				id: "playlistCover",
-				src: __props.coverUrl || unref("/assets/album_cover_placeholder-GArFUbp0.png")
+				src: __props.coverUrl || unref("/album_cover_placeholder.png")
 			}, null, 8, _hoisted_2$3), createBaseVNode("span", null, toDisplayString(__props.name), 1)], 8, _hoisted_1$7);
 		};
 	}
-}), [["__scopeId", "data-v-e349c7b1"]]);
+}), [["__scopeId", "data-v-645646b0"]]);
 //#endregion
 //#region src/views/PlaylistView.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$6 = { class: "playlist-view" };
@@ -8047,7 +8047,7 @@ var TrackCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 			return openBlock(), createElementBlock(Fragment, null, [createBaseVNode("div", _hoisted_1$3, [
 				createBaseVNode("img", {
 					id: "trackCover",
-					src: __props.coverUrl || unref("/assets/album_cover_placeholder-GArFUbp0.png")
+					src: __props.coverUrl || unref("/album_cover_placeholder.png")
 				}, null, 8, _hoisted_2$1),
 				createBaseVNode("div", _hoisted_3, [createBaseVNode("span", _hoisted_4, toDisplayString(props.title), 1), createBaseVNode("span", _hoisted_5, toDisplayString(props.artist), 1)]),
 				createBaseVNode("div", _hoisted_6, [createVNode(IconButton_default, { onClick: share }, {
@@ -8060,7 +8060,7 @@ var TrackCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 			]), _cache[0] || (_cache[0] = createBaseVNode("hr", null, null, -1))], 64);
 		};
 	}
-}), [["__scopeId", "data-v-a2f43d26"]]);
+}), [["__scopeId", "data-v-3e98b2aa"]]);
 //#endregion
 //#region src/views/HistoryView.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$2 = { id: "history-view" };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import coverPlaceholder from '@/assets/img/album_cover_placeholder.png';
+import coverPlaceholder from '/album_cover_placeholder.png';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 
