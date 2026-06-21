@@ -15,17 +15,15 @@ const spotifyApi = useAuthStore();
 const playlists = ref<SpotifyPlaylist[]>([]);
 
 onMounted(async () => {
-  onMounted(async () => {
-    try {
-      const data = (await spotifyApi.spotifyFetch('me/playlists')) as SpotifyPlaylistsResponse;
+  try {
+    const data = (await spotifyApi.spotifyFetch('me/playlists')) as SpotifyPlaylistsResponse;
 
-      if (data?.items) {
-        playlists.value = data.items;
-      }
-    } catch (e) {
-      console.log('offline fallback active');
+    if (data?.items) {
+      playlists.value = data.items;
     }
-  });
+  } catch (e) {
+    console.log('offline fallback active. error: ' + e);
+  }
 });
 </script>
 

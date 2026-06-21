@@ -7929,14 +7929,12 @@ var PlaylistView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 		const spotifyApi = useAuthStore();
 		const playlists = /* @__PURE__ */ ref([]);
 		onMounted(async () => {
-			onMounted(async () => {
-				try {
-					const data = await spotifyApi.spotifyFetch("me/playlists");
-					if (data?.items) playlists.value = data.items;
-				} catch (e) {
-					console.log("offline fallback active");
-				}
-			});
+			try {
+				const data = await spotifyApi.spotifyFetch("me/playlists");
+				if (data?.items) playlists.value = data.items;
+			} catch (e) {
+				console.log("offline fallback active. error: " + e);
+			}
 		});
 		return (_ctx, _cache) => {
 			return openBlock(), createElementBlock("div", _hoisted_1$6, [_cache[0] || (_cache[0] = createBaseVNode("h1", { class: "safe-top" }, "My playlists", -1)), createBaseVNode("div", _hoisted_2$2, [(openBlock(true), createElementBlock(Fragment, null, renderList(playlists.value, (playlist) => {
@@ -7955,7 +7953,7 @@ var PlaylistView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 			}), 128))])]);
 		};
 	}
-}), [["__scopeId", "data-v-6cbaa557"]]);
+}), [["__scopeId", "data-v-ad43ee7a"]]);
 //#endregion
 //#region src/components/icons/shareIcon.vue
 var _sfc_main$2 = {};
