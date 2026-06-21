@@ -2587,7 +2587,7 @@ var SPOTIFY_IMAGE_HOSTS = [
 	"mosaic.scdn.co",
 	"image-cdn-ak.spotifycdn.com"
 ];
-precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"e7e8027b5a84d52c12edcc0e0ce44f45","url":"index.html"},{"revision":null,"url":"assets/index-DnV9nCPw.js"},{"revision":null,"url":"assets/index-B_A3j3af.css"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
+precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"551354860e809160614957b3763691f2","url":"index.html"},{"revision":null,"url":"assets/index-CwmgAPb1.js"},{"revision":null,"url":"assets/index-BwLQON7A.css"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
 registerRoute(new NavigationRoute(createHandlerBoundToURL("/index.html"), { denylist: [/^\/auth/, /^\/api/] }));
 registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname.startsWith("/v1/me/playlists"), new StaleWhileRevalidate({
 	cacheName: "spotify-playlists",
