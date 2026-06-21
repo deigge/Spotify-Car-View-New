@@ -1783,6 +1783,45 @@ function precacheAndRoute(entries, options) {
 * @memberof workbox-precaching
 */
 //#endregion
+//#region node_modules/workbox-strategies/CacheFirst.js
+/**
+* An implementation of a [cache-first](https://developer.chrome.com/docs/workbox/caching-strategies-overview/#cache-first-falling-back-to-network)
+* request strategy.
+*
+* A cache first strategy is useful for assets that have been revisioned,
+* such as URLs like `/styles/example.a8f5f1.css`, since they
+* can be cached for long periods of time.
+*
+* If the network request fails, and there is no cache match, this will throw
+* a `WorkboxError` exception.
+*
+* @extends workbox-strategies.Strategy
+* @memberof workbox-strategies
+*/
+var CacheFirst = class extends Strategy {
+	/**
+	* @private
+	* @param {Request|string} request A request to run this strategy for.
+	* @param {workbox-strategies.StrategyHandler} handler The event that
+	*     triggered the request.
+	* @return {Promise<Response>}
+	*/
+	async _handle(request, handler) {
+		let response = await handler.cacheMatch(request);
+		let error = void 0;
+		if (!response) try {
+			response = await handler.fetchAndCachePut(request);
+		} catch (err) {
+			if (err instanceof Error) error = err;
+		}
+		if (!response) throw new WorkboxError("no-response", {
+			url: request.url,
+			error
+		});
+		return response;
+	}
+};
+//#endregion
 //#region node_modules/workbox-strategies/plugins/cacheOkAndOpaquePlugin.js
 var cacheOkAndOpaquePlugin = { 
 /**
@@ -2456,9 +2495,16 @@ var ExpirationPlugin = class {
 };
 //#endregion
 //#region src/worker/sw.ts
-precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"4990aa3a8daf93ce75ed50ade3d26ede","url":"index.html"},{"revision":null,"url":"assets/index-YOLcolgs.css"},{"revision":null,"url":"assets/index--yPegdLi.js"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
-registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname.includes("/me/playlists"), new StaleWhileRevalidate({
+precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"a19514118584370aef26112bbb2caeaf","url":"index.html"},{"revision":null,"url":"assets/index-BvEBiU2j.js"},{"revision":null,"url":"assets/index-BFR8bpfm.css"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
+registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname.startsWith("/v1/me/playlists"), new StaleWhileRevalidate({
 	cacheName: "spotify-playlists",
 	plugins: [new ExpirationPlugin({ maxAgeSeconds: 10080 * 60 })]
+}));
+registerRoute(({ url }) => url.hostname === "i.scdn.co", new CacheFirst({
+	cacheName: "spotify-images",
+	plugins: [new ExpirationPlugin({
+		maxEntries: 200,
+		maxAgeSeconds: 720 * 60 * 60
+	})]
 }));
 //#endregion
