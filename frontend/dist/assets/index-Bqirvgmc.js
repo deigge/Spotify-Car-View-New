@@ -7789,7 +7789,6 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 		onMounted(async () => {
 			let currentTrack = await spotifyApi.spotifyFetch("me/player");
 			currentTrackId = currentTrack.item.id;
-			preloadTabData();
 			updateTrackDetails(currentTrack);
 			updatePlayerControls(currentTrack);
 			startProgress = currentTrack.progress_ms;
@@ -7824,13 +7823,19 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 				startProgress = fetchedTrack.progress_ms;
 				startTime = Date.now();
 			}, 2e3);
+			requestIdleCallback(() => {
+				preloadTabData();
+			});
 		});
 		onBeforeUnmount(() => {
 			clearInterval(interval);
 			clearInterval(syncInterval);
 		});
 		async function preloadTabData() {
-			spotifyApi.spotifyFetch("me/playlists").catch(() => {});
+			((await spotifyApi.spotifyFetch("me/playlists").catch(() => null))?.items?.map((p) => p.images?.[0]?.url).filter(Boolean) ?? []).slice(0, 10).forEach((url) => {
+				const img = new Image();
+				img.src = url;
+			});
 			fetch("/api/history").catch(() => {});
 		}
 		async function updatePlayerControls(currentTrack) {
@@ -7889,7 +7894,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-ff22a4a3"]]);
+}), [["__scopeId", "data-v-132d2b92"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];

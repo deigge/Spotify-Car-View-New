@@ -7,7 +7,10 @@ import PlayerControls from '@/components/player/PlayerControls.vue';
 import type { SpotifyPlayer } from '../../../shared/types/spotifyPlayer';
 
 import { useAuthStore } from '@/stores/auth';
-import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
+import type {
+  SpotifyPlaylist,
+  SpotifyPlaylistsResponse,
+} from '../../../shared/types/spotifyPlaylist';
 import { useOnlineStatus } from '@/composables/UseOnlineStatus';
 
 const { isOnline } = useOnlineStatus();
@@ -34,8 +37,6 @@ onMounted(async () => {
   let currentTrack = await spotifyApi.spotifyFetch('me/player');
 
   currentTrackId = currentTrack.item.id;
-
-  preloadTabData();
 
   updateTrackDetails(currentTrack);
 
@@ -94,6 +95,10 @@ onMounted(async () => {
     startProgress = fetchedTrack.progress_ms;
     startTime = Date.now();
   }, 2000);
+
+  requestIdleCallback(() => {
+    preloadTabData();
+  });
 });
 
 onBeforeUnmount(() => {
@@ -102,7 +107,15 @@ onBeforeUnmount(() => {
 });
 
 async function preloadTabData() {
-  spotifyApi.spotifyFetch('me/playlists').catch(() => {});
+  const data = await spotifyApi.spotifyFetch('me/playlists').catch(() => null);
+
+  const urls = data?.items?.map((p: SpotifyPlaylist) => p.images?.[0]?.url).filter(Boolean) ?? [];
+
+  urls.slice(0, 10).forEach((url: string) => {
+    const img = new Image();
+    img.src = url;
+  });
+
   fetch('/api/history').catch(() => {});
 }
 
