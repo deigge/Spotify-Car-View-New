@@ -7931,19 +7931,7 @@ var PlaylistView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 		const { isOnline } = useOnlineStatus();
 		const spotifyApi = useAuthStore();
 		const playlists = /* @__PURE__ */ ref([]);
-		async function loadFromCache() {
-			try {
-				const match = await (await caches.open("spotify-playlists")).match("https://api.spotify.com/v1/me/playlists", { ignoreVary: true });
-				if (match) {
-					const data = await match.json();
-					if (data?.items) playlists.value = data.items;
-				}
-			} catch (e) {
-				console.log("cache read failed: " + e);
-			}
-		}
 		onMounted(async () => {
-			await loadFromCache();
 			try {
 				const data = await spotifyApi.spotifyFetch("me/playlists");
 				if (data?.items) playlists.value = data.items;
@@ -7968,7 +7956,7 @@ var PlaylistView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 			}), 128))])]);
 		};
 	}
-}), [["__scopeId", "data-v-f3e1b20f"]]);
+}), [["__scopeId", "data-v-ad43ee7a"]]);
 //#endregion
 //#region src/components/icons/shareIcon.vue
 var _sfc_main$2 = {};

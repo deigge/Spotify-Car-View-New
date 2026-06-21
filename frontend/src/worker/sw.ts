@@ -1,7 +1,7 @@
 import { precacheAndRoute, createHandlerBoundToURL, matchPrecache } from 'workbox-precaching';
 
 import { registerRoute, NavigationRoute, setCatchHandler } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { StaleWhileRevalidate, NetworkFirst } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { clientsClaim } from 'workbox-core';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
@@ -28,6 +28,15 @@ setCatchHandler(async ({ request }) => {
   }
   return Response.error();
 });
+
+registerRoute(
+  ({ url }) => url.pathname === '/api/history',
+
+  new NetworkFirst({
+    cacheName: 'user-history',
+    networkTimeoutSeconds: 5,
+  })
+);
 
 registerRoute(
   ({ url }) =>

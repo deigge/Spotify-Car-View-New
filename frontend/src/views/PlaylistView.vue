@@ -14,24 +14,7 @@ const { isOnline } = useOnlineStatus();
 const spotifyApi = useAuthStore();
 const playlists = ref<SpotifyPlaylist[]>([]);
 
-async function loadFromCache() {
-  try {
-    const cache = await caches.open('spotify-playlists');
-    const match = await cache.match('https://api.spotify.com/v1/me/playlists', {
-      ignoreVary: true,
-    });
-    if (match) {
-      const data = (await match.json()) as SpotifyPlaylistsResponse;
-      if (data?.items) playlists.value = data.items;
-    }
-  } catch (e) {
-    console.log('cache read failed: ' + e);
-  }
-}
-
 onMounted(async () => {
-  await loadFromCache();
-
   try {
     const data = (await spotifyApi.spotifyFetch('me/playlists')) as SpotifyPlaylistsResponse;
 

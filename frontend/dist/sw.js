@@ -1921,6 +1921,126 @@ cacheWillUpdate: async ({ response }) => {
 	return null;
 } };
 //#endregion
+//#region node_modules/workbox-strategies/NetworkFirst.js
+/**
+* An implementation of a
+* [network first](https://developer.chrome.com/docs/workbox/caching-strategies-overview/#network-first-falling-back-to-cache)
+* request strategy.
+*
+* By default, this strategy will cache responses with a 200 status code as
+* well as [opaque responses](https://developer.chrome.com/docs/workbox/caching-resources-during-runtime/#opaque-responses).
+* Opaque responses are are cross-origin requests where the response doesn't
+* support [CORS](https://enable-cors.org/).
+*
+* If the network request fails, and there is no cache match, this will throw
+* a `WorkboxError` exception.
+*
+* @extends workbox-strategies.Strategy
+* @memberof workbox-strategies
+*/
+var NetworkFirst = class extends Strategy {
+	/**
+	* @param {Object} [options]
+	* @param {string} [options.cacheName] Cache name to store and retrieve
+	* requests. Defaults to cache names provided by
+	* {@link workbox-core.cacheNames}.
+	* @param {Array<Object>} [options.plugins] [Plugins]{@link https://developers.google.com/web/tools/workbox/guides/using-plugins}
+	* to use in conjunction with this caching strategy.
+	* @param {Object} [options.fetchOptions] Values passed along to the
+	* [`init`](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters)
+	* of [non-navigation](https://github.com/GoogleChrome/workbox/issues/1796)
+	* `fetch()` requests made by this strategy.
+	* @param {Object} [options.matchOptions] [`CacheQueryOptions`](https://w3c.github.io/ServiceWorker/#dictdef-cachequeryoptions)
+	* @param {number} [options.networkTimeoutSeconds] If set, any network requests
+	* that fail to respond within the timeout will fallback to the cache.
+	*
+	* This option can be used to combat
+	* "[lie-fi]{@link https://developers.google.com/web/fundamentals/performance/poor-connectivity/#lie-fi}"
+	* scenarios.
+	*/
+	constructor(options = {}) {
+		super(options);
+		if (!this.plugins.some((p) => "cacheWillUpdate" in p)) this.plugins.unshift(cacheOkAndOpaquePlugin);
+		this._networkTimeoutSeconds = options.networkTimeoutSeconds || 0;
+	}
+	/**
+	* @private
+	* @param {Request|string} request A request to run this strategy for.
+	* @param {workbox-strategies.StrategyHandler} handler The event that
+	*     triggered the request.
+	* @return {Promise<Response>}
+	*/
+	async _handle(request, handler) {
+		const logs = [];
+		const promises = [];
+		let timeoutId;
+		if (this._networkTimeoutSeconds) {
+			const { id, promise } = this._getTimeoutPromise({
+				request,
+				logs,
+				handler
+			});
+			timeoutId = id;
+			promises.push(promise);
+		}
+		const networkPromise = this._getNetworkPromise({
+			timeoutId,
+			request,
+			logs,
+			handler
+		});
+		promises.push(networkPromise);
+		const response = await handler.waitUntil((async () => {
+			return await handler.waitUntil(Promise.race(promises)) || await networkPromise;
+		})());
+		if (!response) throw new WorkboxError("no-response", { url: request.url });
+		return response;
+	}
+	/**
+	* @param {Object} options
+	* @param {Request} options.request
+	* @param {Array} options.logs A reference to the logs array
+	* @param {Event} options.event
+	* @return {Promise<Response>}
+	*
+	* @private
+	*/
+	_getTimeoutPromise({ request, logs, handler }) {
+		let timeoutId;
+		return {
+			promise: new Promise((resolve) => {
+				const onNetworkTimeout = async () => {
+					resolve(await handler.cacheMatch(request));
+				};
+				timeoutId = setTimeout(onNetworkTimeout, this._networkTimeoutSeconds * 1e3);
+			}),
+			id: timeoutId
+		};
+	}
+	/**
+	* @param {Object} options
+	* @param {number|undefined} options.timeoutId
+	* @param {Request} options.request
+	* @param {Array} options.logs A reference to the logs Array.
+	* @param {Event} options.event
+	* @return {Promise<Response>}
+	*
+	* @private
+	*/
+	async _getNetworkPromise({ timeoutId, request, logs, handler }) {
+		let error;
+		let response;
+		try {
+			response = await handler.fetchAndCachePut(request);
+		} catch (fetchError) {
+			if (fetchError instanceof Error) error = fetchError;
+		}
+		if (timeoutId) clearTimeout(timeoutId);
+		if (error || !response) response = await handler.cacheMatch(request);
+		return response;
+	}
+};
+//#endregion
 //#region node_modules/workbox-strategies/StaleWhileRevalidate.js
 /**
 * An implementation of a
@@ -2680,7 +2800,7 @@ var CacheableResponsePlugin = class {
 //#region src/worker/sw.ts
 self.skipWaiting();
 clientsClaim();
-precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"c07d2137040ecaab73d90e40dff027ec","url":"index.html"},{"revision":null,"url":"assets/index-CBtQJd37.js"},{"revision":null,"url":"assets/index-Bs1ziFVb.css"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
+precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"6a0389c0d6af9eebb04a0e733cf82fae","url":"index.html"},{"revision":null,"url":"assets/index-CtPj4pdM.css"},{"revision":null,"url":"assets/index-B-9IXEDB.js"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
 registerRoute(new NavigationRoute(createHandlerBoundToURL("/index.html"), { denylist: [/^\/auth/, /^\/api/] }));
 setCatchHandler(async ({ request }) => {
 	if (request.destination === "image") {
@@ -2689,6 +2809,10 @@ setCatchHandler(async ({ request }) => {
 	}
 	return Response.error();
 });
+registerRoute(({ url }) => url.pathname === "/api/history", new NetworkFirst({
+	cacheName: "user-history",
+	networkTimeoutSeconds: 5
+}));
 registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname.startsWith("/v1/me/playlists"), new StaleWhileRevalidate({
 	cacheName: "spotify-playlists",
 	matchOptions: { ignoreVary: true },

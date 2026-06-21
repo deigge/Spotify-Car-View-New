@@ -331,20 +331,20 @@ span[data-v-645646b0] {
   text-align: center;
 }
 
-.playlist-view[data-v-f3e1b20f] {
+.playlist-view[data-v-ad43ee7a] {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   max-width: 400px;
 }
-.playlists-grid[data-v-f3e1b20f] {
+.playlists-grid[data-v-ad43ee7a] {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   padding: 1rem;
 }
-h1[data-v-f3e1b20f] {
+h1[data-v-ad43ee7a] {
   margin-top: 1rem;
   font-size: 1.2rem;
   display: block;
