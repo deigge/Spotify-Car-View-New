@@ -42,18 +42,16 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-  if (!isOnline) return true;
   if (to.path === '/login') return true;
 
+  if (!isOnline.value) {
+    // Offline: vertraue dem letzten bekannten Login-Status
+    return localStorage.getItem('wasLoggedIn') === 'true' ? true : '/login';
+  }
+
   const auth = useAuthStore();
-  const loggedIn = await auth.fetchToken();
-
-  if (loggedIn) return true;
-
-  const wasLoggedIn = localStorage.getItem('wasLoggedIn') === 'true';
-  if (wasLoggedIn) return true;
-
-  return '/login';
+  const result = await auth.fetchToken();
+  return result === 'ok' ? true : '/login';
 });
 
 export default router;

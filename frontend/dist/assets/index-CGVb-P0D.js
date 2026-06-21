@@ -7548,14 +7548,17 @@ var useAuthStore = defineStore("auth", {
 		async fetchToken() {
 			try {
 				const res = await fetch("/auth/token", { credentials: "include" });
-				if (!res.ok) return false;
+				if (!res.ok) {
+					localStorage.removeItem("wasLoggedIn");
+					return "unauthorized";
+				}
 				const data = await res.json();
 				this.accessToken = data.accessToken;
 				this.tokenExpiresAt = Date.now() + (data.expiresIn - 60) * 1e3;
 				localStorage.setItem("wasLoggedIn", "true");
-				return true;
+				return "ok";
 			} catch {
-				return false;
+				return "offline";
 			}
 		},
 		async spotifyFetch(url) {
@@ -8189,11 +8192,9 @@ var router = createRouter({
 	]
 });
 router.beforeEach(async (to) => {
-	if (!isOnline) return true;
 	if (to.path === "/login") return true;
-	if (await useAuthStore().fetchToken()) return true;
-	if (localStorage.getItem("wasLoggedIn") === "true") return true;
-	return "/login";
+	if (!isOnline.value) return localStorage.getItem("wasLoggedIn") === "true" ? true : "/login";
+	return await useAuthStore().fetchToken() === "ok" ? true : "/login";
 });
 //#endregion
 //#region src/main.ts

@@ -1,6 +1,6 @@
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 
-import { registerRoute, NavigationRoute } from 'workbox-routing';
+import { registerRoute, NavigationRoute, setCatchHandler } from 'workbox-routing';
 import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { clientsClaim } from 'workbox-core';
@@ -11,8 +11,6 @@ declare let self: ServiceWorkerGlobalScope;
 self.skipWaiting();
 clientsClaim();
 
-const SPOTIFY_IMAGE_HOSTS = ['i.scdn.co', 'mosaic.scdn.co', 'image-cdn-ak.spotifycdn.com'];
-
 // Pflicht: App Dateien cachen
 precacheAndRoute(self.__WB_MANIFEST);
 
@@ -21,6 +19,15 @@ const navigationRoute = new NavigationRoute(handler, {
   denylist: [/^\/auth/, /^\/api/],
 });
 registerRoute(navigationRoute);
+
+setCatchHandler(async ({ request }) => {
+  if (request.destination === 'image') {
+    const cache = await caches.open('spotify-images');
+    const fallback = await cache.match('/placeholder-cover.png');
+    if (fallback) return fallback;
+  }
+  return Response.error();
+});
 
 registerRoute(
   ({ url }) =>
@@ -38,7 +45,10 @@ registerRoute(
 );
 
 registerRoute(
-  ({ url }) => SPOTIFY_IMAGE_HOSTS.includes(url.hostname),
+  ({ url }) =>
+    url.hostname === 'i.scdn.co' ||
+    url.hostname === 'mosaic.scdn.co' ||
+    /^image-cdn-\w+\.spotifycdn\.com$/.test(url.hostname),
 
   new CacheFirst({
     cacheName: 'spotify-images',

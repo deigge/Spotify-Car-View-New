@@ -1870,6 +1870,20 @@ var NavigationRoute = class extends Route {
 	}
 };
 //#endregion
+//#region node_modules/workbox-routing/setCatchHandler.js
+/**
+* If a Route throws an error while handling a request, this `handler`
+* will be called and given a chance to provide a response.
+*
+* @param {workbox-routing~handlerCallback} handler A callback
+* function that returns a Promise resulting in a Response.
+*
+* @memberof workbox-routing
+*/
+function setCatchHandler(handler) {
+	getOrCreateDefaultRouter().setCatchHandler(handler);
+}
+//#endregion
 //#region node_modules/workbox-strategies/CacheFirst.js
 /**
 * An implementation of a [cache-first](https://developer.chrome.com/docs/workbox/caching-strategies-overview/#cache-first-falling-back-to-network)
@@ -2595,19 +2609,21 @@ function clientsClaim() {
 //#region src/worker/sw.ts
 self.skipWaiting();
 clientsClaim();
-var SPOTIFY_IMAGE_HOSTS = [
-	"i.scdn.co",
-	"mosaic.scdn.co",
-	"image-cdn-ak.spotifycdn.com"
-];
-precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"1e1644c3eb430343ea230d6bb22bf97a","url":"index.html"},{"revision":null,"url":"assets/index-CaaFw0yt.js"},{"revision":null,"url":"assets/index-Bv_TOije.css"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
+precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"e062b2afc8e5c632fa77817c0d179155","url":"index.html"},{"revision":null,"url":"assets/index-CGVb-P0D.js"},{"revision":null,"url":"assets/index-Bv_TOije.css"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
 registerRoute(new NavigationRoute(createHandlerBoundToURL("/index.html"), { denylist: [/^\/auth/, /^\/api/] }));
+setCatchHandler(async ({ request }) => {
+	if (request.destination === "image") {
+		const fallback = await (await caches.open("spotify-images")).match("/placeholder-cover.png");
+		if (fallback) return fallback;
+	}
+	return Response.error();
+});
 registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname.startsWith("/v1/me/playlists"), new StaleWhileRevalidate({
 	cacheName: "spotify-playlists",
 	matchOptions: { ignoreVary: true },
 	plugins: [new ExpirationPlugin({ maxAgeSeconds: 10080 * 60 })]
 }));
-registerRoute(({ url }) => SPOTIFY_IMAGE_HOSTS.includes(url.hostname), new CacheFirst({
+registerRoute(({ url }) => url.hostname === "i.scdn.co" || url.hostname === "mosaic.scdn.co" || /^image-cdn-\w+\.spotifycdn\.com$/.test(url.hostname), new CacheFirst({
 	cacheName: "spotify-images",
 	plugins: [new ExpirationPlugin({
 		maxEntries: 200,

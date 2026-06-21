@@ -9,17 +9,22 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   actions: {
-    async fetchToken() {
+    async fetchToken(): Promise<'ok' | 'offline' | 'unauthorized'> {
       try {
         const res = await fetch('/auth/token', { credentials: 'include' });
-        if (!res.ok) return false;
+        if (!res.ok) {
+          // Server hat geantwortet, aber Session ist ungültig (401 o.ä.)
+          localStorage.removeItem('wasLoggedIn');
+          return 'unauthorized';
+        }
         const data = await res.json();
         this.accessToken = data.accessToken;
         this.tokenExpiresAt = Date.now() + (data.expiresIn - 60) * 1000;
         localStorage.setItem('wasLoggedIn', 'true');
-        return true;
+        return 'ok';
       } catch {
-        return false;
+        // Fetch konnte gar nicht erst rausgehen -> wirklich offline
+        return 'offline';
       }
     },
 
