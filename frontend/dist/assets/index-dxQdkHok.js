@@ -7761,6 +7761,16 @@ function useOnlineStatus() {
 	return { isOnline: isOnline$1 };
 }
 //#endregion
+//#region src/composables/UseImageFallback.ts
+function useImageFallback(fallback) {
+	return (e) => {
+		const img = e.target;
+		if (!img) return;
+		if (img.src === fallback) return;
+		img.src = fallback;
+	};
+}
+//#endregion
 //#region src/views/PlayerView.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$8 = { class: "player-view" };
 var _hoisted_2$4 = { class: "playlist-name safe-top" };
@@ -7772,6 +7782,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 	__name: "PlayerView",
 	setup(__props) {
 		const { isOnline } = useOnlineStatus();
+		const onImageError = useImageFallback(album_cover_placeholder_default);
 		const spotifyApi = useAuthStore();
 		const trackTitle = /* @__PURE__ */ ref("");
 		const trackArtist = /* @__PURE__ */ ref("");
@@ -7871,8 +7882,9 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 				}, null, 8, ["title", "artist"]),
 				createBaseVNode("img", {
 					id: "albumCover",
-					src: albumCover.value
-				}, null, 8, _hoisted_3$1),
+					src: albumCover.value,
+					onError: _cache[0] || (_cache[0] = (...args) => unref(onImageError) && unref(onImageError)(...args))
+				}, null, 40, _hoisted_3$1),
 				createBaseVNode("input", {
 					type: "range",
 					min: "0",
@@ -7894,17 +7906,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-132d2b92"]]);
-//#endregion
-//#region src/composables/UseImageFallback.ts
-function useImageFallback(fallback) {
-	return (e) => {
-		const img = e.target;
-		if (!img) return;
-		if (img.src === fallback) return;
-		img.src = fallback;
-	};
-}
+}), [["__scopeId", "data-v-e1e10c12"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];
@@ -8040,6 +8042,7 @@ var TrackCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 		coverUrl: {}
 	},
 	setup(__props) {
+		const onImageError = useImageFallback(album_cover_placeholder_default);
 		const props = __props;
 		async function share() {
 			if (!props.spotifyUrl) return;
@@ -8057,8 +8060,9 @@ var TrackCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 			return openBlock(), createElementBlock(Fragment, null, [createBaseVNode("div", _hoisted_1$3, [
 				createBaseVNode("img", {
 					id: "trackCover",
-					src: __props.coverUrl || unref("/album_cover_placeholder.png")
-				}, null, 8, _hoisted_2$1),
+					src: __props.coverUrl,
+					onError: _cache[0] || (_cache[0] = (...args) => unref(onImageError) && unref(onImageError)(...args))
+				}, null, 40, _hoisted_2$1),
 				createBaseVNode("div", _hoisted_3, [createBaseVNode("span", _hoisted_4, toDisplayString(props.title), 1), createBaseVNode("span", _hoisted_5, toDisplayString(props.artist), 1)]),
 				createBaseVNode("div", _hoisted_6, [createVNode(IconButton_default, { onClick: share }, {
 					default: withCtx(() => [createVNode(shareIcon_default)]),
@@ -8067,10 +8071,10 @@ var TrackCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 					default: withCtx(() => [createVNode(heartIcon_default)]),
 					_: 1
 				})])
-			]), _cache[0] || (_cache[0] = createBaseVNode("hr", null, null, -1))], 64);
+			]), _cache[1] || (_cache[1] = createBaseVNode("hr", null, null, -1))], 64);
 		};
 	}
-}), [["__scopeId", "data-v-3e98b2aa"]]);
+}), [["__scopeId", "data-v-76946704"]]);
 //#endregion
 //#region src/views/HistoryView.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$2 = { id: "history-view" };
@@ -8108,7 +8112,7 @@ var HistoryView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 						key: track._id,
 						title: track.name,
 						artist: track.artists.join(", "),
-						"cover-url": track.albumCovers.at(-1)?.url,
+						"cover-url": track.albumCovers[0]?.url ?? "",
 						"spotify-url": track.spotifyUrl
 					}, null, 8, [
 						"title",
@@ -8120,7 +8124,7 @@ var HistoryView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 			}), 128))]);
 		};
 	}
-}), [["__scopeId", "data-v-ce7ca0dc"]]);
+}), [["__scopeId", "data-v-4181bc58"]]);
 //#endregion
 //#region src/components/icons/externalLinkIcon.vue
 var _sfc_main = {};

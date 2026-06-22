@@ -7,13 +7,12 @@ import PlayerControls from '@/components/player/PlayerControls.vue';
 import type { SpotifyPlayer } from '../../../shared/types/spotifyPlayer';
 
 import { useAuthStore } from '@/stores/auth';
-import type {
-  SpotifyPlaylist,
-  SpotifyPlaylistsResponse,
-} from '../../../shared/types/spotifyPlaylist';
+import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
 import { useOnlineStatus } from '@/composables/UseOnlineStatus';
+import { useImageFallback } from '@/composables/UseImageFallback';
 
 const { isOnline } = useOnlineStatus();
+const onImageError = useImageFallback(coverPlaceholder);
 
 const spotifyApi = useAuthStore();
 
@@ -157,7 +156,7 @@ async function updateTrackDetails(currentTrack: SpotifyPlayer) {
     <span class="playlist-name safe-top">{{ playlistName }}</span>
     <TrackInfo :title="trackTitle" :artist="trackArtist" />
 
-    <img id="albumCover" :src="albumCover" />
+    <img id="albumCover" :src="albumCover" @error="onImageError" />
     <input type="range" min="0" max="100" :value="progress" id="progress-bar" />
     <PlayerControls
       :isPlaying="isPlaying"

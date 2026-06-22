@@ -38,8 +38,15 @@ router.post('/addsong', getUser, async (req, res) => {
 router.get('/history', getUser, async (req, res) => {
   const songs = await PlayedSong.find({ userId: req.user.spotifyId })
     .sort({ playedAt: -1 })
-    .limit(200);
-  res.json(songs);
+    .limit(200)
+    .lean();
+
+  const result = songs.map((song) => ({
+    ...song,
+    albumCovers: song.albumCovers?.length ? [song.albumCovers.at(-1)!] : [],
+  }));
+
+  res.json(result);
 });
 
 export default router;

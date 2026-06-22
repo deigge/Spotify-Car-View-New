@@ -258,7 +258,7 @@ span[data-v-0dafee8e] {
   margin-top: 0.5rem;
 }
 
-.player-view[data-v-132d2b92] {
+.player-view[data-v-e1e10c12] {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -266,7 +266,7 @@ span[data-v-0dafee8e] {
   max-width: 400px;
   padding-bottom: 4rem;
 }
-.playlist-name[data-v-132d2b92] {
+.playlist-name[data-v-e1e10c12] {
   margin-top: 1rem;
   font-size: 1rem;
   display: block;
@@ -275,12 +275,12 @@ span[data-v-0dafee8e] {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#albumCover[data-v-132d2b92] {
+#albumCover[data-v-e1e10c12] {
   margin-top: 1rem;
   width: 70%;
   border-radius: 2rem;
 }
-#progress-bar[data-v-132d2b92] {
+#progress-bar[data-v-e1e10c12] {
   margin-top: 1rem;
   margin-bottom: 1rem;
   accent-color: rgb(144, 255, 80);
@@ -351,20 +351,20 @@ h1[data-v-ad43ee7a] {
   text-align: center;
 }
 
-#trackCard[data-v-3e98b2aa] {
+#trackCard[data-v-76946704] {
   display: flex;
   flex-direction: row;
   min-width: 0;
   gap: 0.75rem;
   padding-right: 1rem;
 }
-#trackInfo[data-v-3e98b2aa] {
+#trackInfo[data-v-76946704] {
   display: flex;
   flex-direction: column;
   min-width: 0;
   justify-content: center;
 }
-#trackCover[data-v-3e98b2aa] {
+#trackCover[data-v-76946704] {
   margin-left: 1rem;
   border-radius: 0.5rem;
   width: 95%;
@@ -375,30 +375,30 @@ h1[data-v-ad43ee7a] {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
-hr[data-v-3e98b2aa] {
+hr[data-v-76946704] {
   border: none;
   border-top: 1px solid #333;
   margin-left: 5%;
   margin-right: 5%;
 }
-#buttons[data-v-3e98b2aa] {
+#buttons[data-v-76946704] {
   margin-left: auto;
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-#history-view[data-v-ce7ca0dc] {
+#history-view[data-v-4181bc58] {
   height: 100%;
   overflow-y: auto;
 }
-h1[data-v-ce7ca0dc] {
+h1[data-v-4181bc58] {
   margin-top: 1rem;
   font-size: 1.2rem;
   display: block;
   text-align: center;
 }
-#date-header[data-v-ce7ca0dc] {
+#date-header[data-v-4181bc58] {
   margin-left: 1rem;
   margin-right: 1rem;
   margin-top: 2rem;

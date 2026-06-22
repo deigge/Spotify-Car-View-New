@@ -4,6 +4,9 @@ import IconButton from './IconButton.vue';
 import ShareIcon from './icons/shareIcon.vue';
 import HeartIcon from './icons/heartIcon.vue';
 import { showToast, ToastType } from '@/components/ToastComponent.vue';
+import { useImageFallback } from '@/composables/UseImageFallback';
+
+const onImageError = useImageFallback(coverPlaceholder);
 
 const props = defineProps<{
   title: string;
@@ -31,7 +34,7 @@ async function share() {
 
 <template>
   <div id="trackCard">
-    <img id="trackCover" :src="coverUrl || coverPlaceholder" />
+    <img id="trackCover" :src="coverUrl" @error="onImageError" />
     <div id="trackInfo">
       <span id="title">{{ props.title }}</span>
       <span id="artist">{{ props.artist }}</span>

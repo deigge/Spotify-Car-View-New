@@ -44,7 +44,7 @@ const groupedTracks = computed(() => {
         :key="track._id"
         :title="track.name"
         :artist="track.artists.join(', ')"
-        :cover-url="track.albumCovers.at(-1)?.url"
+        :cover-url="track.albumCovers[0]?.url ?? ''"
         :spotify-url="track.spotifyUrl"
       />
     </div>
