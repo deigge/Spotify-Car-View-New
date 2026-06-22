@@ -258,7 +258,7 @@ span[data-v-0dafee8e] {
   margin-top: 0.5rem;
 }
 
-.player-view[data-v-e1e10c12] {
+.player-view[data-v-49689fd8] {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -266,7 +266,7 @@ span[data-v-0dafee8e] {
   max-width: 400px;
   padding-bottom: 4rem;
 }
-.playlist-name[data-v-e1e10c12] {
+.playlist-name[data-v-49689fd8] {
   margin-top: 1rem;
   font-size: 1rem;
   display: block;
@@ -275,12 +275,12 @@ span[data-v-0dafee8e] {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#albumCover[data-v-e1e10c12] {
+#albumCover[data-v-49689fd8] {
   margin-top: 1rem;
   width: 70%;
   border-radius: 2rem;
 }
-#progress-bar[data-v-e1e10c12] {
+#progress-bar[data-v-49689fd8] {
   margin-top: 1rem;
   margin-bottom: 1rem;
   accent-color: rgb(144, 255, 80);

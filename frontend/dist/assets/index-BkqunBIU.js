@@ -7843,8 +7843,10 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			clearInterval(syncInterval);
 		});
 		async function preloadTabData() {
-			((await spotifyApi.spotifyFetch("me/playlists").catch(() => null))?.items?.map((p) => p.images?.[0]?.url).filter(Boolean) ?? []).slice(0, 10).forEach((url) => {
+			const data = await spotifyApi.spotifyFetch("me/playlists").catch(() => null);
+			[...new Set(data?.items?.map((p) => p.images?.[0]?.url).filter(Boolean))].forEach((url) => {
 				const img = new Image();
+				img.loading = "lazy";
 				img.src = url;
 			});
 			fetch("/api/history").catch(() => {});
@@ -7906,7 +7908,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-e1e10c12"]]);
+}), [["__scopeId", "data-v-49689fd8"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];

@@ -66,6 +66,7 @@ registerRoute(
         statuses: [0, 200], // 0 = opaque responses!
       }),
       new ExpirationPlugin({
+        maxEntries: 300,
         maxAgeSeconds: 7 * 24 * 60 * 60, // 1 Woche
       }),
     ],

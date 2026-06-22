@@ -108,10 +108,13 @@ onBeforeUnmount(() => {
 async function preloadTabData() {
   const data = await spotifyApi.spotifyFetch('me/playlists').catch(() => null);
 
-  const urls = data?.items?.map((p: SpotifyPlaylist) => p.images?.[0]?.url).filter(Boolean) ?? [];
+  const urls: string[] = [
+    ...new Set(data?.items?.map((p: SpotifyPlaylist) => p.images?.[0]?.url).filter(Boolean)),
+  ] as string[];
 
-  urls.slice(0, 10).forEach((url: string) => {
+  urls.forEach((url: string) => {
     const img = new Image();
+    img.loading = 'lazy';
     img.src = url;
   });
 
