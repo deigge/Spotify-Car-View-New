@@ -18,7 +18,6 @@ export default defineConfig({
       strategies: 'injectManifest',
       injectManifest: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        additionalManifestEntries: [{ url: '/album_cover_placeholder.png', revision: null }],
       },
       srcDir: 'src/worker',
       filename: 'sw.ts',
