@@ -157,8 +157,8 @@ async function updateTrackDetails(currentTrack: SpotifyPlayer) {
   switch (currentTrack.context?.type) {
     case 'playlist': {
       const id = currentTrack.context.uri.split(':')[2];
-      const playlist = (await spotifyApi.spotifyFetch(`playlists/${id}`)) as SpotifyPlaylist;
-      playlistName.value = playlist.name;
+      const playlist = (await spotifyApi.spotifyFetch(`playlists/${id}`)) as SpotifyPlaylist | null;
+      playlistName.value = playlist?.name ?? '';
       break;
     }
 

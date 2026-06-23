@@ -258,7 +258,7 @@ span[data-v-0dafee8e] {
   margin-top: 0.5rem;
 }
 
-.player-view[data-v-ac15695c] {
+.player-view[data-v-66cc4fab] {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -266,7 +266,7 @@ span[data-v-0dafee8e] {
   max-width: 400px;
   padding-bottom: 4rem;
 }
-.playlist-name[data-v-ac15695c] {
+.playlist-name[data-v-66cc4fab] {
   margin-top: 1rem;
   font-size: 1rem;
   display: block;
@@ -275,17 +275,17 @@ span[data-v-0dafee8e] {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.cover-wrapper[data-v-ac15695c] {
+.cover-wrapper[data-v-66cc4fab] {
   position: relative;
   width: 70%;
   margin-top: 1rem;
 }
-#albumCover[data-v-ac15695c] {
+#albumCover[data-v-66cc4fab] {
   width: 100%;
   border-radius: 2rem;
   display: block;
 }
-.offline-overlay[data-v-ac15695c] {
+.offline-overlay[data-v-66cc4fab] {
   position: absolute;
   inset: 0;
   border-radius: 2rem;
@@ -298,11 +298,11 @@ span[data-v-0dafee8e] {
   flex-direction: column;
   gap: 0.5rem;
 }
-.offline-overlay svg[data-v-ac15695c] {
+.offline-overlay svg[data-v-66cc4fab] {
   width: 5rem;
   height: 5rem;
 }
-#progress-bar[data-v-ac15695c] {
+#progress-bar[data-v-66cc4fab] {
   margin-top: 1rem;
   margin-bottom: 1rem;
   accent-color: rgb(144, 255, 80);

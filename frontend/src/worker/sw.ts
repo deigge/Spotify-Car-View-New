@@ -53,6 +53,21 @@ registerRoute(
 
 registerRoute(
   ({ url }) =>
+    url.origin === 'https://api.spotify.com' && url.pathname.startsWith('/v1/playlists/'),
+  new StaleWhileRevalidate({
+    cacheName: 'spotify-playlists',
+    matchOptions: { ignoreVary: true },
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 5,
+        maxAgeSeconds: 7 * 24 * 60 * 60,
+      }),
+    ],
+  })
+);
+
+registerRoute(
+  ({ url }) =>
     url.origin === 'https://api.spotify.com' && url.pathname.startsWith('/v1/me/playlists'),
 
   new StaleWhileRevalidate({

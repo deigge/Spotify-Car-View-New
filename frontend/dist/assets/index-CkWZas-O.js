@@ -7918,7 +7918,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			switch (currentTrack.context?.type) {
 				case "playlist": {
 					const id = currentTrack.context.uri.split(":")[2];
-					playlistName.value = (await spotifyApi.spotifyFetch(`playlists/${id}`)).name;
+					playlistName.value = (await spotifyApi.spotifyFetch(`playlists/${id}`))?.name ?? "";
 					break;
 				}
 				case "album":
@@ -7963,7 +7963,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-ac15695c"]]);
+}), [["__scopeId", "data-v-66cc4fab"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];
