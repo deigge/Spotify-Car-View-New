@@ -15,12 +15,11 @@ export default defineConfig({
     vueDevTools(),
     VitePWA({
       registerType: 'autoUpdate',
-      workbox: {
-        navigateFallback: '/index.html',
-        navigateFallbackDenylist: [/^\/auth/, /^\/api/],
+      strategies: 'injectManifest',
+      injectManifest: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         additionalManifestEntries: [{ url: '/album_cover_placeholder.png', revision: null }],
       },
-      strategies: 'injectManifest',
       srcDir: 'src/worker',
       filename: 'sw.ts',
       devOptions: {
