@@ -7906,7 +7906,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 		async function updateTrackDetails(currentTrack) {
 			trackTitle.value = currentTrack.item.name;
 			trackArtist.value = currentTrack.item.artists?.[0]?.name ?? "Unknown Artist";
-			albumCover.value = currentTrack.item.album?.images?.[0]?.url ?? "/album_cover_placeholder.png";
+			albumCover.value = currentTrack.item.album?.images?.[0]?.url ?? "";
 			switch (currentTrack.context?.type) {
 				case "playlist": {
 					const id = currentTrack.context.uri.split(":")[2];
@@ -7955,7 +7955,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-b8a0125e"]]);
+}), [["__scopeId", "data-v-aee1c8db"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];

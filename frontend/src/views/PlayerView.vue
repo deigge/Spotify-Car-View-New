@@ -147,7 +147,7 @@ async function updatePlayerControls(currentTrack: SpotifyPlayer) {
 async function updateTrackDetails(currentTrack: SpotifyPlayer) {
   trackTitle.value = currentTrack.item.name;
   trackArtist.value = currentTrack.item.artists?.[0]?.name ?? 'Unknown Artist';
-  albumCover.value = currentTrack.item.album?.images?.[0]?.url ?? coverPlaceholder;
+  albumCover.value = currentTrack.item.album?.images?.[0]?.url ?? '';
 
   switch (currentTrack.context?.type) {
     case 'playlist': {
