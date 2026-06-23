@@ -7843,7 +7843,10 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 					startTime = Date.now();
 					progress.value = startProgress / fetchedTrack.item.duration_ms * 100;
 					startIntervals();
-				} else stopIntervals();
+				} else {
+					stopIntervals();
+					console.log("offline → stopping intervals");
+				}
 			}, { immediate: true });
 			requestIdleCallback(() => {
 				preloadTabData();
@@ -7853,6 +7856,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			stopIntervals();
 		});
 		function startIntervals() {
+			console.log("startIntervals called, existing:", progressInterval, syncInterval);
 			if (progressInterval || syncInterval) return;
 			progressInterval = window.setInterval(() => {
 				updatePlayerControls(currentTrack);
@@ -7955,7 +7959,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-aee1c8db"]]);
+}), [["__scopeId", "data-v-6775a13b"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];

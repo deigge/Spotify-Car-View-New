@@ -51,6 +51,7 @@ onMounted(async () => {
         startIntervals();
       } else {
         stopIntervals();
+        console.log('offline → stopping intervals');
       }
     },
     { immediate: true }
@@ -66,6 +67,7 @@ onBeforeUnmount(() => {
 });
 
 function startIntervals() {
+  console.log('startIntervals called, existing:', progressInterval, syncInterval);
   if (progressInterval || syncInterval) return;
   progressInterval = window.setInterval(() => {
     updatePlayerControls(currentTrack);
