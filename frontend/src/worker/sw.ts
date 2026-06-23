@@ -31,7 +31,7 @@ setCatchHandler(async ({ request }) => {
 
 registerRoute(
   ({ url }) => url.origin === 'https://api.spotify.com' && url.pathname === '/v1/me/player',
-  new NetworkFirst({
+  new StaleWhileRevalidate({
     cacheName: 'spotify-player',
     matchOptions: { ignoreVary: true },
     plugins: [

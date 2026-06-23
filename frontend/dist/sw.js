@@ -2809,7 +2809,7 @@ setCatchHandler(async ({ request }) => {
 	}
 	return Response.error();
 });
-registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname === "/v1/me/player", new NetworkFirst({
+registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname === "/v1/me/player", new StaleWhileRevalidate({
 	cacheName: "spotify-player",
 	matchOptions: { ignoreVary: true },
 	plugins: [new ExpirationPlugin({ maxAgeSeconds: 30 })]
