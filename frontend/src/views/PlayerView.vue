@@ -38,17 +38,8 @@ onMounted(async () => {
   watch(
     isOnline,
     async (online) => {
+      await fetchAndUpdateTrack();
       if (online) {
-        const fetchedTrack = await spotifyApi.spotifyFetch('me/player');
-        console.log('fetchedTrack:', fetchedTrack);
-        if (!fetchedTrack?.item) return;
-        currentTrack = fetchedTrack;
-        currentTrackId = fetchedTrack.item.id;
-        updateTrackDetails(fetchedTrack);
-        updatePlayerControls(fetchedTrack);
-        startProgress = fetchedTrack.progress_ms;
-        startTime = Date.now();
-        progress.value = (startProgress / fetchedTrack.item.duration_ms) * 100;
         startIntervals();
       } else {
         stopIntervals();
@@ -65,6 +56,19 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   stopIntervals();
 });
+
+async function fetchAndUpdateTrack() {
+  const fetchedTrack = await spotifyApi.spotifyFetch('me/player');
+  console.log('fetchedTrack:', fetchedTrack);
+  if (!fetchedTrack?.item) return;
+  currentTrack = fetchedTrack;
+  currentTrackId = fetchedTrack.item.id;
+  updateTrackDetails(fetchedTrack);
+  updatePlayerControls(fetchedTrack);
+  startProgress = fetchedTrack.progress_ms;
+  startTime = Date.now();
+  progress.value = (startProgress / fetchedTrack.item.duration_ms) * 100;
+}
 
 function startIntervals() {
   if (progressInterval || syncInterval) return;

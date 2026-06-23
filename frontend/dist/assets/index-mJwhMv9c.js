@@ -7837,19 +7837,9 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 		let currentTrack = {};
 		onMounted(async () => {
 			watch(isOnline, async (online) => {
-				if (online) {
-					const fetchedTrack = await spotifyApi.spotifyFetch("me/player");
-					console.log("fetchedTrack:", fetchedTrack);
-					if (!fetchedTrack?.item) return;
-					currentTrack = fetchedTrack;
-					currentTrackId = fetchedTrack.item.id;
-					updateTrackDetails(fetchedTrack);
-					updatePlayerControls(fetchedTrack);
-					startProgress = fetchedTrack.progress_ms;
-					startTime = Date.now();
-					progress.value = startProgress / fetchedTrack.item.duration_ms * 100;
-					startIntervals();
-				} else stopIntervals();
+				await fetchAndUpdateTrack();
+				if (online) startIntervals();
+				else stopIntervals();
 			}, { immediate: true });
 			requestIdleCallback(() => {
 				preloadTabData();
@@ -7858,6 +7848,18 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 		onBeforeUnmount(() => {
 			stopIntervals();
 		});
+		async function fetchAndUpdateTrack() {
+			const fetchedTrack = await spotifyApi.spotifyFetch("me/player");
+			console.log("fetchedTrack:", fetchedTrack);
+			if (!fetchedTrack?.item) return;
+			currentTrack = fetchedTrack;
+			currentTrackId = fetchedTrack.item.id;
+			updateTrackDetails(fetchedTrack);
+			updatePlayerControls(fetchedTrack);
+			startProgress = fetchedTrack.progress_ms;
+			startTime = Date.now();
+			progress.value = startProgress / fetchedTrack.item.duration_ms * 100;
+		}
 		function startIntervals() {
 			if (progressInterval || syncInterval) return;
 			progressInterval = window.setInterval(() => {
@@ -7961,7 +7963,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-d03a10fc"]]);
+}), [["__scopeId", "data-v-ac15695c"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];
