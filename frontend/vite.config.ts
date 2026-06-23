@@ -18,6 +18,7 @@ export default defineConfig({
       workbox: {
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/auth/, /^\/api/],
+        additionalManifestEntries: [{ url: '/album_cover_placeholder.png', revision: null }],
       },
       strategies: 'injectManifest',
       srcDir: 'src/worker',
