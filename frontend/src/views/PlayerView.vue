@@ -40,6 +40,10 @@ onMounted(async () => {
     async (online) => {
       if (online) {
         const fetchedTrack = await spotifyApi.spotifyFetch('me/player');
+        if (!fetchedTrack?.item) {
+          console.log('no track data, loading from cache failed?');
+          return;
+        }
         if (!fetchedTrack?.item) return;
         currentTrack = fetchedTrack;
         currentTrackId = fetchedTrack.item.id;

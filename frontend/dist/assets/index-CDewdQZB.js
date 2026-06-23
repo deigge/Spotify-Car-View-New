@@ -7839,6 +7839,10 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			watch(isOnline, async (online) => {
 				if (online) {
 					const fetchedTrack = await spotifyApi.spotifyFetch("me/player");
+					if (!fetchedTrack?.item) {
+						console.log("no track data, loading from cache failed?");
+						return;
+					}
 					if (!fetchedTrack?.item) return;
 					currentTrack = fetchedTrack;
 					currentTrackId = fetchedTrack.item.id;
@@ -7964,7 +7968,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-6775a13b"]]);
+}), [["__scopeId", "data-v-b9cc5af0"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];
