@@ -7839,10 +7839,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			watch(isOnline, async (online) => {
 				if (online) {
 					const fetchedTrack = await spotifyApi.spotifyFetch("me/player");
-					if (!fetchedTrack?.item) {
-						console.log("no track data, loading from cache failed?");
-						return;
-					}
+					console.log("fetchedTrack:", fetchedTrack);
 					if (!fetchedTrack?.item) return;
 					currentTrack = fetchedTrack;
 					currentTrackId = fetchedTrack.item.id;
@@ -7852,10 +7849,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 					startTime = Date.now();
 					progress.value = startProgress / fetchedTrack.item.duration_ms * 100;
 					startIntervals();
-				} else {
-					stopIntervals();
-					console.log("offline → stopping intervals");
-				}
+				} else stopIntervals();
 			}, { immediate: true });
 			requestIdleCallback(() => {
 				preloadTabData();
@@ -7865,7 +7859,6 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			stopIntervals();
 		});
 		function startIntervals() {
-			console.log("startIntervals called, existing:", progressInterval, syncInterval);
 			if (progressInterval || syncInterval) return;
 			progressInterval = window.setInterval(() => {
 				updatePlayerControls(currentTrack);
@@ -7968,7 +7961,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-b9cc5af0"]]);
+}), [["__scopeId", "data-v-d03a10fc"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];

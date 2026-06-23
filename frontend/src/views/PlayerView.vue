@@ -40,10 +40,7 @@ onMounted(async () => {
     async (online) => {
       if (online) {
         const fetchedTrack = await spotifyApi.spotifyFetch('me/player');
-        if (!fetchedTrack?.item) {
-          console.log('no track data, loading from cache failed?');
-          return;
-        }
+        console.log('fetchedTrack:', fetchedTrack);
         if (!fetchedTrack?.item) return;
         currentTrack = fetchedTrack;
         currentTrackId = fetchedTrack.item.id;
@@ -55,7 +52,6 @@ onMounted(async () => {
         startIntervals();
       } else {
         stopIntervals();
-        console.log('offline → stopping intervals');
       }
     },
     { immediate: true }
@@ -71,7 +67,6 @@ onBeforeUnmount(() => {
 });
 
 function startIntervals() {
-  console.log('startIntervals called, existing:', progressInterval, syncInterval);
   if (progressInterval || syncInterval) return;
   progressInterval = window.setInterval(() => {
     updatePlayerControls(currentTrack);
