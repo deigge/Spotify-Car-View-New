@@ -6710,8 +6710,8 @@ var _plugin_vue_export_helper_default = (sfc, props) => {
 var NavButton_default = /* @__PURE__ */ _plugin_vue_export_helper_default(NavButton_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-284e78e3"]]);
 //#endregion
 //#region src/components/icons/historyIcon.vue
-var _sfc_main$13 = {};
-var _hoisted_1$24 = {
+var _sfc_main$14 = {};
+var _hoisted_1$25 = {
 	xmlns: "http://www.w3.org/2000/svg",
 	width: "24",
 	height: "24",
@@ -6723,8 +6723,8 @@ var _hoisted_1$24 = {
 	"stroke-linejoin": "round",
 	class: "icon icon-tabler icons-tabler-outline icon-tabler-history"
 };
-function _sfc_render$14(_ctx, _cache) {
-	return openBlock(), createElementBlock("svg", _hoisted_1$24, [..._cache[0] || (_cache[0] = [
+function _sfc_render$15(_ctx, _cache) {
+	return openBlock(), createElementBlock("svg", _hoisted_1$25, [..._cache[0] || (_cache[0] = [
 		createBaseVNode("path", {
 			stroke: "none",
 			d: "M0 0h24v24H0z",
@@ -6734,11 +6734,11 @@ function _sfc_render$14(_ctx, _cache) {
 		createBaseVNode("path", { d: "M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" }, null, -1)
 	])]);
 }
-var historyIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$13, [["render", _sfc_render$14]]);
+var historyIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$14, [["render", _sfc_render$15]]);
 //#endregion
 //#region src/components/icons/homeIcon.vue
-var _sfc_main$12 = {};
-var _hoisted_1$23 = {
+var _sfc_main$13 = {};
+var _hoisted_1$24 = {
 	xmlns: "http://www.w3.org/2000/svg",
 	width: "24",
 	height: "24",
@@ -6750,8 +6750,8 @@ var _hoisted_1$23 = {
 	"stroke-linejoin": "round",
 	class: "icon icon-tabler icons-tabler-outline icon-tabler-home"
 };
-function _sfc_render$13(_ctx, _cache) {
-	return openBlock(), createElementBlock("svg", _hoisted_1$23, [..._cache[0] || (_cache[0] = [
+function _sfc_render$14(_ctx, _cache) {
+	return openBlock(), createElementBlock("svg", _hoisted_1$24, [..._cache[0] || (_cache[0] = [
 		createBaseVNode("path", {
 			stroke: "none",
 			d: "M0 0h24v24H0z",
@@ -6762,11 +6762,11 @@ function _sfc_render$13(_ctx, _cache) {
 		createBaseVNode("path", { d: "M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" }, null, -1)
 	])]);
 }
-var homeIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$12, [["render", _sfc_render$13]]);
+var homeIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$13, [["render", _sfc_render$14]]);
 //#endregion
 //#region src/components/icons/playlistIcon.vue
-var _sfc_main$11 = {};
-var _hoisted_1$22 = {
+var _sfc_main$12 = {};
+var _hoisted_1$23 = {
 	xmlns: "http://www.w3.org/2000/svg",
 	width: "24",
 	height: "24",
@@ -6778,13 +6778,13 @@ var _hoisted_1$22 = {
 	"stroke-linejoin": "round",
 	class: "icon icon-tabler icons-tabler-outline icon-tabler-playlist"
 };
-function _sfc_render$12(_ctx, _cache) {
-	return openBlock(), createElementBlock("svg", _hoisted_1$22, [..._cache[0] || (_cache[0] = [createStaticVNode("<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><path d=\"M11 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0\"></path><path d=\"M17 17v-13h4\"></path><path d=\"M13 5h-10\"></path><path d=\"M3 9l10 0\"></path><path d=\"M9 13h-6\"></path>", 6)])]);
+function _sfc_render$13(_ctx, _cache) {
+	return openBlock(), createElementBlock("svg", _hoisted_1$23, [..._cache[0] || (_cache[0] = [createStaticVNode("<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><path d=\"M11 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0\"></path><path d=\"M17 17v-13h4\"></path><path d=\"M13 5h-10\"></path><path d=\"M3 9l10 0\"></path><path d=\"M9 13h-6\"></path>", 6)])]);
 }
-var playlistIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$11, [["render", _sfc_render$12]]);
+var playlistIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$12, [["render", _sfc_render$13]]);
 //#endregion
 //#region src/components/BottomNavBar.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$21 = { class: "bottom-nav" };
+var _hoisted_1$22 = { class: "bottom-nav" };
 //#endregion
 //#region src/components/BottomNavBar.vue
 var BottomNavBar_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -6792,7 +6792,7 @@ var BottomNavBar_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 	setup(__props) {
 		const route = useRoute();
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("nav", _hoisted_1$21, [
+			return openBlock(), createElementBlock("nav", _hoisted_1$22, [
 				createVNode(NavButton_default, {
 					href: "/playlists",
 					active: unref(route).path === "/playlists"
@@ -6848,7 +6848,7 @@ var ToastComponent_vue_vue_type_script_lang_default = /* @__PURE__ */ defineComp
 } });
 //#endregion
 //#region src/components/ToastComponent.vue
-function _sfc_render$11(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$12(_ctx, _cache, $props, $setup, $data, $options) {
 	return openBlock(), createBlock(Transition, { name: "fade" }, {
 		default: withCtx(() => [_ctx.visible ? (openBlock(), createElementBlock("div", {
 			key: 0,
@@ -6857,10 +6857,10 @@ function _sfc_render$11(_ctx, _cache, $props, $setup, $data, $options) {
 		_: 1
 	});
 }
-var ToastComponent_default = /* @__PURE__ */ _plugin_vue_export_helper_default(ToastComponent_vue_vue_type_script_lang_default, [["render", _sfc_render$11], ["__scopeId", "data-v-67e54c2c"]]);
+var ToastComponent_default = /* @__PURE__ */ _plugin_vue_export_helper_default(ToastComponent_vue_vue_type_script_lang_default, [["render", _sfc_render$12], ["__scopeId", "data-v-67e54c2c"]]);
 //#endregion
 //#region src/App.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$20 = { class: "app" };
+var _hoisted_1$21 = { class: "app" };
 //#endregion
 //#region src/App.vue
 var App_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -6868,7 +6868,7 @@ var App_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__
 	setup(__props) {
 		const route = useRoute();
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$20, [
+			return openBlock(), createElementBlock("div", _hoisted_1$21, [
 				createVNode(unref(RouterView), { style: {
 					"overflow-y": "auto",
 					"overflow-x": "hidden",
@@ -6893,7 +6893,7 @@ var DevView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PU
 }), [["__scopeId", "data-v-16476975"]]);
 //#endregion
 //#region src/components/player/TrackInfo.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$19 = { class: "track-info" };
+var _hoisted_1$20 = { class: "track-info" };
 var _hoisted_2$6 = { id: "trackArtist" };
 //#endregion
 //#region src/components/player/TrackInfo.vue
@@ -6911,7 +6911,7 @@ var TrackInfo_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 			if (titleRef.value) titleOverflowing.value = titleRef.value.scrollWidth > titleRef.value.clientWidth;
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$19, [createBaseVNode("span", {
+			return openBlock(), createElementBlock("div", _hoisted_1$20, [createBaseVNode("span", {
 				id: "trackTitle",
 				ref_key: "titleRef",
 				ref: titleRef,
@@ -6925,7 +6925,7 @@ var TrackInfo_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 var album_cover_placeholder_default = "/album_cover_placeholder.png";
 //#endregion
 //#region src/components/IconButton.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$18 = ["disabled"];
+var _hoisted_1$19 = ["disabled"];
 //#endregion
 //#region src/components/IconButton.vue
 var IconButton_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -6941,14 +6941,14 @@ var IconButton_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 				class: normalizeClass(["icon-btn", { active: __props.active }]),
 				style: normalizeStyle({ "font-size": __props.size }),
 				disabled: __props.disabled
-			}, [renderSlot(_ctx.$slots, "default", {}, void 0, true)], 14, _hoisted_1$18);
+			}, [renderSlot(_ctx.$slots, "default", {}, void 0, true)], 14, _hoisted_1$19);
 		};
 	}
 }), [["__scopeId", "data-v-28de5f48"]]);
 //#endregion
 //#region src/components/icons/arrowsShuffleIcon.vue
-var _sfc_main$10 = {};
-var _hoisted_1$17 = {
+var _sfc_main$11 = {};
+var _hoisted_1$18 = {
 	xmlns: "http://www.w3.org/2000/svg",
 	width: "24",
 	height: "24",
@@ -6960,14 +6960,14 @@ var _hoisted_1$17 = {
 	"stroke-linejoin": "round",
 	class: "icon icon-tabler icons-tabler-outline icon-tabler-arrows-shuffle"
 };
-function _sfc_render$10(_ctx, _cache) {
-	return openBlock(), createElementBlock("svg", _hoisted_1$17, [..._cache[0] || (_cache[0] = [createStaticVNode("<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><path d=\"M18 4l3 3l-3 3\"></path><path d=\"M18 20l3 -3l-3 -3\"></path><path d=\"M3 7h3a5 5 0 0 1 5 5a5 5 0 0 0 5 5h5\"></path><path d=\"M21 7h-5a4.978 4.978 0 0 0 -3 1m-4 8a4.984 4.984 0 0 1 -3 1h-3\"></path>", 5)])]);
+function _sfc_render$11(_ctx, _cache) {
+	return openBlock(), createElementBlock("svg", _hoisted_1$18, [..._cache[0] || (_cache[0] = [createStaticVNode("<path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"></path><path d=\"M18 4l3 3l-3 3\"></path><path d=\"M18 20l3 -3l-3 -3\"></path><path d=\"M3 7h3a5 5 0 0 1 5 5a5 5 0 0 0 5 5h5\"></path><path d=\"M21 7h-5a4.978 4.978 0 0 0 -3 1m-4 8a4.984 4.984 0 0 1 -3 1h-3\"></path>", 5)])]);
 }
-var arrowsShuffleIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$10, [["render", _sfc_render$10]]);
+var arrowsShuffleIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$11, [["render", _sfc_render$11]]);
 //#endregion
 //#region src/components/icons/playerPlayIcon.vue
-var _sfc_main$9 = {};
-var _hoisted_1$16 = {
+var _sfc_main$10 = {};
+var _hoisted_1$17 = {
 	xmlns: "http://www.w3.org/2000/svg",
 	width: "24",
 	height: "24",
@@ -6975,18 +6975,18 @@ var _hoisted_1$16 = {
 	fill: "currentColor",
 	class: "icon icon-tabler icons-tabler-filled icon-tabler-player-play"
 };
-function _sfc_render$9(_ctx, _cache) {
-	return openBlock(), createElementBlock("svg", _hoisted_1$16, [..._cache[0] || (_cache[0] = [createBaseVNode("path", {
+function _sfc_render$10(_ctx, _cache) {
+	return openBlock(), createElementBlock("svg", _hoisted_1$17, [..._cache[0] || (_cache[0] = [createBaseVNode("path", {
 		stroke: "none",
 		d: "M0 0h24v24H0z",
 		fill: "none"
 	}, null, -1), createBaseVNode("path", { d: "M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" }, null, -1)])]);
 }
-var playerPlayIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$9, [["render", _sfc_render$9]]);
+var playerPlayIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$10, [["render", _sfc_render$10]]);
 //#endregion
 //#region src/components/icons/playerPauseIcon.vue
-var _sfc_main$8 = {};
-var _hoisted_1$15 = {
+var _sfc_main$9 = {};
+var _hoisted_1$16 = {
 	xmlns: "http://www.w3.org/2000/svg",
 	width: "24",
 	height: "24",
@@ -6998,8 +6998,8 @@ var _hoisted_1$15 = {
 	"stroke-linejoin": "round",
 	class: "icon icon-tabler icons-tabler-outline icon-tabler-player-pause"
 };
-function _sfc_render$8(_ctx, _cache) {
-	return openBlock(), createElementBlock("svg", _hoisted_1$15, [..._cache[0] || (_cache[0] = [
+function _sfc_render$9(_ctx, _cache) {
+	return openBlock(), createElementBlock("svg", _hoisted_1$16, [..._cache[0] || (_cache[0] = [
 		createBaseVNode("path", {
 			stroke: "none",
 			d: "M0 0h24v24H0z",
@@ -7009,11 +7009,11 @@ function _sfc_render$8(_ctx, _cache) {
 		createBaseVNode("path", { d: "M14 6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -12" }, null, -1)
 	])]);
 }
-var playerPauseIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$8, [["render", _sfc_render$8]]);
+var playerPauseIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$9, [["render", _sfc_render$9]]);
 //#endregion
 //#region src/components/icons/playerSkipBackIcon.vue
-var _sfc_main$7 = {};
-var _hoisted_1$14 = {
+var _sfc_main$8 = {};
+var _hoisted_1$15 = {
 	xmlns: "http://www.w3.org/2000/svg",
 	width: "24",
 	height: "24",
@@ -7025,8 +7025,8 @@ var _hoisted_1$14 = {
 	"stroke-linejoin": "round",
 	class: "icon icon-tabler icons-tabler-outline icon-tabler-player-skip-back"
 };
-function _sfc_render$7(_ctx, _cache) {
-	return openBlock(), createElementBlock("svg", _hoisted_1$14, [..._cache[0] || (_cache[0] = [
+function _sfc_render$8(_ctx, _cache) {
+	return openBlock(), createElementBlock("svg", _hoisted_1$15, [..._cache[0] || (_cache[0] = [
 		createBaseVNode("path", {
 			stroke: "none",
 			d: "M0 0h24v24H0z",
@@ -7036,11 +7036,11 @@ function _sfc_render$7(_ctx, _cache) {
 		createBaseVNode("path", { d: "M4 5l0 14" }, null, -1)
 	])]);
 }
-var playerSkipBackIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$7, [["render", _sfc_render$7]]);
+var playerSkipBackIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$8, [["render", _sfc_render$8]]);
 //#endregion
 //#region src/components/icons/playerSkipForwardIcon.vue
-var _sfc_main$6 = {};
-var _hoisted_1$13 = {
+var _sfc_main$7 = {};
+var _hoisted_1$14 = {
 	xmlns: "http://www.w3.org/2000/svg",
 	width: "24",
 	height: "24",
@@ -7052,8 +7052,8 @@ var _hoisted_1$13 = {
 	"stroke-linejoin": "round",
 	class: "icon icon-tabler icons-tabler-outline icon-tabler-player-skip-forward"
 };
-function _sfc_render$6(_ctx, _cache) {
-	return openBlock(), createElementBlock("svg", _hoisted_1$13, [..._cache[0] || (_cache[0] = [
+function _sfc_render$7(_ctx, _cache) {
+	return openBlock(), createElementBlock("svg", _hoisted_1$14, [..._cache[0] || (_cache[0] = [
 		createBaseVNode("path", {
 			stroke: "none",
 			d: "M0 0h24v24H0z",
@@ -7063,11 +7063,11 @@ function _sfc_render$6(_ctx, _cache) {
 		createBaseVNode("path", { d: "M20 5l0 14" }, null, -1)
 	])]);
 }
-var playerSkipForwardIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$6, [["render", _sfc_render$6]]);
+var playerSkipForwardIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$7, [["render", _sfc_render$7]]);
 //#endregion
 //#region src/components/icons/repeatIcon.vue
-var _sfc_main$5 = {};
-var _hoisted_1$12 = {
+var _sfc_main$6 = {};
+var _hoisted_1$13 = {
 	xmlns: "http://www.w3.org/2000/svg",
 	width: "24",
 	height: "24",
@@ -7079,8 +7079,8 @@ var _hoisted_1$12 = {
 	"stroke-linejoin": "round",
 	class: "icon icon-tabler icons-tabler-outline icon-tabler-repeat"
 };
-function _sfc_render$5(_ctx, _cache) {
-	return openBlock(), createElementBlock("svg", _hoisted_1$12, [..._cache[0] || (_cache[0] = [
+function _sfc_render$6(_ctx, _cache) {
+	return openBlock(), createElementBlock("svg", _hoisted_1$13, [..._cache[0] || (_cache[0] = [
 		createBaseVNode("path", {
 			stroke: "none",
 			d: "M0 0h24v24H0z",
@@ -7090,7 +7090,7 @@ function _sfc_render$5(_ctx, _cache) {
 		createBaseVNode("path", { d: "M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" }, null, -1)
 	])]);
 }
-var repeatIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$5, [["render", _sfc_render$5]]);
+var repeatIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$6, [["render", _sfc_render$6]]);
 //#endregion
 //#region node_modules/pinia/dist/pinia.mjs
 /*!
@@ -7600,8 +7600,8 @@ var useAuthStore = defineStore("auth", {
 });
 //#endregion
 //#region src/components/icons/repeatOnceIcon.vue
-var _sfc_main$4 = {};
-var _hoisted_1$11 = {
+var _sfc_main$5 = {};
+var _hoisted_1$12 = {
 	xmlns: "http://www.w3.org/2000/svg",
 	width: "24",
 	height: "24",
@@ -7613,8 +7613,8 @@ var _hoisted_1$11 = {
 	"stroke-linejoin": "round",
 	class: "icon icon-tabler icons-tabler-outline icon-tabler-repeat-once"
 };
-function _sfc_render$4(_ctx, _cache) {
-	return openBlock(), createElementBlock("svg", _hoisted_1$11, [..._cache[0] || (_cache[0] = [
+function _sfc_render$5(_ctx, _cache) {
+	return openBlock(), createElementBlock("svg", _hoisted_1$12, [..._cache[0] || (_cache[0] = [
 		createBaseVNode("path", {
 			stroke: "none",
 			d: "M0 0h24v24H0z",
@@ -7625,11 +7625,11 @@ function _sfc_render$4(_ctx, _cache) {
 		createBaseVNode("path", { d: "M11 11l1 -1v4" }, null, -1)
 	])]);
 }
-var repeatOnceIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$4, [["render", _sfc_render$4]]);
+var repeatOnceIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$5, [["render", _sfc_render$5]]);
 //#endregion
 //#region src/components/icons/repeatOffIcon.vue
-var _sfc_main$3 = {};
-var _hoisted_1$10 = {
+var _sfc_main$4 = {};
+var _hoisted_1$11 = {
 	xmlns: "http://www.w3.org/2000/svg",
 	width: "24",
 	height: "24",
@@ -7641,8 +7641,8 @@ var _hoisted_1$10 = {
 	"stroke-linejoin": "round",
 	class: "icon icon-tabler icons-tabler-outline icon-tabler-repeat-off"
 };
-function _sfc_render$3(_ctx, _cache) {
-	return openBlock(), createElementBlock("svg", _hoisted_1$10, [..._cache[0] || (_cache[0] = [
+function _sfc_render$4(_ctx, _cache) {
+	return openBlock(), createElementBlock("svg", _hoisted_1$11, [..._cache[0] || (_cache[0] = [
 		createBaseVNode("path", {
 			stroke: "none",
 			d: "M0 0h24v24H0z",
@@ -7653,10 +7653,10 @@ function _sfc_render$3(_ctx, _cache) {
 		createBaseVNode("path", { d: "M3 3l18 18" }, null, -1)
 	])]);
 }
-var repeatOffIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$3, [["render", _sfc_render$3]]);
+var repeatOffIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$4, [["render", _sfc_render$4]]);
 //#endregion
 //#region src/components/player/PlayerControls.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$9 = { class: "controls" };
+var _hoisted_1$10 = { class: "controls" };
 var _hoisted_2$5 = {
 	class: "controls",
 	id: "mainControls"
@@ -7701,7 +7701,7 @@ var PlayerControls_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/
 			spotifyApi.spotifyPost("me/player/previous");
 		}
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock(Fragment, null, [createBaseVNode("div", _hoisted_1$9, [createVNode(IconButton_default, {
+			return openBlock(), createElementBlock(Fragment, null, [createBaseVNode("div", _hoisted_1$10, [createVNode(IconButton_default, {
 				size: "2.5rem",
 				active: __props.shuffleState,
 				disabled: props.disabled,
@@ -7771,11 +7771,43 @@ function useImageFallback(fallback) {
 	};
 }
 //#endregion
+//#region src/components/icons/cloudOffIcon.vue
+var _sfc_main$3 = {};
+var _hoisted_1$9 = {
+	xmlns: "http://www.w3.org/2000/svg",
+	width: "24",
+	height: "24",
+	viewBox: "0 0 24 24",
+	fill: "none",
+	stroke: "currentColor",
+	"stroke-width": "2",
+	"stroke-linecap": "round",
+	"stroke-linejoin": "round",
+	class: "icon icon-tabler icons-tabler-outline icon-tabler-cloud-off"
+};
+function _sfc_render$3(_ctx, _cache) {
+	return openBlock(), createElementBlock("svg", _hoisted_1$9, [..._cache[0] || (_cache[0] = [
+		createBaseVNode("path", {
+			stroke: "none",
+			d: "M0 0h24v24H0z",
+			fill: "none"
+		}, null, -1),
+		createBaseVNode("path", { d: "M9.58 5.548c.24 -.11 .492 -.207 .752 -.286c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.913 0 3.464 1.56 3.464 3.486c0 .957 -.383 1.824 -1.003 2.454m-2.997 1.033h-11.343c-2.572 -.004 -4.657 -2.011 -4.657 -4.487c0 -2.475 2.085 -4.482 4.657 -4.482c.13 -.582 .37 -1.128 .7 -1.62" }, null, -1),
+		createBaseVNode("path", { d: "M3 3l18 18" }, null, -1)
+	])]);
+}
+var cloudOffIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$3, [["render", _sfc_render$3]]);
+//#endregion
 //#region src/views/PlayerView.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$8 = { class: "player-view" };
 var _hoisted_2$4 = { class: "playlist-name safe-top" };
-var _hoisted_3$1 = ["src"];
-var _hoisted_4$1 = ["value"];
+var _hoisted_3$1 = { class: "cover-wrapper" };
+var _hoisted_4$1 = ["src"];
+var _hoisted_5$1 = {
+	key: 0,
+	class: "offline-overlay"
+};
+var _hoisted_6$1 = ["value"];
 //#endregion
 //#region src/views/PlayerView.vue
 var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -7792,21 +7824,37 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 		const isPlaying = /* @__PURE__ */ ref(false);
 		const shuffleState = /* @__PURE__ */ ref(false);
 		const repeatState = /* @__PURE__ */ ref("");
-		let interval;
+		let progressInterval;
 		let syncInterval;
 		let startTime = 0;
 		let startProgress = 0;
 		let currentTrackId = "";
+		let currentTrack = {};
 		onMounted(async () => {
-			let currentTrack = await spotifyApi.spotifyFetch("me/player");
-			currentTrackId = currentTrack.item.id;
-			updateTrackDetails(currentTrack);
-			updatePlayerControls(currentTrack);
-			startProgress = currentTrack.progress_ms;
-			const duration = currentTrack.item.duration_ms;
-			startTime = Date.now();
-			progress.value = startProgress / duration * 100;
-			interval = window.setInterval(() => {
+			watch(isOnline, async (online) => {
+				if (online) {
+					const fetchedTrack = await spotifyApi.spotifyFetch("me/player");
+					if (!fetchedTrack?.item) return;
+					currentTrack = fetchedTrack;
+					currentTrackId = fetchedTrack.item.id;
+					updateTrackDetails(fetchedTrack);
+					updatePlayerControls(fetchedTrack);
+					startProgress = fetchedTrack.progress_ms;
+					startTime = Date.now();
+					progress.value = startProgress / fetchedTrack.item.duration_ms * 100;
+					startIntervals();
+				} else stopIntervals();
+			}, { immediate: true });
+			requestIdleCallback(() => {
+				preloadTabData();
+			});
+		});
+		onBeforeUnmount(() => {
+			stopIntervals();
+		});
+		function startIntervals() {
+			if (progressInterval || syncInterval) return;
+			progressInterval = window.setInterval(() => {
 				updatePlayerControls(currentTrack);
 				if (!currentTrack?.is_playing) return;
 				const elapsed = Date.now() - startTime;
@@ -7834,14 +7882,13 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 				startProgress = fetchedTrack.progress_ms;
 				startTime = Date.now();
 			}, 2e3);
-			requestIdleCallback(() => {
-				preloadTabData();
-			});
-		});
-		onBeforeUnmount(() => {
-			clearInterval(interval);
+		}
+		function stopIntervals() {
+			clearInterval(progressInterval);
 			clearInterval(syncInterval);
-		});
+			progressInterval = 0;
+			syncInterval = 0;
+		}
 		async function preloadTabData() {
 			const data = await spotifyApi.spotifyFetch("me/playlists").catch(() => null);
 			[...new Set(data?.items?.map((p) => p.images?.[0]?.url).filter(Boolean))].forEach((url) => {
@@ -7882,18 +7929,18 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 					title: trackTitle.value,
 					artist: trackArtist.value
 				}, null, 8, ["title", "artist"]),
-				createBaseVNode("img", {
+				createBaseVNode("div", _hoisted_3$1, [createBaseVNode("img", {
 					id: "albumCover",
 					src: albumCover.value,
 					onError: _cache[0] || (_cache[0] = (...args) => unref(onImageError) && unref(onImageError)(...args))
-				}, null, 40, _hoisted_3$1),
+				}, null, 40, _hoisted_4$1), !unref(isOnline) ? (openBlock(), createElementBlock("div", _hoisted_5$1, [createVNode(cloudOffIcon_default), _cache[1] || (_cache[1] = createBaseVNode("span", null, "offline", -1))])) : createCommentVNode("", true)]),
 				createBaseVNode("input", {
 					type: "range",
 					min: "0",
 					max: "100",
 					value: progress.value,
 					id: "progress-bar"
-				}, null, 8, _hoisted_4$1),
+				}, null, 8, _hoisted_6$1),
 				createVNode(PlayerControls_default, {
 					isPlaying: isPlaying.value,
 					shuffleState: shuffleState.value,
@@ -7908,7 +7955,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-49689fd8"]]);
+}), [["__scopeId", "data-v-b8a0125e"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];

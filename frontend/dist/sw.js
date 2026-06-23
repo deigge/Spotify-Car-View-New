@@ -2800,7 +2800,7 @@ var CacheableResponsePlugin = class {
 //#region src/worker/sw.ts
 self.skipWaiting();
 clientsClaim();
-precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"fdd263096508c2ee9f3feb6410688eed","url":"index.html"},{"revision":null,"url":"assets/index-DdyFRXmV.css"},{"revision":null,"url":"assets/index-BkqunBIU.js"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
+precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"7e2d89d4a0fc9af0400237368e6711a8","url":"index.html"},{"revision":null,"url":"assets/index-weiQZ0bA.css"},{"revision":null,"url":"assets/index-CPSqzZFy.js"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
 registerRoute(new NavigationRoute(createHandlerBoundToURL("/index.html"), { denylist: [/^\/auth/, /^\/api/] }));
 setCatchHandler(async ({ request }) => {
 	if (request.destination === "image") {
@@ -2809,6 +2809,11 @@ setCatchHandler(async ({ request }) => {
 	}
 	return Response.error();
 });
+registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname === "/v1/me/player", new NetworkFirst({
+	cacheName: "spotify-player",
+	matchOptions: { ignoreVary: true },
+	plugins: [new ExpirationPlugin({ maxAgeSeconds: 30 })]
+}));
 registerRoute(({ url }) => url.pathname === "/api/history", new NetworkFirst({
 	cacheName: "user-history",
 	networkTimeoutSeconds: 5

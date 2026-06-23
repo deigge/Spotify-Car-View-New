@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 
 import TrackInfo from '@/components/player/TrackInfo.vue';
 import coverPlaceholder from '/album_cover_placeholder.png';
@@ -10,6 +10,7 @@ import { useAuthStore } from '@/stores/auth';
 import type { SpotifyPlaylist } from '../../../shared/types/spotifyPlaylist';
 import { useOnlineStatus } from '@/composables/UseOnlineStatus';
 import { useImageFallback } from '@/composables/UseImageFallback';
+import CloudOffIcon from '@/components/icons/cloudOffIcon.vue';
 
 const { isOnline } = useOnlineStatus();
 const onImageError = useImageFallback(coverPlaceholder);
@@ -26,29 +27,47 @@ const isPlaying = ref(false);
 const shuffleState = ref(false);
 const repeatState = ref('');
 
-let interval: number;
+let progressInterval: number;
 let syncInterval: number;
 let startTime = 0;
 let startProgress = 0;
 let currentTrackId = '';
+let currentTrack = {} as SpotifyPlayer;
 
 onMounted(async () => {
-  let currentTrack = await spotifyApi.spotifyFetch('me/player');
+  watch(
+    isOnline,
+    async (online) => {
+      if (online) {
+        const fetchedTrack = await spotifyApi.spotifyFetch('me/player');
+        if (!fetchedTrack?.item) return;
+        currentTrack = fetchedTrack;
+        currentTrackId = fetchedTrack.item.id;
+        updateTrackDetails(fetchedTrack);
+        updatePlayerControls(fetchedTrack);
+        startProgress = fetchedTrack.progress_ms;
+        startTime = Date.now();
+        progress.value = (startProgress / fetchedTrack.item.duration_ms) * 100;
+        startIntervals();
+      } else {
+        stopIntervals();
+      }
+    },
+    { immediate: true }
+  );
 
-  currentTrackId = currentTrack.item.id;
+  requestIdleCallback(() => {
+    preloadTabData();
+  });
+});
 
-  updateTrackDetails(currentTrack);
+onBeforeUnmount(() => {
+  stopIntervals();
+});
 
-  updatePlayerControls(currentTrack);
-
-  startProgress = currentTrack.progress_ms;
-  const duration = currentTrack.item.duration_ms;
-
-  startTime = Date.now();
-
-  progress.value = (startProgress / duration) * 100;
-
-  interval = window.setInterval(() => {
+function startIntervals() {
+  if (progressInterval || syncInterval) return;
+  progressInterval = window.setInterval(() => {
     updatePlayerControls(currentTrack);
     if (!currentTrack?.is_playing) return;
 
@@ -94,16 +113,14 @@ onMounted(async () => {
     startProgress = fetchedTrack.progress_ms;
     startTime = Date.now();
   }, 2000);
+}
 
-  requestIdleCallback(() => {
-    preloadTabData();
-  });
-});
-
-onBeforeUnmount(() => {
-  clearInterval(interval);
+function stopIntervals() {
+  clearInterval(progressInterval);
   clearInterval(syncInterval);
-});
+  progressInterval = 0;
+  syncInterval = 0;
+}
 
 async function preloadTabData() {
   const data = await spotifyApi.spotifyFetch('me/playlists').catch(() => null);
@@ -159,7 +176,14 @@ async function updateTrackDetails(currentTrack: SpotifyPlayer) {
     <span class="playlist-name safe-top">{{ playlistName }}</span>
     <TrackInfo :title="trackTitle" :artist="trackArtist" />
 
-    <img id="albumCover" :src="albumCover" @error="onImageError" />
+    <div class="cover-wrapper">
+      <img id="albumCover" :src="albumCover" @error="onImageError" />
+      <div class="offline-overlay" v-if="!isOnline">
+        <CloudOffIcon />
+        <span>offline</span>
+      </div>
+    </div>
+
     <input type="range" min="0" max="100" :value="progress" id="progress-bar" />
     <PlayerControls
       :isPlaying="isPlaying"
@@ -190,10 +214,35 @@ async function updateTrackDetails(currentTrack: SpotifyPlayer) {
   text-overflow: ellipsis;
 }
 
-#albumCover {
-  margin-top: 1rem;
+.cover-wrapper {
+  position: relative;
   width: 70%;
+  margin-top: 1rem;
+}
+
+#albumCover {
+  width: 100%;
   border-radius: 2rem;
+  display: block;
+}
+
+.offline-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 2rem;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.offline-overlay svg {
+  width: 5rem;
+  height: 5rem;
 }
 
 #progress-bar {

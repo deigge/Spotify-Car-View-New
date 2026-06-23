@@ -258,7 +258,7 @@ span[data-v-0dafee8e] {
   margin-top: 0.5rem;
 }
 
-.player-view[data-v-49689fd8] {
+.player-view[data-v-b8a0125e] {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -266,7 +266,7 @@ span[data-v-0dafee8e] {
   max-width: 400px;
   padding-bottom: 4rem;
 }
-.playlist-name[data-v-49689fd8] {
+.playlist-name[data-v-b8a0125e] {
   margin-top: 1rem;
   font-size: 1rem;
   display: block;
@@ -275,12 +275,34 @@ span[data-v-0dafee8e] {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#albumCover[data-v-49689fd8] {
-  margin-top: 1rem;
+.cover-wrapper[data-v-b8a0125e] {
+  position: relative;
   width: 70%;
-  border-radius: 2rem;
+  margin-top: 1rem;
 }
-#progress-bar[data-v-49689fd8] {
+#albumCover[data-v-b8a0125e] {
+  width: 100%;
+  border-radius: 2rem;
+  display: block;
+}
+.offline-overlay[data-v-b8a0125e] {
+  position: absolute;
+  inset: 0;
+  border-radius: 2rem;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.offline-overlay svg[data-v-b8a0125e] {
+  width: 5rem;
+  height: 5rem;
+}
+#progress-bar[data-v-b8a0125e] {
   margin-top: 1rem;
   margin-bottom: 1rem;
   accent-color: rgb(144, 255, 80);
