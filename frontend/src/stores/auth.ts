@@ -29,18 +29,21 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async spotifyFetch(url: string) {
-      let res = await fetch(base_url + url, {
-        headers: { Authorization: 'Bearer ' + this.accessToken },
-      });
-
-      if (res.status === 401) {
-        await this.fetchToken();
-        res = await fetch(base_url + url, {
+      try {
+        let res = await fetch(base_url + url, {
           headers: { Authorization: 'Bearer ' + this.accessToken },
         });
+        if (res.status === 401) {
+          await this.fetchToken();
+          res = await fetch(base_url + url, {
+            headers: { Authorization: 'Bearer ' + this.accessToken },
+          });
+        }
+        return res.json();
+      } catch (e) {
+        console.error('spotifyFetch failed:', url, e);
+        return null;
       }
-
-      return res.json();
     },
 
     async spotifyRequest(method: 'PUT' | 'POST', url: string, body?: object) {
