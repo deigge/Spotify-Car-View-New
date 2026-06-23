@@ -23,7 +23,7 @@ registerRoute(navigationRoute);
 
 setCatchHandler(async ({ request }) => {
   if (request.destination === 'image') {
-    const fallback = await matchPrecache('/img/album_cover_placeholder.png');
+    const fallback = await matchPrecache('/album_cover_placeholder.png');
     if (fallback) return fallback;
   }
   return Response.error();
