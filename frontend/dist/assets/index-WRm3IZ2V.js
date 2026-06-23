@@ -7568,6 +7568,7 @@ var useAuthStore = defineStore("auth", {
 					await this.fetchToken();
 					res = await fetch(base_url + url, { headers: { Authorization: "Bearer " + this.accessToken } });
 				}
+				if (!res.ok) return null;
 				return res.json();
 			} catch (e) {
 				console.error("spotifyFetch failed:", url, e);
