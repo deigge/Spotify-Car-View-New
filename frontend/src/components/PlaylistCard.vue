@@ -38,6 +38,7 @@ function selectPlaylist() {
   border: none;
   color: #d1d1d1;
   cursor: pointer;
+  max-width: 10rem;
 }
 
 #playlistCard:hover,

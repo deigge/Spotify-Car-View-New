@@ -6841,7 +6841,7 @@ var BottomNavBar_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-b78a4a29"]]);
+}), [["__scopeId", "data-v-3d5be17a"]]);
 //#endregion
 //#region src/components/ToastComponent.vue?vue&type=script&lang.ts
 var ToastType = /* @__PURE__ */ function(ToastType) {
@@ -6893,18 +6893,13 @@ var App_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__
 		const route = useRoute();
 		return (_ctx, _cache) => {
 			return openBlock(), createElementBlock("div", _hoisted_1$21, [
-				createVNode(unref(RouterView), { style: {
-					"overflow-y": "auto",
-					"overflow-x": "hidden",
-					"width": "100%",
-					"height": "100%"
-				} }),
+				createVNode(unref(RouterView)),
 				unref(route).path !== "/login" ? (openBlock(), createBlock(BottomNavBar_default, { key: 0 })) : createCommentVNode("", true),
 				createVNode(ToastComponent_default)
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-cb6acb04"]]);
+}), [["__scopeId", "data-v-01f64fba"]]);
 //#endregion
 //#region src/views/DevView.vue
 var DevView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -8044,7 +8039,7 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-8c7e5684"]]);
+}), [["__scopeId", "data-v-f5205fef"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$7 = ["disabled"];
@@ -8080,7 +8075,7 @@ var PlaylistCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 			}, null, 40, _hoisted_2$3), createBaseVNode("span", null, toDisplayString(__props.name), 1)], 8, _hoisted_1$7);
 		};
 	}
-}), [["__scopeId", "data-v-68e78712"]]);
+}), [["__scopeId", "data-v-e93eb382"]]);
 //#endregion
 //#region src/views/PlaylistView.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$6 = { class: "playlist-view" };
@@ -8118,7 +8113,7 @@ var PlaylistView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 			}), 128))])]);
 		};
 	}
-}), [["__scopeId", "data-v-307fc107"]]);
+}), [["__scopeId", "data-v-624fbe28"]]);
 //#endregion
 //#region src/components/icons/shareIcon.vue
 var _sfc_main$2 = {};
@@ -8306,7 +8301,7 @@ var HistoryView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 			}), 128))]);
 		};
 	}
-}), [["__scopeId", "data-v-dbef1e98"]]);
+}), [["__scopeId", "data-v-1ad5d050"]]);
 //#endregion
 //#region src/views/LoginView.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1 = { id: "login" };

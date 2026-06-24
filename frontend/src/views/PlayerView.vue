@@ -236,7 +236,8 @@ function openSpotify() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 400px;
+  max-width: 40rem;
+  margin: 0 auto;
   padding-bottom: 4rem;
 }
 

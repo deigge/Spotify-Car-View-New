@@ -51,7 +51,6 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 400px;
 }
 
 .playlists-grid {
@@ -66,5 +65,29 @@ h1 {
   font-size: 1.2rem;
   display: block;
   text-align: center;
+}
+
+@media (min-width: 600px) {
+  .playlists-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media (min-width: 900px) {
+  .playlists-grid {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+@media (min-width: 1200px) {
+  .playlists-grid {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  }
+}
+
+@media (min-width: 1500px) {
+  .playlists-grid {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
 }
 </style>

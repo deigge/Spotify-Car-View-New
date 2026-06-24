@@ -27,7 +27,9 @@ const route = useRoute();
 
 <style lang="css" scoped>
 .bottom-nav {
-  margin: 0 1rem 1rem 1rem;
+  left: 5%;
+  right: 5%;
+  margin: 0 auto;
   height: 4rem;
   background: #11111198;
   border-radius: 2rem;
@@ -45,5 +47,7 @@ const route = useRoute();
   -webkit-backdrop-filter: blur(10px);
 
   box-shadow: 0 0 1rem 0.4rem #0f0f0f98;
+
+  max-width: 70rem;
 }
 </style>

@@ -49,8 +49,8 @@ const groupedTracks = computed(() => {
 
 <style lang="css" scoped>
 #history-view {
-  height: 100%;
-  overflow-y: auto;
+  max-width: 70rem;
+  margin: 0 auto;
 }
 
 h1 {
