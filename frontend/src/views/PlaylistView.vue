@@ -16,10 +16,11 @@ const playlists = ref<SpotifyPlaylist[]>([]);
 
 onMounted(async () => {
   try {
-    const data = (await spotifyApi.spotifyFetch('me/playlists')) as SpotifyPlaylistsResponse;
+    const request = await spotifyApi.spotifyFetch('me/playlists');
+    const data = request?.data as SpotifyPlaylistsResponse;
 
     if (data?.items) {
-      playlists.value = data.items;
+      playlists.value = data.items.sort((a, b) => a.name.localeCompare(b.name));
     }
   } catch (e) {
     console.log('offline fallback active. error: ' + e);
@@ -35,7 +36,7 @@ onMounted(async () => {
       <PlaylistCard
         v-for="playlist in playlists"
         :key="playlist.id"
-        :coverUrl="playlist.images[1]?.url ?? playlist.images[0]?.url"
+        :coverUrl="playlist.images?.[1]?.url ?? playlist.images?.[0]?.url"
         :name="playlist.name"
         :playlistURI="playlist.uri"
         :disabled="!isOnline"

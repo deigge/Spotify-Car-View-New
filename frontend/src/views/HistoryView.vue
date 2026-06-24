@@ -3,6 +3,9 @@ import { ref, onMounted } from 'vue';
 import TrackCard from '@/components/TrackCard.vue';
 import type { PlayedSong } from '../../../shared/types/playedSong';
 import { computed } from 'vue';
+import { useOnlineStatus } from '@/composables/UseOnlineStatus';
+
+const { isOnline } = useOnlineStatus();
 
 const tracks = ref<PlayedSong[]>([]);
 
@@ -39,14 +42,7 @@ const groupedTracks = computed(() => {
         <hr />
       </div>
 
-      <TrackCard
-        v-for="track in songs"
-        :key="track._id"
-        :title="track.name"
-        :artist="track.artists.join(', ')"
-        :cover-url="track.albumCovers[0]?.url ?? ''"
-        :spotify-url="track.spotifyUrl"
-      />
+      <TrackCard v-for="track in songs" :key="track._id" :song="track" :disabled="!isOnline" />
     </div>
   </div>
 </template>

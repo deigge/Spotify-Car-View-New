@@ -4,6 +4,7 @@ import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import TrackInfo from '@/components/player/TrackInfo.vue';
 import coverPlaceholder from '/album_cover_placeholder.png';
 import PlayerControls from '@/components/player/PlayerControls.vue';
+import ExternalLinkIcon from '@/components/icons/externalLinkIcon.vue';
 import type { SpotifyPlayer } from '../../../shared/types/spotifyPlayer';
 
 import { useAuthStore } from '@/stores/auth';
@@ -16,6 +17,8 @@ const { isOnline } = useOnlineStatus();
 const onImageError = useImageFallback(coverPlaceholder);
 
 const spotifyApi = useAuthStore();
+
+const isWaitingForTrack = ref(false);
 
 const trackTitle = ref('');
 const trackArtist = ref('');
@@ -58,13 +61,22 @@ onBeforeUnmount(() => {
 });
 
 async function fetchAndUpdateTrack() {
-  const fetchedTrack = await spotifyApi.spotifyFetch('me/player');
-  console.log('fetchedTrack:', fetchedTrack);
-  if (!fetchedTrack?.item) return;
+  const fetchRequest = await spotifyApi.spotifyFetch('me/player');
+  const fetchedTrack = fetchRequest?.data;
+
+  if (!fetchedTrack?.item) {
+    isWaitingForTrack.value = true;
+    return;
+  }
+
+  isWaitingForTrack.value = false;
+
   currentTrack = fetchedTrack;
   currentTrackId = fetchedTrack.item.id;
+
   updateTrackDetails(fetchedTrack);
   updatePlayerControls(fetchedTrack);
+
   startProgress = fetchedTrack.progress_ms;
   startTime = Date.now();
   progress.value = (startProgress / fetchedTrack.item.duration_ms) * 100;
@@ -73,7 +85,6 @@ async function fetchAndUpdateTrack() {
 function startIntervals() {
   if (progressInterval || syncInterval) return;
   progressInterval = window.setInterval(() => {
-    updatePlayerControls(currentTrack);
     if (!currentTrack?.is_playing) return;
 
     const elapsed = Date.now() - startTime;
@@ -85,7 +96,8 @@ function startIntervals() {
   }, 1000);
 
   syncInterval = window.setInterval(async () => {
-    const fetchedTrack = await spotifyApi.spotifyFetch('me/player');
+    const fetchRequest = await spotifyApi.spotifyFetch('me/player');
+    const fetchedTrack = fetchRequest?.data;
 
     if (!fetchedTrack?.item) return;
 
@@ -103,10 +115,14 @@ function startIntervals() {
       const duration = fetchedTrack.item.duration_ms;
       progress.value = (startProgress / duration) * 100;
 
+      const [isSaved] = (
+        await spotifyApi.spotifyFetch(`me/library/contains?uris=${currentTrack.item?.uri}`)
+      )?.data ?? [false];
+
       await fetch('/api/addsong', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(currentTrack),
+        body: JSON.stringify({ ...currentTrack, isSaved }),
       });
 
       return;
@@ -114,7 +130,9 @@ function startIntervals() {
 
     // 🔄 SAME TRACK → SYNC CORRECTION
     currentTrack = fetchedTrack;
-
+    if (fetchedTrack.is_playing !== isPlaying.value) {
+      isPlaying.value = fetchedTrack.is_playing;
+    }
     startProgress = fetchedTrack.progress_ms;
     startTime = Date.now();
   }, 2000);
@@ -128,7 +146,8 @@ function stopIntervals() {
 }
 
 async function preloadTabData() {
-  const data = await spotifyApi.spotifyFetch('me/playlists').catch(() => null);
+  const request = await spotifyApi.spotifyFetch('me/playlists').catch(() => null);
+  const data = request?.data;
 
   const urls: string[] = [
     ...new Set(data?.items?.map((p: SpotifyPlaylist) => p.images?.[0]?.url).filter(Boolean)),
@@ -151,28 +170,33 @@ async function updatePlayerControls(currentTrack: SpotifyPlayer) {
 
 async function updateTrackDetails(currentTrack: SpotifyPlayer) {
   trackTitle.value = currentTrack.item.name;
-  trackArtist.value = currentTrack.item.artists?.[0]?.name ?? 'Unknown Artist';
+  trackArtist.value = currentTrack.item.artists?.map((a) => a.name).join(', ') ?? 'Unknown Artist';
   albumCover.value = currentTrack.item.album?.images?.[0]?.url ?? '';
 
   switch (currentTrack.context?.type) {
     case 'playlist': {
       const id = currentTrack.context.uri.split(':')[2];
-      const playlist = (await spotifyApi.spotifyFetch(`playlists/${id}`)) as SpotifyPlaylist | null;
+      const playlist = (await spotifyApi.spotifyFetch(`playlists/${id}`))
+        ?.data as SpotifyPlaylist | null;
       playlistName.value = playlist?.name ?? '';
       break;
     }
 
     case 'album':
-      playlistName.value = currentTrack.item.album.name;
+      playlistName.value = currentTrack.item.album.name ?? '';
       break;
 
     case 'artist':
-      playlistName.value = trackArtist.value;
+      playlistName.value = trackArtist.value ?? '';
       break;
 
     default:
       playlistName.value = '';
   }
+}
+
+function openSpotify() {
+  window.open('spotify://', '_blank');
 }
 </script>
 
@@ -182,10 +206,17 @@ async function updateTrackDetails(currentTrack: SpotifyPlayer) {
     <TrackInfo :title="trackTitle" :artist="trackArtist" />
 
     <div class="cover-wrapper">
-      <img id="albumCover" :src="albumCover" @error="onImageError" />
+      <img id="albumCover" :src="albumCover ?? coverPlaceholder" @error="onImageError" />
       <div class="offline-overlay" v-if="!isOnline">
         <CloudOffIcon />
         <span>offline</span>
+      </div>
+      <div class="offline-overlay" v-else-if="isWaitingForTrack">
+        <span>No playback active</span>
+        <button id="openspotifybtn" @click="openSpotify">
+          Open Spotify
+          <ExternalLinkIcon />
+        </button>
       </div>
     </div>
 
@@ -248,6 +279,32 @@ async function updateTrackDetails(currentTrack: SpotifyPlayer) {
 .offline-overlay svg {
   width: 5rem;
   height: 5rem;
+}
+
+#openspotifybtn {
+  all: unset;
+  background-color: var(--accent-color);
+  color: var(--vt-c-black);
+  font-size: 1.2rem;
+  padding-left: 6%;
+  padding-right: 6%;
+  padding-top: 3%;
+  padding-bottom: 3%;
+  border-radius: 2rem;
+}
+
+#openspotifybtn svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  vertical-align: middle;
+}
+
+#openspotifybtn:focus {
+  outline: revert;
+}
+
+#openspotifybtn:hover {
+  background-color: var(--accent-color-light);
 }
 
 #progress-bar {

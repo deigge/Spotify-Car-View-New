@@ -9,6 +9,8 @@ const playedSongSchema = new mongoose.Schema<PlayedSong>({
   albumName: { type: String },
   albumCovers: [{ url: String, height: Number, width: Number }],
   spotifyUrl: { type: String },
+  spotifyUri: { type: String },
+  isSaved: { type: Boolean, default: false },
   playedAt: { type: Date, default: Date.now },
 });
 

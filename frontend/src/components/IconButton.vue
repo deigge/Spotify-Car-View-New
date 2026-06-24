@@ -7,7 +7,13 @@ defineProps<{
 </script>
 
 <template>
-  <button class="icon-btn" :class="{ active }" :style="{ 'font-size': size }" :disabled="disabled">
+  <button
+    class="icon-btn"
+    :class="{ active }"
+    :style="{ 'font-size': size }"
+    :disabled="disabled"
+    @click="($event.currentTarget as HTMLButtonElement).blur()"
+  >
     <slot />
   </button>
 </template>
@@ -33,6 +39,14 @@ defineProps<{
 
 .icon-btn:active {
   color: rgb(204, 255, 174);
+  filter: brightness(0.8);
+  transform: scale(0.96);
+}
+
+.icon-btn.active:hover,
+.icon-btn.active:focus-visible,
+.icon-btn.active:focus {
+  color: rgb(212, 255, 187);
 }
 
 .icon-btn:disabled {

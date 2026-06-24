@@ -258,7 +258,7 @@ span[data-v-0dafee8e] {
   margin-top: 0.5rem;
 }
 
-.player-view[data-v-66cc4fab] {
+.player-view[data-v-31b4cf69] {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -266,7 +266,7 @@ span[data-v-0dafee8e] {
   max-width: 400px;
   padding-bottom: 4rem;
 }
-.playlist-name[data-v-66cc4fab] {
+.playlist-name[data-v-31b4cf69] {
   margin-top: 1rem;
   font-size: 1rem;
   display: block;
@@ -275,17 +275,17 @@ span[data-v-0dafee8e] {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.cover-wrapper[data-v-66cc4fab] {
+.cover-wrapper[data-v-31b4cf69] {
   position: relative;
   width: 70%;
   margin-top: 1rem;
 }
-#albumCover[data-v-66cc4fab] {
+#albumCover[data-v-31b4cf69] {
   width: 100%;
   border-radius: 2rem;
   display: block;
 }
-.offline-overlay[data-v-66cc4fab] {
+.offline-overlay[data-v-31b4cf69] {
   position: absolute;
   inset: 0;
   border-radius: 2rem;
@@ -298,11 +298,11 @@ span[data-v-0dafee8e] {
   flex-direction: column;
   gap: 0.5rem;
 }
-.offline-overlay svg[data-v-66cc4fab] {
+.offline-overlay svg[data-v-31b4cf69] {
   width: 5rem;
   height: 5rem;
 }
-#progress-bar[data-v-66cc4fab] {
+#progress-bar[data-v-31b4cf69] {
   margin-top: 1rem;
   margin-bottom: 1rem;
   accent-color: rgb(144, 255, 80);
@@ -373,20 +373,20 @@ h1[data-v-ad43ee7a] {
   text-align: center;
 }
 
-#trackCard[data-v-76946704] {
+#trackCard[data-v-114c6067] {
   display: flex;
   flex-direction: row;
   min-width: 0;
   gap: 0.75rem;
   padding-right: 1rem;
 }
-#trackInfo[data-v-76946704] {
+#trackInfo[data-v-114c6067] {
   display: flex;
   flex-direction: column;
   min-width: 0;
   justify-content: center;
 }
-#trackCover[data-v-76946704] {
+#trackCover[data-v-114c6067] {
   margin-left: 1rem;
   border-radius: 0.5rem;
   width: 95%;
@@ -397,30 +397,30 @@ h1[data-v-ad43ee7a] {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
-hr[data-v-76946704] {
+hr[data-v-114c6067] {
   border: none;
   border-top: 1px solid #333;
   margin-left: 5%;
   margin-right: 5%;
 }
-#buttons[data-v-76946704] {
+#buttons[data-v-114c6067] {
   margin-left: auto;
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-#history-view[data-v-4181bc58] {
+#history-view[data-v-9dcfa68a] {
   height: 100%;
   overflow-y: auto;
 }
-h1[data-v-4181bc58] {
+h1[data-v-9dcfa68a] {
   margin-top: 1rem;
   font-size: 1.2rem;
   display: block;
   text-align: center;
 }
-#date-header[data-v-4181bc58] {
+#date-header[data-v-9dcfa68a] {
   margin-left: 1rem;
   margin-right: 1rem;
   margin-top: 2rem;

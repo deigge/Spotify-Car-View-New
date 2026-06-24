@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import IconButton from './IconButton.vue';
 
 const props = defineProps<{
   active?: boolean;
@@ -15,32 +16,20 @@ function handleClick() {
 </script>
 
 <template>
-  <button class="nav-btn" :class="{ active }" :style="{ 'font-size': size }" @click="handleClick">
+  <IconButton
+    class="nav-btn"
+    :class="{ active }"
+    :style="{ 'font-size': size }"
+    @click="handleClick"
+  >
     <slot />
-  </button>
+  </IconButton>
 </template>
 
 <style lang="css" scoped>
 .nav-btn {
-  background: none;
-  border: none;
-  color: #d3d3d3;
-  font-size: 1.8rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-}
-.nav-btn.active {
-  color: var(--accent-color);
-}
-
-.nav-btn:not(.active):hover,
-.nav-btn:not(.active):focus-visible,
-.nav-btn:not(.active):focus {
-  color: white;
-}
-
-.nav-btn:active {
-  color: rgb(204, 255, 174);
 }
 </style>

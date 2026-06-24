@@ -12,8 +12,20 @@ const app_url = process.env.APP_URL;
 
 router.get('/login', function (req, res) {
   const state = crypto.randomUUID();
-  const scope =
-    'user-read-playback-state user-read-private user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative user-read-playback-position';
+  const scope = [
+    'user-read-playback-state',
+    'user-read-private',
+    'user-modify-playback-state',
+    'user-read-currently-playing',
+    'playlist-read-private',
+    'playlist-read-collaborative',
+    'user-read-playback-position',
+    'user-library-read',
+    'user-library-modify',
+    'user-follow-read',
+    'user-follow-modify',
+    'playlist-modify-public',
+  ].join(' ');
 
   res.cookie('spotify_state', state, { httpOnly: true });
 

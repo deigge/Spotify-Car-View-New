@@ -13,7 +13,6 @@ export const useAuthStore = defineStore('auth', {
       try {
         const res = await fetch('/auth/token', { credentials: 'include' });
         if (!res.ok) {
-          // Server hat geantwortet, aber Session ist ungültig (401 o.ä.)
           localStorage.removeItem('wasLoggedIn');
           return 'unauthorized';
         }
@@ -23,7 +22,6 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('wasLoggedIn', 'true');
         return 'ok';
       } catch {
-        // Fetch konnte gar nicht erst rausgehen -> wirklich offline
         return 'offline';
       }
     },
@@ -39,15 +37,21 @@ export const useAuthStore = defineStore('auth', {
             headers: { Authorization: 'Bearer ' + this.accessToken },
           });
         }
-        if (!res.ok) return null;
-        return res.json();
+        const text = await res.text();
+        let data = null;
+        try {
+          data = text ? JSON.parse(text) : null;
+        } catch {
+          data = null;
+        }
+        return { ok: res.ok, status: res.status, data };
       } catch (e) {
         console.error('spotifyFetch failed:', url, e);
         return null;
       }
     },
 
-    async spotifyRequest(method: 'PUT' | 'POST', url: string, body?: object) {
+    async spotifyRequest(method: 'PUT' | 'POST' | 'DELETE', url: string, body?: object) {
       const doRequest = () =>
         fetch(base_url + url, {
           method,
@@ -64,11 +68,14 @@ export const useAuthStore = defineStore('auth', {
       }
 
       const text = await res.text();
-      try {
-        return text ? JSON.parse(text) : null;
-      } catch {
-        return null; // Antwort war kein valides JSON, z.B. /shuffle
-      }
+      const data = (() => {
+        try {
+          return text ? JSON.parse(text) : null;
+        } catch {
+          return null;
+        }
+      })();
+      return { ok: res.ok, status: res.status, data };
     },
 
     async spotifyPut(url: string, body?: object) {
@@ -77,6 +84,10 @@ export const useAuthStore = defineStore('auth', {
 
     async spotifyPost(url: string, body?: object) {
       return this.spotifyRequest('POST', url, body);
+    },
+
+    async spotifyDelete(url: string, body?: object) {
+      return this.spotifyRequest('DELETE', url, body);
     },
   },
 });

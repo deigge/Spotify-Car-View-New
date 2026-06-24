@@ -29,9 +29,19 @@ router.post('/addsong', getUser, async (req, res) => {
     albumName: trackInfo.item.album.name,
     albumCovers: trackInfo.item.album.images,
     spotifyUrl: trackInfo.item.external_urls.spotify,
+    spotifyUri: trackInfo.item.uri,
+    isSaved: trackInfo.isSaved,
   });
 
   await song.save();
+  res.sendStatus(200);
+});
+
+router.patch('/updatesong/:trackId', getUser, async (req, res) => {
+  await PlayedSong.findOneAndUpdate(
+    { userId: req.user.spotifyId, trackId: req.params.trackId },
+    { $set: req.body }
+  );
   res.sendStatus(200);
 });
 

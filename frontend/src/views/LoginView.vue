@@ -9,7 +9,7 @@ function login() {
 <template>
   <div id="login">
     <button id="loginButton" @click="login">
-      Mit Spotify anmelden
+      Log in with Spotify
       <ExternalLinkIcon />
     </button>
   </div>

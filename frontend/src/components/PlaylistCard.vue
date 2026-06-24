@@ -23,7 +23,7 @@ function selectPlaylist() {
 
 <template>
   <button id="playlistCard" @click="selectPlaylist" :disabled="props.disabled">
-    <img id="playlistCover" :src="coverUrl" @error="onImageError" />
+    <img id="playlistCover" :src="coverUrl ?? coverPlaceholder" @error="onImageError" />
     <span>{{ name }}</span>
   </button>
 </template>

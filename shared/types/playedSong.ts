@@ -7,5 +7,7 @@ export type PlayedSong = {
   albumName: string;
   albumCovers: { url: string; height: number; width: number }[];
   spotifyUrl: string;
+  spotifyUri: string;
+  isSaved: boolean;
   playedAt: string;
 };

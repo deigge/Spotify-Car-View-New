@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue';
 import IconButton from '@/components/IconButton.vue';
 import ArrowsShuffleIcon from '@/components/icons/arrowsShuffleIcon.vue';
 import PlayerPlayIcon from '@/components/icons/playerPlayIcon.vue';
@@ -19,29 +20,59 @@ const props = defineProps<{
   disabled?: boolean;
 }>();
 
-function togglePlayback() {
-  if (props.isPlaying) {
-    spotifyApi.spotifyPut('me/player/pause');
+const localShuffleState = ref(props.shuffleState);
+const localRepeatState = ref(props.repeatState);
+const localIsPlaying = ref(props.isPlaying);
+
+watch(
+  () => props.isPlaying,
+  (val) => (localIsPlaying.value = val)
+);
+watch(
+  () => props.shuffleState,
+  (val) => (localShuffleState.value = val)
+);
+watch(
+  () => props.repeatState,
+  (val) => (localRepeatState.value = val)
+);
+
+async function togglePlayback() {
+  let request;
+  if (localIsPlaying.value) {
+    request = await spotifyApi.spotifyPut('me/player/pause');
   } else {
-    spotifyApi.spotifyPut('me/player/play');
+    request = await spotifyApi.spotifyPut('me/player/play');
+  }
+  if (request.ok) localIsPlaying.value = !localIsPlaying.value;
+}
+
+async function toggleShuffle() {
+  const request = await spotifyApi.spotifyPut(
+    `me/player/shuffle?state=${!localShuffleState.value}`
+  );
+  if (request.ok) {
+    localShuffleState.value = !localShuffleState.value;
   }
 }
 
-function toggleShuffle() {
-  spotifyApi.spotifyPut(`me/player/shuffle?state=${!props.shuffleState}`);
-}
-
-function switchRepeatState() {
-  switch (props.repeatState) {
+async function switchRepeatState() {
+  let request;
+  let newState;
+  switch (localRepeatState.value) {
     case 'off':
-      spotifyApi.spotifyPut('me/player/repeat?state=context');
+      newState = 'context';
       break;
     case 'context':
-      spotifyApi.spotifyPut('me/player/repeat?state=track');
+      newState = 'track';
       break;
     default:
-      spotifyApi.spotifyPut('me/player/repeat?state=off');
+      newState = 'off';
       break;
+  }
+  request = await spotifyApi.spotifyPut(`me/player/repeat?state=${newState}`);
+  if (request.ok) {
+    localRepeatState.value = newState;
   }
 }
 
@@ -58,7 +89,7 @@ function previousSong() {
   <div class="controls">
     <IconButton
       size="2.5rem"
-      :active="shuffleState"
+      :active="localShuffleState"
       :disabled="props.disabled"
       @click="toggleShuffle"
     >
@@ -67,12 +98,12 @@ function previousSong() {
 
     <IconButton
       size="2.5rem"
-      :active="props.repeatState === 'context' || props.repeatState === 'track'"
+      :active="localRepeatState === 'context' || localRepeatState === 'track'"
       :disabled="disabled"
       @click="switchRepeatState"
     >
-      <RepeatIcon v-if="props.repeatState == 'context'" />
-      <RepeatOnceIcon v-else-if="props.repeatState == 'track'" />
+      <RepeatIcon v-if="localRepeatState == 'context'" />
+      <RepeatOnceIcon v-else-if="localRepeatState == 'track'" />
       <RepeatOffIcon v-else />
     </IconButton>
   </div>
@@ -83,7 +114,7 @@ function previousSong() {
     </IconButton>
 
     <IconButton icon="player-play" size="5rem" :disabled="props.disabled" @click="togglePlayback">
-      <PlayerPauseIcon v-if="props.isPlaying" />
+      <PlayerPauseIcon v-if="localIsPlaying" />
       <PlayerPlayIcon v-else />
     </IconButton>
 
