@@ -14,6 +14,10 @@ const { isOnline } = useOnlineStatus();
 const spotifyApi = useAuthStore();
 const playlists = ref<SpotifyPlaylist[]>([]);
 
+/**
+ * Lädt die Spotify Playlists beim ersten Rendern
+ * und speichert sie sortiert im State
+ */
 onMounted(async () => {
   try {
     const request = await spotifyApi.spotifyFetch('me/playlists');

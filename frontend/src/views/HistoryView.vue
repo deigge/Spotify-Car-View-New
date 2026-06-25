@@ -9,11 +9,17 @@ const { isOnline } = useOnlineStatus();
 
 const tracks = ref<PlayedSong[]>([]);
 
+/**
+ * Lädt die History Daten vom Backend
+ */
 onMounted(async () => {
   const res = await fetch('/api/history');
   tracks.value = await res.json();
 });
 
+/**
+ * Gruppiert Tracks nach Datum (TT.MM.JJJJ)
+ */
 const groupedTracks = computed(() => {
   const groups: Record<string, PlayedSong[]> = {};
 

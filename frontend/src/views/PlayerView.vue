@@ -38,6 +38,9 @@ let currentTrackId = '';
 let currentTrack = {} as SpotifyPlayer;
 
 onMounted(async () => {
+  /**
+   * Reagiert auf Online/Offline Wechsel
+   */
   watch(
     isOnline,
     async (online) => {
@@ -51,6 +54,9 @@ onMounted(async () => {
     { immediate: true }
   );
 
+  /**
+   * Lädt Daten im Hintergrund nach initialem Rendern
+   */
   requestIdleCallback(() => {
     preloadTabData();
   });
@@ -60,6 +66,10 @@ onBeforeUnmount(() => {
   stopIntervals();
 });
 
+/**
+ * Holt den aktuellen Playback Status von Spotify
+ * und aktualisiert den lokalen UI State
+ */
 async function fetchAndUpdateTrack() {
   const fetchRequest = await spotifyApi.spotifyFetch('me/player');
   const fetchedTrack = fetchRequest?.data;
@@ -82,6 +92,13 @@ async function fetchAndUpdateTrack() {
   progress.value = (startProgress / fetchedTrack.item.duration_ms) * 100;
 }
 
+/**
+ * Startet:
+ * - lokale Progress Berechnung
+ * - regelmäßige Spotify Synchronisation
+ *
+ * Wird nur gestartet wenn noch nicht aktiv
+ */
 function startIntervals() {
   if (progressInterval || syncInterval) return;
   progressInterval = window.setInterval(() => {
@@ -101,7 +118,7 @@ function startIntervals() {
 
     if (!fetchedTrack?.item) return;
 
-    // 🔥 TRACK CHANGE DETECTED
+    // Track gewechselt → kompletter State Reset
     if (fetchedTrack.item.id !== currentTrackId) {
       currentTrackId = fetchedTrack.item.id;
 
@@ -119,6 +136,7 @@ function startIntervals() {
         await spotifyApi.spotifyFetch(`me/library/contains?uris=${currentTrack.item?.uri}`)
       )?.data ?? [false];
 
+      // Track in Backend History speichern
       await fetch('/api/addsong', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -128,7 +146,7 @@ function startIntervals() {
       return;
     }
 
-    // 🔄 SAME TRACK → SYNC CORRECTION
+    // gleicher Track → nur Sync-Korrektur
     currentTrack = fetchedTrack;
     if (fetchedTrack.is_playing !== isPlaying.value) {
       isPlaying.value = fetchedTrack.is_playing;
@@ -138,6 +156,10 @@ function startIntervals() {
   }, 2000);
 }
 
+/**
+ * Stoppt alle laufenden Intervalle
+ * und setzt interne Timer zurück
+ */
 function stopIntervals() {
   clearInterval(progressInterval);
   clearInterval(syncInterval);
@@ -145,6 +167,11 @@ function stopIntervals() {
   syncInterval = 0;
 }
 
+/**
+ * Lädt Daten im Hintergrund vor:
+ * - Playlists
+ * - History API
+ */
 async function preloadTabData() {
   const request = await spotifyApi.spotifyFetch('me/playlists').catch(() => null);
   const data = request?.data;
@@ -162,12 +189,23 @@ async function preloadTabData() {
   fetch('/api/history').catch(() => {});
 }
 
+/**
+ * Aktualisiert Playback Controls:
+ * Play / Pause, Shuffle, Repeat
+ */
 async function updatePlayerControls(currentTrack: SpotifyPlayer) {
   isPlaying.value = currentTrack.is_playing;
   shuffleState.value = currentTrack.shuffle_state;
   repeatState.value = currentTrack.repeat_state;
 }
 
+/**
+ * Aktualisiert alle Track UI Daten:
+ * - Titel
+ * - Artist
+ * - Cover
+ * - Kontext (Playlist / Album / Artist)
+ */
 async function updateTrackDetails(currentTrack: SpotifyPlayer) {
   trackTitle.value = currentTrack.item.name;
   trackArtist.value = currentTrack.item.artists?.map((a) => a.name).join(', ') ?? 'Unknown Artist';
@@ -195,6 +233,9 @@ async function updateTrackDetails(currentTrack: SpotifyPlayer) {
   }
 }
 
+/**
+ * Öffnet Spotify App
+ */
 function openSpotify() {
   window.open('spotify://', '_blank');
 }

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import ExternalLinkIcon from '@/components/icons/externalLinkIcon.vue';
 
+/**
+ * Leitet den Nutzer zum Backend Login Flow weiter
+ */
 function login() {
   window.location.href = '/auth/login';
 }
