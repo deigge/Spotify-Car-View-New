@@ -19,8 +19,20 @@ const props = defineProps<{
   disabled: boolean;
 }>();
 
+/**
+ * Lokaler Like/Saved-Status des Songs.
+ * Wird optimistisch aktualisiert, bevor API Calls bestätigt sind.
+ */
 const isSaved = ref(props.song.isSaved);
 
+/**
+ * Teilt den Song über native Share API oder kopiert den Link in die Zwischenablage.
+ *
+ * Verhalten:
+ * - Wenn Spotify URL fehlt → Info Toast
+ * - Wenn Web Share API verfügbar → nativer Share Dialog
+ * - Sonst → Link in Clipboard kopieren
+ */
 async function share() {
   if (!props.song.spotifyUrl) {
     showToast('Link not available', ToastType.Info);
@@ -40,10 +52,21 @@ async function share() {
   }
 }
 
+/**
+ * Toggle Funktion für Like-Status (UI + API Sync)
+ */
 async function toggleLike() {
   await likeSong(!isSaved.value);
 }
 
+/**
+ * Aktualisiert Like-Status:
+ * - UI wird sofort aktualisiert (optimistic update)
+ * - Spotify API wird synchronisiert
+ * - lokale DB wird ebenfalls aktualisiert
+ *
+ * Falls ein Request fehlschlägt → vorheriger Zustand wird wiederhergestellt
+ */
 async function likeSong(save: boolean) {
   if (isSaved.value == null) {
     showToast('Like state unavailable', ToastType.Info);
@@ -56,6 +79,7 @@ async function likeSong(save: boolean) {
     ? await spotifyApi.spotifyPut(`/me/library?uris=${props.song.spotifyUri}`)
     : await spotifyApi.spotifyDelete(`/me/library?uris=${props.song.spotifyUri}`);
 
+  // Spotify Sync fehlgeschlagen → Zustand zurücksetzen
   if (!spotifyRequest.ok) {
     isSaved.value = previousValue;
     showToast('Failed to update', ToastType.Error);
@@ -68,6 +92,7 @@ async function likeSong(save: boolean) {
     body: JSON.stringify({ isSaved: isSaved.value }),
   });
 
+  // DB Sync fehlgeschlagen → Zustand ebenfalls zurücksetzen
   if (!dbRes.ok) {
     isSaved.value = previousValue;
     showToast('Failed to save', ToastType.Error);

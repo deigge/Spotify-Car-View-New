@@ -7,6 +7,11 @@ import HomeIcon from './icons/homeIcon.vue';
 import PlaylistIcon from './icons/playlistIcon.vue';
 
 const route = useRoute();
+
+/**
+ * Liefert den aktuellen Vue Router Pfad.
+ * Wird genutzt, um den aktiven Tab im Bottom Navigation Bar zu markieren.
+ */
 </script>
 
 <template>

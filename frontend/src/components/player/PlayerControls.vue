@@ -10,6 +10,7 @@ import RepeatIcon from '@/components/icons/repeatIcon.vue';
 import { useAuthStore } from '@/stores/auth';
 import RepeatOnceIcon from '../icons/repeatOnceIcon.vue';
 import RepeatOffIcon from '../icons/repeatOffIcon.vue';
+import { showToast, ToastType } from '../ToastComponent.vue';
 
 const spotifyApi = useAuthStore();
 
@@ -20,10 +21,18 @@ const props = defineProps<{
   disabled?: boolean;
 }>();
 
+/**
+ * Lokale Kopien der Player States.
+ * Werden optimistisch im UI aktualisiert und mit Props synchronisiert.
+ */
 const localShuffleState = ref(props.shuffleState);
 const localRepeatState = ref(props.repeatState);
 const localIsPlaying = ref(props.isPlaying);
 
+/**
+ * Synchronisiert externe Player Props mit lokalen UI States.
+ * Wichtig, falls sich der Player State außerhalb dieser Komponente ändert.
+ */
 watch(
   () => props.isPlaying,
   (val) => (localIsPlaying.value = val)
@@ -37,6 +46,10 @@ watch(
   (val) => (localRepeatState.value = val)
 );
 
+/**
+ * Play/Pause Toggle für Spotify Playback.
+ * Optimistic Update nur bei erfolgreicher API Response.
+ */
 async function togglePlayback() {
   let request;
   if (localIsPlaying.value) {
@@ -47,6 +60,9 @@ async function togglePlayback() {
   if (request.ok) localIsPlaying.value = !localIsPlaying.value;
 }
 
+/**
+ * Aktiviert oder deaktiviert Shuffle Mode.
+ */
 async function toggleShuffle() {
   const request = await spotifyApi.spotifyPut(
     `me/player/shuffle?state=${!localShuffleState.value}`
@@ -56,6 +72,10 @@ async function toggleShuffle() {
   }
 }
 
+/**
+ * Wechselt den Repeat Modus zyklisch:
+ * off → context → track → off
+ */
 async function switchRepeatState() {
   let request;
   let newState;
@@ -76,12 +96,24 @@ async function switchRepeatState() {
   }
 }
 
-function nextSong() {
-  spotifyApi.spotifyPost('me/player/next');
+/**
+ * Springt zum nächsten Song im Playback Queue.
+ */
+async function nextSong() {
+  const request = await spotifyApi.spotifyPost('me/player/next');
+  if (!request.ok) {
+    showToast('Failed to skip track', ToastType.Error);
+  }
 }
 
-function previousSong() {
-  spotifyApi.spotifyPost('me/player/previous');
+/**
+ * Springt zum vorherigen Song im Playback Queue.
+ */
+async function previousSong() {
+  const request = await spotifyApi.spotifyPost('me/player/previous');
+  if (!request.ok) {
+    showToast('Failed to skip track', ToastType.Error);
+  }
 }
 </script>
 
@@ -121,7 +153,7 @@ function previousSong() {
       size="3.5rem"
       :disabled="props.disabled"
       @click="previousSong"
-      aria-label="Previous song"
+      aria-label="Previous Song"
     >
       <PlayerSkipBackIcon />
     </IconButton>
@@ -137,7 +169,7 @@ function previousSong() {
       <PlayerPlayIcon v-else />
     </IconButton>
 
-    <IconButton size="3.5rem" :disabled="disabled" @click="nextSong" aria-label="Next song">
+    <IconButton size="3.5rem" :disabled="disabled" @click="nextSong" aria-label="Next Song">
       <PlayerSkipForwardIcon />
     </IconButton>
   </div>

@@ -3,6 +3,7 @@ import coverPlaceholder from '/album_cover_placeholder.png';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 import { useImageFallback } from '@/composables/UseImageFallback';
+import { showToast, ToastType } from '@/components/ToastComponent.vue';
 
 const spotifyApi = useAuthStore();
 const router = useRouter();
@@ -15,9 +16,21 @@ const props = defineProps<{
   disabled?: boolean;
 }>();
 
-function selectPlaylist() {
-  spotifyApi.spotifyPut('me/player/play', { context_uri: props.playlistURI });
-  router.push('/');
+/**
+ * Wählt eine Playlist aus und startet die Wiedergabe.
+ *
+ * Verhalten:
+ * - sendet Play-Request an Spotify API
+ * - navigiert danach zurück zur Startseite
+ */
+async function selectPlaylist() {
+  const request = await spotifyApi.spotifyPut('me/player/play', { context_uri: props.playlistURI });
+  if (request.ok) {
+    // Nach Start der Wiedergabe zurück zur Hauptansicht
+    router.push('/');
+  } else {
+    showToast('Failed to play playlist', ToastType.Error);
+  }
 }
 </script>
 

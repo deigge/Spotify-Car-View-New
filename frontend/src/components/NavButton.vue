@@ -10,6 +10,13 @@ const props = defineProps<{
 
 const router = useRouter();
 
+/**
+ * Navigiert zu einer Route, falls ein `href` gesetzt ist.
+ *
+ * Verhalten:
+ * - Wenn `href` vorhanden ist → Navigation per vue-router
+ * - Wenn nicht → Button macht nichts (nur UI Element)
+ */
 function handleClick() {
   if (props.href) router.push(props.href);
 }

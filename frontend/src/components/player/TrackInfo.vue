@@ -1,22 +1,43 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 
 const props = defineProps<{
   title: string;
   artist: string;
 }>();
 
+/**
+ * Referenz auf das DOM-Element des Titels.
+ * Wird genutzt, um die Breite zu messen.
+ */
 const titleRef = ref<HTMLElement | null>(null);
+
+/**
+ * Gibt an, ob der Titel über den verfügbaren Platz hinausgeht.
+ * Wird genutzt, um Scroll-Animation nur bei Bedarf zu aktivieren.
+ */
 const titleOverflowing = ref(false);
 
-onMounted(() => {
-  if (titleRef.value)
-    titleOverflowing.value = titleRef.value.scrollWidth > titleRef.value.clientWidth;
-});
+/**
+ * Prüft nach dem Rendern, ob der Titel zu lang für den Container ist.
+ * Wenn ja → aktiviert horizontales Scrollen.
+ */
+watch(
+  () => props.title,
+  () => {
+    nextTick(() => {
+      if (titleRef.value) {
+        titleOverflowing.value = titleRef.value.scrollWidth > titleRef.value.clientWidth;
+      }
+    });
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
   <div class="track-info">
+    <!-- Aktiviert Scroll-Animation nur wenn Text zu lang ist -->
     <span id="trackTitle" ref="titleRef" :class="{ scrolling: titleOverflowing }">
       {{ props.title }}
     </span>

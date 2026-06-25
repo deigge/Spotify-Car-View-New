@@ -4,9 +4,19 @@ defineProps<{
   size?: string;
   disabled?: boolean;
 }>();
+
+/**
+ * Icon Button Komponente für klickbare Icons.
+ *
+ * Verhalten:
+ * - unterstützt aktiven Zustand (active styling)
+ * - unterstützt optionale Größe über font-size
+ * - kann deaktiviert werden (disabled)
+ */
 </script>
 
 <template>
+  <!-- Entfernt Fokus nach Klick, damit Button optisch nicht „fokussiert bleibt“ -->
   <button
     class="icon-btn"
     :class="{ active }"
