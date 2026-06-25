@@ -6685,6 +6685,14 @@ var IconButton_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ def
 		disabled: { type: Boolean }
 	},
 	setup(__props) {
+		/**
+		* Icon Button Komponente für klickbare Icons.
+		*
+		* Verhalten:
+		* - unterstützt aktiven Zustand (active styling)
+		* - unterstützt optionale Größe über font-size
+		* - kann deaktiviert werden (disabled)
+		*/
 		return (_ctx, _cache) => {
 			return openBlock(), createElementBlock("button", {
 				class: normalizeClass(["icon-btn", { active: __props.active }]),
@@ -6704,7 +6712,7 @@ var _plugin_vue_export_helper_default = (sfc, props) => {
 };
 //#endregion
 //#region src/components/IconButton.vue
-var IconButton_default = /* @__PURE__ */ _plugin_vue_export_helper_default(IconButton_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-9836376a"]]);
+var IconButton_default = /* @__PURE__ */ _plugin_vue_export_helper_default(IconButton_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-dc6f5d4b"]]);
 //#endregion
 //#region src/components/NavButton.vue
 var NavButton_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -6717,6 +6725,13 @@ var NavButton_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 	setup(__props) {
 		const props = __props;
 		const router = useRouter();
+		/**
+		* Navigiert zu einer Route, falls ein `href` gesetzt ist.
+		*
+		* Verhalten:
+		* - Wenn `href` vorhanden ist → Navigation per vue-router
+		* - Wenn nicht → Button macht nichts (nur UI Element)
+		*/
 		function handleClick() {
 			if (props.href) router.push(props.href);
 		}
@@ -6731,7 +6746,7 @@ var NavButton_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 			}, 8, ["class", "style"]);
 		};
 	}
-}), [["__scopeId", "data-v-0f345a1b"]]);
+}), [["__scopeId", "data-v-be308ea5"]]);
 //#endregion
 //#region src/components/icons/historyIcon.vue
 var _sfc_main$15 = {};
@@ -6815,25 +6830,32 @@ var BottomNavBar_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 	__name: "BottomNavBar",
 	setup(__props) {
 		const route = useRoute();
+		/**
+		* Liefert den aktuellen Vue Router Pfad.
+		* Wird genutzt, um den aktiven Tab im Bottom Navigation Bar zu markieren.
+		*/
 		return (_ctx, _cache) => {
 			return openBlock(), createElementBlock("nav", _hoisted_1$22, [
 				createVNode(NavButton_default, {
 					href: "/playlists",
-					active: unref(route).path === "/playlists"
+					active: unref(route).path === "/playlists",
+					"aria-label": "Playlist Tab"
 				}, {
 					default: withCtx(() => [createVNode(playlistIcon_default)]),
 					_: 1
 				}, 8, ["active"]),
 				createVNode(NavButton_default, {
 					href: "/",
-					active: unref(route).path === "/"
+					active: unref(route).path === "/",
+					"aria-label": "Player Tab"
 				}, {
 					default: withCtx(() => [createVNode(homeIcon_default)]),
 					_: 1
 				}, 8, ["active"]),
 				createVNode(NavButton_default, {
 					href: "/history",
-					active: unref(route).path === "/history"
+					active: unref(route).path === "/history",
+					"aria-label": "History Tab"
 				}, {
 					default: withCtx(() => [createVNode(historyIcon_default)]),
 					_: 1
@@ -6841,19 +6863,49 @@ var BottomNavBar_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-3d5be17a"]]);
+}), [["__scopeId", "data-v-70816dfc"]]);
 //#endregion
 //#region src/components/ToastComponent.vue?vue&type=script&lang.ts
+/**
+* Typen für Toast-Nachrichten.
+* Bestimmt nur das visuelle Styling.
+*/
 var ToastType = /* @__PURE__ */ function(ToastType) {
 	ToastType["Info"] = "info";
 	ToastType["Success"] = "success";
 	ToastType["Error"] = "error";
 	return ToastType;
 }({});
+/**
+* Aktuelle Toast-Nachricht.
+*/
 var message = /* @__PURE__ */ ref("");
+/**
+* Steuert, ob der Toast sichtbar ist.
+*/
 var visible = /* @__PURE__ */ ref(false);
+/**
+* Aktueller Toast-Typ (steuert Farbe / Styling).
+*/
 var type = /* @__PURE__ */ ref("info");
+/**
+* Speichert den aktuellen Timeout,
+* damit neue Toasts alte sauber überschreiben können.
+*/
 var timeoutId;
+/**
+* Zeigt eine Toast-Nachricht an.
+*
+* Verhalten:
+* - setzt Text + Typ
+* - blendet Toast ein
+* - ersetzt laufende Timer (kein „Überlappen“ von Toasts)
+* - blendet Toast nach `duration` wieder aus
+*
+* @param text Nachricht, die angezeigt werden soll
+* @param toastType visuelle Art des Toasts (info/success/error)
+* @param duration wie lange der Toast sichtbar bleibt (ms)
+*/
 function showToast(text, toastType = "info", duration = 2e3) {
 	message.value = text;
 	visible.value = true;
@@ -6881,7 +6933,7 @@ function _sfc_render$13(_ctx, _cache, $props, $setup, $data, $options) {
 		_: 1
 	});
 }
-var ToastComponent_default = /* @__PURE__ */ _plugin_vue_export_helper_default(ToastComponent_vue_vue_type_script_lang_default, [["render", _sfc_render$13], ["__scopeId", "data-v-67e54c2c"]]);
+var ToastComponent_default = /* @__PURE__ */ _plugin_vue_export_helper_default(ToastComponent_vue_vue_type_script_lang_default, [["render", _sfc_render$13], ["__scopeId", "data-v-b85ec71c"]]);
 //#endregion
 //#region src/App.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$21 = { class: "app" };
@@ -6891,25 +6943,42 @@ var App_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__
 	__name: "App",
 	setup(__props) {
 		const route = useRoute();
+		const router = useRouter();
+		/**
+		* Keyboard Shortcuts für Navigation:
+		* - 1 → Playlists
+		* - 2 → Player (Home)
+		* - 3 → History
+		*/
+		function handleKeydown(e) {
+			if (e.target instanceof HTMLInputElement) return;
+			switch (e.key) {
+				case "1":
+					router.push("/playlists");
+					break;
+				case "2":
+					router.push("/");
+					break;
+				case "3":
+					router.push("/history");
+					break;
+			}
+		}
+		/**
+		* Registriert globale Keyboard Listener beim Mounten
+		* und entfernt sie wieder beim Unmount (Cleanup).
+		*/
+		onMounted(() => window.addEventListener("keydown", handleKeydown));
+		onUnmounted(() => window.removeEventListener("keydown", handleKeydown));
 		return (_ctx, _cache) => {
 			return openBlock(), createElementBlock("div", _hoisted_1$21, [
-				createVNode(unref(RouterView)),
+				createBaseVNode("main", null, [createVNode(unref(RouterView))]),
 				unref(route).path !== "/login" ? (openBlock(), createBlock(BottomNavBar_default, { key: 0 })) : createCommentVNode("", true),
 				createVNode(ToastComponent_default)
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-01f64fba"]]);
-//#endregion
-//#region src/views/DevView.vue
-var DevView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
-	__name: "DevView",
-	setup(__props) {
-		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", null, [..._cache[0] || (_cache[0] = [createBaseVNode("div", null, [createBaseVNode("h1", null, "Test Hallo")], -1)])]);
-		};
-	}
-}), [["__scopeId", "data-v-16476975"]]);
+}), [["__scopeId", "data-v-7a8cb156"]]);
 //#endregion
 //#region src/components/player/TrackInfo.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$20 = { class: "track-info" };
@@ -6924,11 +6993,25 @@ var TrackInfo_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 	},
 	setup(__props) {
 		const props = __props;
+		/**
+		* Referenz auf das DOM-Element des Titels.
+		* Wird genutzt, um die Breite zu messen.
+		*/
 		const titleRef = /* @__PURE__ */ ref(null);
+		/**
+		* Gibt an, ob der Titel über den verfügbaren Platz hinausgeht.
+		* Wird genutzt, um Scroll-Animation nur bei Bedarf zu aktivieren.
+		*/
 		const titleOverflowing = /* @__PURE__ */ ref(false);
-		onMounted(() => {
-			if (titleRef.value) titleOverflowing.value = titleRef.value.scrollWidth > titleRef.value.clientWidth;
-		});
+		/**
+		* Prüft nach dem Rendern, ob der Titel zu lang für den Container ist.
+		* Wenn ja → aktiviert horizontales Scrollen.
+		*/
+		watch(() => props.title, () => {
+			nextTick(() => {
+				if (titleRef.value) titleOverflowing.value = titleRef.value.scrollWidth > titleRef.value.clientWidth;
+			});
+		}, { immediate: true });
 		return (_ctx, _cache) => {
 			return openBlock(), createElementBlock("div", _hoisted_1$20, [createBaseVNode("span", {
 				id: "trackTitle",
@@ -6938,7 +7021,7 @@ var TrackInfo_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 			}, toDisplayString(props.title), 3), createBaseVNode("span", _hoisted_2$6, toDisplayString(props.artist), 1)]);
 		};
 	}
-}), [["__scopeId", "data-v-0dafee8e"]]);
+}), [["__scopeId", "data-v-503f452f"]]);
 //#endregion
 //#region /album_cover_placeholder.png
 var album_cover_placeholder_default = "/album_cover_placeholder.png";
@@ -7536,12 +7619,28 @@ function defineStore(id, setup, setupOptions) {
 //#endregion
 //#region src/stores/auth.ts
 var base_url = "https://api.spotify.com/v1/";
+/**
+* Pinia Store für Authentication + Spotify API Requests.
+*
+* Verantwortlichkeiten:
+* - Token Management
+* - automatische Token-Erneuerung
+* - zentrale Spotify API Requests
+*/
 var useAuthStore = defineStore("auth", {
 	state: () => ({
 		accessToken: null,
 		tokenExpiresAt: null
 	}),
 	actions: {
+		/**
+		* Holt ein neues Access Token vom Backend.
+		*
+		* Rückgabewerte:
+		* - ok → Token gültig erhalten
+		* - offline → Netzwerkfehler
+		* - unauthorized → Login nicht mehr gültig
+		*/
 		async fetchToken() {
 			try {
 				const res = await fetch("/auth/token", { credentials: "include" });
@@ -7558,6 +7657,9 @@ var useAuthStore = defineStore("auth", {
 				return "offline";
 			}
 		},
+		/**
+		* GET Request an Spotify API mit automatischem Token Retry bei 401.
+		*/
 		async spotifyFetch(url) {
 			try {
 				let res = await fetch(base_url + url, { headers: { Authorization: "Bearer " + this.accessToken } });
@@ -7582,6 +7684,10 @@ var useAuthStore = defineStore("auth", {
 				return null;
 			}
 		},
+		/**
+		* Generischer Spotify Request (PUT / POST / DELETE)
+		* mit automatischem Token Refresh bei 401.
+		*/
 		async spotifyRequest(method, url, body) {
 			const doRequest = () => fetch(base_url + url, {
 				method,
@@ -7610,12 +7716,21 @@ var useAuthStore = defineStore("auth", {
 				data
 			};
 		},
+		/**
+		* Spotify PUT Request Wrapper
+		*/
 		async spotifyPut(url, body) {
 			return this.spotifyRequest("PUT", url, body);
 		},
+		/**
+		* Spotify POST Request Wrapper
+		*/
 		async spotifyPost(url, body) {
 			return this.spotifyRequest("POST", url, body);
 		},
+		/**
+		* Spotify DELETE Request Wrapper
+		*/
 		async spotifyDelete(url, body) {
 			return this.spotifyRequest("DELETE", url, body);
 		}
@@ -7697,21 +7812,40 @@ var PlayerControls_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/
 	setup(__props) {
 		const spotifyApi = useAuthStore();
 		const props = __props;
+		/**
+		* Lokale Kopien der Player States.
+		* Werden optimistisch im UI aktualisiert und mit Props synchronisiert.
+		*/
 		const localShuffleState = /* @__PURE__ */ ref(props.shuffleState);
 		const localRepeatState = /* @__PURE__ */ ref(props.repeatState);
 		const localIsPlaying = /* @__PURE__ */ ref(props.isPlaying);
+		/**
+		* Synchronisiert externe Player Props mit lokalen UI States.
+		* Wichtig, falls sich der Player State außerhalb dieser Komponente ändert.
+		*/
 		watch(() => props.isPlaying, (val) => localIsPlaying.value = val);
 		watch(() => props.shuffleState, (val) => localShuffleState.value = val);
 		watch(() => props.repeatState, (val) => localRepeatState.value = val);
+		/**
+		* Play/Pause Toggle für Spotify Playback.
+		* Optimistic Update nur bei erfolgreicher API Response.
+		*/
 		async function togglePlayback() {
 			let request;
 			if (localIsPlaying.value) request = await spotifyApi.spotifyPut("me/player/pause");
 			else request = await spotifyApi.spotifyPut("me/player/play");
 			if (request.ok) localIsPlaying.value = !localIsPlaying.value;
 		}
+		/**
+		* Aktiviert oder deaktiviert Shuffle Mode.
+		*/
 		async function toggleShuffle() {
 			if ((await spotifyApi.spotifyPut(`me/player/shuffle?state=${!localShuffleState.value}`)).ok) localShuffleState.value = !localShuffleState.value;
 		}
+		/**
+		* Wechselt den Repeat Modus zyklisch:
+		* off → context → track → off
+		*/
 		async function switchRepeatState() {
 			let request;
 			let newState;
@@ -7729,34 +7863,51 @@ var PlayerControls_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/
 			request = await spotifyApi.spotifyPut(`me/player/repeat?state=${newState}`);
 			if (request.ok) localRepeatState.value = newState;
 		}
-		function nextSong() {
-			spotifyApi.spotifyPost("me/player/next");
+		/**
+		* Springt zum nächsten Song im Playback Queue.
+		*/
+		async function nextSong() {
+			if (!(await spotifyApi.spotifyPost("me/player/next")).ok) showToast("Failed to skip track", ToastType.Error);
 		}
-		function previousSong() {
-			spotifyApi.spotifyPost("me/player/previous");
+		/**
+		* Springt zum vorherigen Song im Playback Queue.
+		*/
+		async function previousSong() {
+			if (!(await spotifyApi.spotifyPost("me/player/previous")).ok) showToast("Failed to skip track", ToastType.Error);
 		}
 		return (_ctx, _cache) => {
 			return openBlock(), createElementBlock(Fragment, null, [createBaseVNode("div", _hoisted_1$11, [createVNode(IconButton_default, {
 				size: "2.5rem",
 				active: localShuffleState.value,
 				disabled: props.disabled,
-				onClick: toggleShuffle
+				onClick: toggleShuffle,
+				"aria-label": localShuffleState.value ? "Shuffle on" : "Shuffle off"
 			}, {
 				default: withCtx(() => [createVNode(arrowsShuffleIcon_default)]),
 				_: 1
-			}, 8, ["active", "disabled"]), createVNode(IconButton_default, {
+			}, 8, [
+				"active",
+				"disabled",
+				"aria-label"
+			]), createVNode(IconButton_default, {
 				size: "2.5rem",
 				active: localRepeatState.value === "context" || localRepeatState.value === "track",
 				disabled: __props.disabled,
-				onClick: switchRepeatState
+				onClick: switchRepeatState,
+				"aria-label": localRepeatState.value === "off" ? "Repeat off" : localRepeatState.value === "context" ? "Repeat all" : "Repeat one"
 			}, {
 				default: withCtx(() => [localRepeatState.value == "context" ? (openBlock(), createBlock(repeatIcon_default, { key: 0 })) : localRepeatState.value == "track" ? (openBlock(), createBlock(repeatOnceIcon_default, { key: 1 })) : (openBlock(), createBlock(repeatOffIcon_default, { key: 2 }))]),
 				_: 1
-			}, 8, ["active", "disabled"])]), createBaseVNode("div", _hoisted_2$5, [
+			}, 8, [
+				"active",
+				"disabled",
+				"aria-label"
+			])]), createBaseVNode("div", _hoisted_2$5, [
 				createVNode(IconButton_default, {
 					size: "3.5rem",
 					disabled: props.disabled,
-					onClick: previousSong
+					onClick: previousSong,
+					"aria-label": "Previous Song"
 				}, {
 					default: withCtx(() => [createVNode(playerSkipBackIcon_default)]),
 					_: 1
@@ -7765,15 +7916,17 @@ var PlayerControls_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/
 					icon: "player-play",
 					size: "5rem",
 					disabled: props.disabled,
-					onClick: togglePlayback
+					onClick: togglePlayback,
+					"aria-label": localIsPlaying.value ? "Pause" : "Play"
 				}, {
 					default: withCtx(() => [localIsPlaying.value ? (openBlock(), createBlock(playerPauseIcon_default, { key: 0 })) : (openBlock(), createBlock(playerPlayIcon_default, { key: 1 }))]),
 					_: 1
-				}, 8, ["disabled"]),
+				}, 8, ["disabled", "aria-label"]),
 				createVNode(IconButton_default, {
 					size: "3.5rem",
 					disabled: __props.disabled,
-					onClick: nextSong
+					onClick: nextSong,
+					"aria-label": "Next Song"
 				}, {
 					default: withCtx(() => [createVNode(playerSkipForwardIcon_default)]),
 					_: 1
@@ -7781,7 +7934,7 @@ var PlayerControls_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/
 			])], 64);
 		};
 	}
-}), [["__scopeId", "data-v-6dc412bc"]]);
+}), [["__scopeId", "data-v-767ada88"]]);
 //#endregion
 //#region src/components/icons/externalLinkIcon.vue
 var _sfc_main$4 = {};
@@ -7812,19 +7965,46 @@ function _sfc_render$4(_ctx, _cache) {
 var externalLinkIcon_default = /* @__PURE__ */ _plugin_vue_export_helper_default(_sfc_main$4, [["render", _sfc_render$4]]);
 //#endregion
 //#region src/composables/UseOnlineStatus.ts
+/**
+* Globaler Online-Status der Anwendung.
+* Wird initial aus navigator.onLine gesetzt und live aktualisiert.
+*/
 var isOnline$1 = /* @__PURE__ */ ref(navigator.onLine);
+/**
+* Aktualisiert den Online-Status basierend auf dem Browser Event.
+*
+* Verhalten:
+* - setzt isOnline State
+* - zeigt Feedback Toast bei Statuswechsel
+*/
 function updateStatus() {
 	isOnline$1.value = navigator.onLine;
 	if (isOnline$1.value) showToast("Du bist online", ToastType.Success);
 	else showToast("Du bist offline", ToastType.Error);
 }
+/**
+* Reagiert auf Netzwerkwechsel des Browsers.
+*/
 window.addEventListener("online", updateStatus);
 window.addEventListener("offline", updateStatus);
+/**
+* Composable für den globalen Online-Status.
+*/
 function useOnlineStatus() {
 	return { isOnline: isOnline$1 };
 }
 //#endregion
 //#region src/composables/UseImageFallback.ts
+/**
+* Composable für ein Fallback-Bild bei fehlgeschlagenem Image-Load.
+*
+* Verhalten:
+* - wird als onError Handler für <img> genutzt
+* - ersetzt defektes Bild durch ein Fallback
+* - verhindert Endlosschleife, falls auch das Fallback fehlschlägt
+*
+* @param fallback - URL des Ersatzbildes
+*/
 function useImageFallback(fallback) {
 	return (e) => {
 		const img = e.target;
@@ -7899,11 +8079,17 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 		let currentTrackId = "";
 		let currentTrack = {};
 		onMounted(async () => {
+			/**
+			* Reagiert auf Online/Offline Wechsel
+			*/
 			watch(isOnline, async (online) => {
 				await fetchAndUpdateTrack();
 				if (online) startIntervals();
 				else stopIntervals();
 			}, { immediate: true });
+			/**
+			* Lädt Daten im Hintergrund nach initialem Rendern
+			*/
 			requestIdleCallback(() => {
 				preloadTabData();
 			});
@@ -7911,6 +8097,10 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 		onBeforeUnmount(() => {
 			stopIntervals();
 		});
+		/**
+		* Holt den aktuellen Playback Status von Spotify
+		* und aktualisiert den lokalen UI State
+		*/
 		async function fetchAndUpdateTrack() {
 			const fetchedTrack = (await spotifyApi.spotifyFetch("me/player"))?.data;
 			if (!fetchedTrack?.item) {
@@ -7926,6 +8116,13 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			startTime = Date.now();
 			progress.value = startProgress / fetchedTrack.item.duration_ms * 100;
 		}
+		/**
+		* Startet:
+		* - lokale Progress Berechnung
+		* - regelmäßige Spotify Synchronisation
+		*
+		* Wird nur gestartet wenn noch nicht aktiv
+		*/
 		function startIntervals() {
 			if (progressInterval || syncInterval) return;
 			progressInterval = window.setInterval(() => {
@@ -7961,12 +8158,21 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 				startTime = Date.now();
 			}, 2e3);
 		}
+		/**
+		* Stoppt alle laufenden Intervalle
+		* und setzt interne Timer zurück
+		*/
 		function stopIntervals() {
 			clearInterval(progressInterval);
 			clearInterval(syncInterval);
 			progressInterval = 0;
 			syncInterval = 0;
 		}
+		/**
+		* Lädt Daten im Hintergrund vor:
+		* - Playlists
+		* - History API
+		*/
 		async function preloadTabData() {
 			const data = (await spotifyApi.spotifyFetch("me/playlists").catch(() => null))?.data;
 			[...new Set(data?.items?.map((p) => p.images?.[0]?.url).filter(Boolean))].forEach((url) => {
@@ -7976,11 +8182,22 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			});
 			fetch("/api/history").catch(() => {});
 		}
+		/**
+		* Aktualisiert Playback Controls:
+		* Play / Pause, Shuffle, Repeat
+		*/
 		async function updatePlayerControls(currentTrack) {
 			isPlaying.value = currentTrack.is_playing;
 			shuffleState.value = currentTrack.shuffle_state;
 			repeatState.value = currentTrack.repeat_state;
 		}
+		/**
+		* Aktualisiert alle Track UI Daten:
+		* - Titel
+		* - Artist
+		* - Cover
+		* - Kontext (Playlist / Album / Artist)
+		*/
 		async function updateTrackDetails(currentTrack) {
 			trackTitle.value = currentTrack.item.name;
 			trackArtist.value = currentTrack.item.artists?.map((a) => a.name).join(", ") ?? "Unknown Artist";
@@ -8000,6 +8217,9 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 				default: playlistName.value = "";
 			}
 		}
+		/**
+		* Öffnet Spotify App
+		*/
 		function openSpotify() {
 			window.open("spotify://", "_blank");
 		}
@@ -8013,17 +8233,20 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 				createBaseVNode("div", _hoisted_3$1, [createBaseVNode("img", {
 					id: "albumCover",
 					src: albumCover.value ?? unref("/album_cover_placeholder.png"),
-					onError: _cache[0] || (_cache[0] = (...args) => unref(onImageError) && unref(onImageError)(...args))
+					onError: _cache[0] || (_cache[0] = (...args) => unref(onImageError) && unref(onImageError)(...args)),
+					alt: "Album Cover"
 				}, null, 40, _hoisted_4$1), !unref(isOnline) ? (openBlock(), createElementBlock("div", _hoisted_5$1, [createVNode(cloudOffIcon_default), _cache[1] || (_cache[1] = createBaseVNode("span", null, "offline", -1))])) : isWaitingForTrack.value ? (openBlock(), createElementBlock("div", _hoisted_6$1, [_cache[3] || (_cache[3] = createBaseVNode("span", null, "No playback active", -1)), createBaseVNode("button", {
 					id: "openspotifybtn",
-					onClick: openSpotify
+					onClick: openSpotify,
+					"aria-label": "Open Spotify"
 				}, [_cache[2] || (_cache[2] = createTextVNode(" Open Spotify ", -1)), createVNode(externalLinkIcon_default)])])) : createCommentVNode("", true)]),
 				createBaseVNode("input", {
 					type: "range",
 					min: "0",
 					max: "100",
 					value: progress.value,
-					id: "progress-bar"
+					id: "progress-bar",
+					"aria-label": "Song Progress"
 				}, null, 8, _hoisted_7),
 				createVNode(PlayerControls_default, {
 					isPlaying: isPlaying.value,
@@ -8039,10 +8262,10 @@ var PlayerView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-f5205fef"]]);
+}), [["__scopeId", "data-v-b3ad254e"]]);
 //#endregion
 //#region src/components/PlaylistCard.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$7 = ["disabled"];
+var _hoisted_1$7 = ["disabled", "aria-label"];
 var _hoisted_2$3 = ["src"];
 //#endregion
 //#region src/components/PlaylistCard.vue
@@ -8059,23 +8282,32 @@ var PlaylistCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 		const router = useRouter();
 		const onImageError = useImageFallback(album_cover_placeholder_default);
 		const props = __props;
-		function selectPlaylist() {
-			spotifyApi.spotifyPut("me/player/play", { context_uri: props.playlistURI });
-			router.push("/");
+		/**
+		* Wählt eine Playlist aus und startet die Wiedergabe.
+		*
+		* Verhalten:
+		* - sendet Play-Request an Spotify API
+		* - navigiert danach zurück zur Startseite
+		*/
+		async function selectPlaylist() {
+			if ((await spotifyApi.spotifyPut("me/player/play", { context_uri: props.playlistURI })).ok) router.push("/");
+			else showToast("Failed to play playlist", ToastType.Error);
 		}
 		return (_ctx, _cache) => {
 			return openBlock(), createElementBlock("button", {
 				id: "playlistCard",
 				onClick: selectPlaylist,
-				disabled: props.disabled
+				disabled: props.disabled,
+				"aria-label": "Select " + props.name
 			}, [createBaseVNode("img", {
 				id: "playlistCover",
 				src: __props.coverUrl ?? unref("/album_cover_placeholder.png"),
-				onError: _cache[0] || (_cache[0] = (...args) => unref(onImageError) && unref(onImageError)(...args))
+				onError: _cache[0] || (_cache[0] = (...args) => unref(onImageError) && unref(onImageError)(...args)),
+				alt: "Playlist Cover"
 			}, null, 40, _hoisted_2$3), createBaseVNode("span", null, toDisplayString(__props.name), 1)], 8, _hoisted_1$7);
 		};
 	}
-}), [["__scopeId", "data-v-e93eb382"]]);
+}), [["__scopeId", "data-v-4b689833"]]);
 //#endregion
 //#region src/views/PlaylistView.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$6 = { class: "playlist-view" };
@@ -8088,6 +8320,10 @@ var PlaylistView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 		const { isOnline } = useOnlineStatus();
 		const spotifyApi = useAuthStore();
 		const playlists = /* @__PURE__ */ ref([]);
+		/**
+		* Lädt die Spotify Playlists beim ersten Rendern
+		* und speichert sie sortiert im State
+		*/
 		onMounted(async () => {
 			try {
 				const data = (await spotifyApi.spotifyFetch("me/playlists"))?.data;
@@ -8113,7 +8349,7 @@ var PlaylistView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 			}), 128))])]);
 		};
 	}
-}), [["__scopeId", "data-v-624fbe28"]]);
+}), [["__scopeId", "data-v-dfe39927"]]);
 //#endregion
 //#region src/components/icons/shareIcon.vue
 var _sfc_main$2 = {};
@@ -8195,7 +8431,19 @@ var TrackCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 		const spotifyApi = useAuthStore();
 		const onImageError = useImageFallback(album_cover_placeholder_default);
 		const props = __props;
+		/**
+		* Lokaler Like/Saved-Status des Songs.
+		* Wird optimistisch aktualisiert, bevor API Calls bestätigt sind.
+		*/
 		const isSaved = /* @__PURE__ */ ref(props.song.isSaved);
+		/**
+		* Teilt den Song über native Share API oder kopiert den Link in die Zwischenablage.
+		*
+		* Verhalten:
+		* - Wenn Spotify URL fehlt → Info Toast
+		* - Wenn Web Share API verfügbar → nativer Share Dialog
+		* - Sonst → Link in Clipboard kopieren
+		*/
 		async function share() {
 			if (!props.song.spotifyUrl) {
 				showToast("Link not available", ToastType.Info);
@@ -8211,9 +8459,20 @@ var TrackCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 				showToast("Link copied!", ToastType.Success);
 			}
 		}
+		/**
+		* Toggle Funktion für Like-Status (UI + API Sync)
+		*/
 		async function toggleLike() {
 			await likeSong(!isSaved.value);
 		}
+		/**
+		* Aktualisiert Like-Status:
+		* - UI wird sofort aktualisiert (optimistic update)
+		* - Spotify API wird synchronisiert
+		* - lokale DB wird ebenfalls aktualisiert
+		*
+		* Falls ein Request fehlschlägt → vorheriger Zustand wird wiederhergestellt
+		*/
 		async function likeSong(save) {
 			if (isSaved.value == null) {
 				showToast("Like state unavailable", ToastType.Info);
@@ -8240,24 +8499,33 @@ var TrackCard_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 				createBaseVNode("img", {
 					id: "trackCover",
 					src: __props.song.albumCovers[0]?.url ?? unref("/album_cover_placeholder.png"),
-					onError: _cache[0] || (_cache[0] = (...args) => unref(onImageError) && unref(onImageError)(...args))
+					onError: _cache[0] || (_cache[0] = (...args) => unref(onImageError) && unref(onImageError)(...args)),
+					"aria-label": "Track Cover"
 				}, null, 40, _hoisted_2$1),
 				createBaseVNode("div", _hoisted_3, [createBaseVNode("span", _hoisted_4, toDisplayString(props.song.name), 1), createBaseVNode("span", _hoisted_5, toDisplayString(props.song.artists.join(", ")), 1)]),
-				createBaseVNode("div", _hoisted_6, [createVNode(IconButton_default, { onClick: share }, {
+				createBaseVNode("div", _hoisted_6, [createVNode(IconButton_default, {
+					onClick: share,
+					"aria-label": "Share"
+				}, {
 					default: withCtx(() => [createVNode(shareIcon_default)]),
 					_: 1
 				}), createVNode(IconButton_default, {
 					disabled: props.disabled,
 					active: isSaved.value,
-					onClick: toggleLike
+					onClick: toggleLike,
+					"aria-label": isSaved.value ? "Unlike Song" : "Like Song"
 				}, {
 					default: withCtx(() => [isSaved.value ? (openBlock(), createBlock(heartFilledIcon_default, { key: 0 })) : (openBlock(), createBlock(heartIcon_default, { key: 1 }))]),
 					_: 1
-				}, 8, ["disabled", "active"])])
+				}, 8, [
+					"disabled",
+					"active",
+					"aria-label"
+				])])
 			]), _cache[1] || (_cache[1] = createBaseVNode("hr", null, null, -1))], 64);
 		};
 	}
-}), [["__scopeId", "data-v-9f1bd3ae"]]);
+}), [["__scopeId", "data-v-eb2b066d"]]);
 //#endregion
 //#region src/views/HistoryView.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$1 = { id: "history-view" };
@@ -8269,9 +8537,15 @@ var HistoryView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 	setup(__props) {
 		const { isOnline } = useOnlineStatus();
 		const tracks = /* @__PURE__ */ ref([]);
+		/**
+		* Lädt die History Daten vom Backend
+		*/
 		onMounted(async () => {
 			tracks.value = await (await fetch("/api/history")).json();
 		});
+		/**
+		* Gruppiert Tracks nach Datum (TT.MM.JJJJ)
+		*/
 		const groupedTracks = computed(() => {
 			const groups = {};
 			for (const track of tracks.value) {
@@ -8301,7 +8575,7 @@ var HistoryView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 			}), 128))]);
 		};
 	}
-}), [["__scopeId", "data-v-1ad5d050"]]);
+}), [["__scopeId", "data-v-ecde3ca3"]]);
 //#endregion
 //#region src/views/LoginView.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1 = { id: "login" };
@@ -8320,18 +8594,17 @@ var LoginView_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 			}, [_cache[0] || (_cache[0] = createTextVNode(" Log in with Spotify ", -1)), createVNode(externalLinkIcon_default)])]);
 		};
 	}
-}), [["__scopeId", "data-v-84828e8b"]]);
+}), [["__scopeId", "data-v-c51088a9"]]);
 //#endregion
 //#region src/router/index.ts
 var { isOnline } = useOnlineStatus();
+/**
+* Vue Router Instanz
+* Verwaltet alle App-Routen und Navigation
+*/
 var router = createRouter({
 	history: createWebHistory("/"),
 	routes: [
-		{
-			path: "/dev",
-			name: "dev",
-			component: DevView_default
-		},
 		{
 			path: "/",
 			name: "home",
@@ -8354,6 +8627,17 @@ var router = createRouter({
 		}
 	]
 });
+/**
+* Globaler Route Guard:
+*
+* Regeln:
+* - Login-Seite ist immer erlaubt
+* - Offline:
+*   → prüft lokalen Login-Status (localStorage)
+* - Online:
+*   → validiert Token über Auth Store
+*   → leitet bei Fehler zu /login weiter
+*/
 router.beforeEach(async (to) => {
 	if (to.path === "/login") return true;
 	if (!isOnline.value) return localStorage.getItem("wasLoggedIn") === "true" ? true : "/login";

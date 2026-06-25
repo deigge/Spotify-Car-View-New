@@ -2800,8 +2800,14 @@ var CacheableResponsePlugin = class {
 //#region src/worker/sw.ts
 self.skipWaiting();
 clientsClaim();
-precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"95f0f2b387e92dcc938878379323584d","url":"logo.png"},{"revision":"a4ff4467b2ba26970530bb7c8b8c6485","url":"index.html"},{"revision":"f79914bce65b3ce39277641b043bc3c1","url":"favicon.ico"},{"revision":"2c9c97d57c7c04c9988c0c5ba542f13d","url":"apple-touch-icon-180x180.png"},{"revision":"6903b6470792a2d2a4fb0164b31ce883","url":"album_cover_placeholder.png"},{"revision":null,"url":"assets/index-CHbD1g3i.css"},{"revision":null,"url":"assets/index-Br9qJout.js"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
+/**
+* Precache aller Build-Artefakte (Vite/Vue App Shell)
+*/
+precacheAndRoute([{"revision":"1872c500de691dce40960bb85481de07","url":"registerSW.js"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"95f0f2b387e92dcc938878379323584d","url":"logo.png"},{"revision":"67462db9b909537b1612a9295b3c0019","url":"index.html"},{"revision":"f79914bce65b3ce39277641b043bc3c1","url":"favicon.ico"},{"revision":"2c9c97d57c7c04c9988c0c5ba542f13d","url":"apple-touch-icon-180x180.png"},{"revision":"6903b6470792a2d2a4fb0164b31ce883","url":"album_cover_placeholder.png"},{"revision":null,"url":"assets/index-PAjzyp4f.css"},{"revision":null,"url":"assets/index-C6ukUP6x.js"},{"revision":"f07fd692551f498952a8b409a0842fcb","url":"maskable-icon-512x512.png"},{"revision":"e021efe0608f3304600a82c2f1af7cb0","url":"pwa-192x192.png"},{"revision":"ca8d303b7ea40c8b415acd2eb1700571","url":"pwa-512x512.png"},{"revision":"20cf8fa3af18175aeebdb01fd3e48346","url":"pwa-64x64.png"},{"revision":"6dcb67eff47c87d56a8f441dc45b7bb8","url":"manifest.webmanifest"}]);
 registerRoute(new NavigationRoute(createHandlerBoundToURL("/index.html"), { denylist: [/^\/auth/, /^\/api/] }));
+/**
+* Fallback für fehlgeschlagene Requests im Service Worker.
+*/
 setCatchHandler(async ({ request }) => {
 	if (request.destination === "image") {
 		const fallback = await matchPrecache("/album_cover_placeholder.png");
@@ -2809,15 +2815,28 @@ setCatchHandler(async ({ request }) => {
 	}
 	return Response.error();
 });
+/**
+* Spotify Player State
+* wird aus dem Cache gelesen und im Hintergrund aktualisiert
+*/
 registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname === "/v1/me/player", new StaleWhileRevalidate({
 	cacheName: "spotify-player",
 	matchOptions: { ignoreVary: true },
 	plugins: [new ExpirationPlugin({ maxAgeSeconds: 30 })]
 }));
+/**
+* API Request für Verlauf
+* Netzwerk wird bevorzugt, Cache nur bei fehlender/zu langsamer Verbindung
+*/
 registerRoute(({ url }) => url.pathname === "/api/history", new NetworkFirst({
 	cacheName: "user-history",
 	networkTimeoutSeconds: 5
 }));
+/**
+* Spotify Playlist Details
+* Cache wird verwendet und im Hintergrund aktualisiert
+* Einträge laufen nach Zeit und Anzahl begrenzt aus
+*/
 registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname.startsWith("/v1/playlists/"), new StaleWhileRevalidate({
 	cacheName: "spotify-playlists",
 	matchOptions: { ignoreVary: true },
@@ -2826,11 +2845,22 @@ registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathn
 		maxAgeSeconds: 10080 * 60
 	})]
 }));
+/**
+* Spotify User Playlists
+* Cache wird verwendet und im Hintergrund aktualisiert
+* Einträge bleiben bis zum Ablaufdatum im Cache
+*/
 registerRoute(({ url }) => url.origin === "https://api.spotify.com" && url.pathname.startsWith("/v1/me/playlists"), new StaleWhileRevalidate({
 	cacheName: "spotify-playlists",
 	matchOptions: { ignoreVary: true },
 	plugins: [new ExpirationPlugin({ maxAgeSeconds: 10080 * 60 })]
 }));
+/**
+* Spotify Images (Album Cover / Artwork)
+* werden aus Cache geladen und im Hintergrund aktualisiert
+* Cache speichert nur erfolgreiche Antworten (200 oder opaque)
+* Einträge werden nach Zeit und Anzahl begrenzt
+*/
 registerRoute(({ url }) => url.hostname === "i.scdn.co" || url.hostname === "mosaic.scdn.co" || /^image-cdn-\w+\.spotifycdn\.com$/.test(url.hostname), new StaleWhileRevalidate({
 	cacheName: "spotify-images",
 	plugins: [new CacheableResponsePlugin({ statuses: [0, 200] }), new ExpirationPlugin({

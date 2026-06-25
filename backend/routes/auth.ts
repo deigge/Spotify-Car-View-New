@@ -10,6 +10,11 @@ const s_client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 const s_redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
 const app_url = process.env.APP_URL;
 
+/**
+ * Startet den Spotify Login Flow.
+ * Leitet zur Spotify Authorize URL weiter.
+ * Speichert einen State Cookie zur Absicherung.
+ */
 router.get('/login', function (req, res) {
   const state = crypto.randomUUID();
   const scope = [
@@ -41,6 +46,12 @@ router.get('/login', function (req, res) {
   );
 });
 
+/**
+ * Callback nach Spotify Login.
+ * Tauscht Authorization Code gegen Tokens.
+ * Legt User + Session in DB an/aktualisiert sie.
+ * Setzt Session Cookie.
+ */
 router.get('/callback', async (req, res) => {
   try {
     const code = req.query.code as string;
@@ -126,6 +137,11 @@ router.get('/callback', async (req, res) => {
   }
 });
 
+/**
+ * Liefert einen neuen Spotify Access Token.
+ * Nutzt gespeicherten Refresh Token aus DB.
+ * Aktualisiert Session lastUsedAt.
+ */
 router.get('/token', async (req, res) => {
   const sessionId = req.cookies.sessionId;
   if (!sessionId) return res.status(401).json({ error: 'nicht eingeloggt' });
@@ -173,6 +189,11 @@ router.get('/token', async (req, res) => {
 
 export default router;
 
+/**
+ * Lädt User anhand sessionId Cookie.
+ * Hängt User Objekt an req.
+ * Blockt Request wenn Session ungültig ist.
+ */
 export async function getUser(req, res, next) {
   const sessionId = req.cookies.sessionId;
   if (!sessionId) return res.status(401).json({ error: 'nicht eingeloggt' });

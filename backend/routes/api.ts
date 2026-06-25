@@ -7,16 +7,27 @@ import { getUser } from './auth.js';
 
 const router = Router();
 
-// --- API ROUTES ---
+/**
+ * Prüft die MongoDB Verbindung.
+ * Wird für Health Checks genutzt.
+ */
 router.get('/ping', async (req, res) => {
   await mongoose.connection.db.admin().ping();
   res.json({ mongo: 'ok' });
 });
 
+/**
+ * Einfache Test Route.
+ * Gibt nur einen statischen Status zurück.
+ */
 router.get('/test', (req, res) => {
   res.json({ ok: true });
 });
 
+/**
+ * Speichert einen abgespielten Song für den aktuellen User.
+ * Erwartet Spotify Player Daten im Request Body.
+ */
 router.post('/addsong', getUser, async (req, res) => {
   const trackInfo = req.body as SpotifyPlayer;
   console.log('images:', trackInfo.item.album.images);
@@ -37,6 +48,10 @@ router.post('/addsong', getUser, async (req, res) => {
   res.sendStatus(200);
 });
 
+/**
+ * Aktualisiert einen gespeicherten Song eines Users.
+ * Identifikation über trackId + userId.
+ */
 router.patch('/updatesong/:trackId', getUser, async (req, res) => {
   await PlayedSong.findOneAndUpdate(
     { userId: req.user.spotifyId, trackId: req.params.trackId },
@@ -45,6 +60,11 @@ router.patch('/updatesong/:trackId', getUser, async (req, res) => {
   res.sendStatus(200);
 });
 
+/**
+ * Liefert die letzten abgespielten Songs des Users.
+ * Sortiert nach Abspielzeit (neu → alt).
+ * Maximal 200 Einträge.
+ */
 router.get('/history', getUser, async (req, res) => {
   const songs = await PlayedSong.find({ userId: req.user.spotifyId })
     .sort({ playedAt: -1 })
