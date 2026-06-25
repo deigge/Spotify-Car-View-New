@@ -81,16 +81,22 @@ async function likeSong(save: boolean) {
       id="trackCover"
       :src="song.albumCovers[0]?.url ?? coverPlaceholder"
       @error="onImageError"
+      aria-label="Track Cover"
     />
     <div id="trackInfo">
       <span id="title">{{ props.song.name }}</span>
       <span id="artist">{{ props.song.artists.join(', ') }}</span>
     </div>
     <div id="buttons">
-      <IconButton @click="share">
+      <IconButton @click="share" aria-label="Share">
         <ShareIcon />
       </IconButton>
-      <IconButton :disabled="props.disabled" :active="isSaved" @click="toggleLike">
+      <IconButton
+        :disabled="props.disabled"
+        :active="isSaved"
+        @click="toggleLike"
+        :aria-label="isSaved ? 'Unlike Song' : 'Like Song'"
+      >
         <HeartFilledIcon v-if="isSaved" />
         <HeartIcon v-else />
       </IconButton>

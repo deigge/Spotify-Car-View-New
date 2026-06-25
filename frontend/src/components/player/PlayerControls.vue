@@ -92,6 +92,7 @@ function previousSong() {
       :active="localShuffleState"
       :disabled="props.disabled"
       @click="toggleShuffle"
+      :aria-label="localShuffleState ? 'Shuffle on' : 'Shuffle off'"
     >
       <ArrowsShuffleIcon />
     </IconButton>
@@ -101,6 +102,13 @@ function previousSong() {
       :active="localRepeatState === 'context' || localRepeatState === 'track'"
       :disabled="disabled"
       @click="switchRepeatState"
+      :aria-label="
+        localRepeatState === 'off'
+          ? 'Repeat off'
+          : localRepeatState === 'context'
+            ? 'Repeat all'
+            : 'Repeat one'
+      "
     >
       <RepeatIcon v-if="localRepeatState == 'context'" />
       <RepeatOnceIcon v-else-if="localRepeatState == 'track'" />
@@ -109,16 +117,27 @@ function previousSong() {
   </div>
 
   <div class="controls" id="mainControls">
-    <IconButton size="3.5rem" :disabled="props.disabled" @click="previousSong">
+    <IconButton
+      size="3.5rem"
+      :disabled="props.disabled"
+      @click="previousSong"
+      aria-label="Previous song"
+    >
       <PlayerSkipBackIcon />
     </IconButton>
 
-    <IconButton icon="player-play" size="5rem" :disabled="props.disabled" @click="togglePlayback">
+    <IconButton
+      icon="player-play"
+      size="5rem"
+      :disabled="props.disabled"
+      @click="togglePlayback"
+      :aria-label="localIsPlaying ? 'Pause' : 'Play'"
+    >
       <PlayerPauseIcon v-if="localIsPlaying" />
       <PlayerPlayIcon v-else />
     </IconButton>
 
-    <IconButton size="3.5rem" :disabled="disabled" @click="nextSong">
+    <IconButton size="3.5rem" :disabled="disabled" @click="nextSong" aria-label="Next song">
       <PlayerSkipForwardIcon />
     </IconButton>
   </div>

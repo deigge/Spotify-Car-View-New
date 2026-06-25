@@ -11,15 +11,15 @@ const route = useRoute();
 
 <template>
   <nav class="bottom-nav">
-    <NavButton href="/playlists" :active="route.path === '/playlists'">
+    <NavButton href="/playlists" :active="route.path === '/playlists'" aria-label="Playlist Tab">
       <PlaylistIcon />
     </NavButton>
 
-    <NavButton href="/" :active="route.path === '/'">
+    <NavButton href="/" :active="route.path === '/'" aria-label="Player Tab">
       <HomeIcon />
     </NavButton>
 
-    <NavButton href="/history" :active="route.path === '/history'">
+    <NavButton href="/history" :active="route.path === '/history'" aria-label="History Tab">
       <HistoryIcon />
     </NavButton>
   </nav>

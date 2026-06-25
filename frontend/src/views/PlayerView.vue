@@ -206,21 +206,33 @@ function openSpotify() {
     <TrackInfo :title="trackTitle" :artist="trackArtist" />
 
     <div class="cover-wrapper">
-      <img id="albumCover" :src="albumCover ?? coverPlaceholder" @error="onImageError" />
+      <img
+        id="albumCover"
+        :src="albumCover ?? coverPlaceholder"
+        @error="onImageError"
+        alt="Album Cover"
+      />
       <div class="offline-overlay" v-if="!isOnline">
         <CloudOffIcon />
         <span>offline</span>
       </div>
       <div class="offline-overlay" v-else-if="isWaitingForTrack">
         <span>No playback active</span>
-        <button id="openspotifybtn" @click="openSpotify">
+        <button id="openspotifybtn" @click="openSpotify" aria-label="Open Spotify">
           Open Spotify
           <ExternalLinkIcon />
         </button>
       </div>
     </div>
 
-    <input type="range" min="0" max="100" :value="progress" id="progress-bar" />
+    <input
+      type="range"
+      min="0"
+      max="100"
+      :value="progress"
+      id="progress-bar"
+      aria-label="Song Progress"
+    />
     <PlayerControls
       :isPlaying="isPlaying"
       :shuffleState="shuffleState"

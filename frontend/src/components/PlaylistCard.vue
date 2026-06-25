@@ -22,8 +22,18 @@ function selectPlaylist() {
 </script>
 
 <template>
-  <button id="playlistCard" @click="selectPlaylist" :disabled="props.disabled">
-    <img id="playlistCover" :src="coverUrl ?? coverPlaceholder" @error="onImageError" />
+  <button
+    id="playlistCard"
+    @click="selectPlaylist"
+    :disabled="props.disabled"
+    :aria-label="'Select ' + props.name"
+  >
+    <img
+      id="playlistCover"
+      :src="coverUrl ?? coverPlaceholder"
+      @error="onImageError"
+      alt="Playlist Cover"
+    />
     <span>{{ name }}</span>
   </button>
 </template>
